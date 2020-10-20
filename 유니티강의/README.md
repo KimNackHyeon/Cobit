@@ -14,7 +14,7 @@
 
 #### 파트5. [User Input](https://lab.ssafy.com/s03-final/s03p31b102/blob/feature/unity/%EC%9C%A0%EB%8B%88%ED%8B%B0%EA%B0%95%EC%9D%98/User%20Input.md)
 
-#### 파트6. ChildObject와 LocalPosition
+#### 파트6. [ChildObject와 LocalPosition](https://lab.ssafy.com/s03-final/s03p31b102/blob/feature/unity/%EC%9C%A0%EB%8B%88%ED%8B%B0%EA%B0%95%EC%9D%98/ChildObject%EC%99%80%20LocalPosition.md)
 
 #### 파트7. 아이템과 장애물 
 
