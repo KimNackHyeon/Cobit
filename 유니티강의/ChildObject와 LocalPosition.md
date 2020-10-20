@@ -21,7 +21,7 @@
     ```c#
     transform.position // GlobalPosition을 의미
     transform.localPosition // LocalPosition을 의미
-    transform.localPosition = new Vector3(transform.localPosition.x, 
-    																			transform.localPosition.y, 
-    																			transform.localPosition.z);
+    transform.localPosition = new Vector3(transform.localPosition.x,
+                                          transform.localPosition.y,
+                                          transform.localPosition.z);
     ```
