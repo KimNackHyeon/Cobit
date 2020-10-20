@@ -1,6 +1,6 @@
 ## Unity로 배우는 C#
 
-### < Part 8. SendMessage >
+### < Part 9. SendMessage >
 
 - GameManager
 
