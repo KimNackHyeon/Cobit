@@ -6,13 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <link rel="stylesheet" href="./TemplateData/style.css">
-    <script src="./TemplateData/UnityProgress.js"></script>
-    <script src="./Build/UnityLoader.js"></script>
+    <link rel="stylesheet" href="./Game/TemplateData/style.css">
+    <script src="./GameTemplateData/UnityProgress.js"></script>
+    <script src="./GameBuild/UnityLoader.js"></script>
     <!-- <script src="static/compiled/bundle.js"></script> -->
     <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "./Build/unity.json", {onProgress: UnityProgress});
-      var unityBall = UnityLoader.instantiate("ball", "./Build/ball.json", {onProgress: UnityProgress});
+      var unityInstance = UnityLoader.instantiate("unityContainer", "./Game/Build/unity.json", {onProgress: UnityProgress});
     </script>
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
