@@ -1,9 +1,9 @@
 !<template>
   <div class="webgl-content">
-      <div id="ball" style="width: 960px; height: 600px"></div>
+      <div id="unityContainer" style="width: 960px; height: 600px"></div>
       <div class="footer">
         <div class="webgl-logo"></div>
-        <div class="fullscreen" onclick="unityBall.SetFullscreen(1)"></div>
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
         <div class="title">Ball</div>
       </div>
     </div>
@@ -13,8 +13,22 @@
 export default {
   mounted(){
     let jsScript = document.createElement('script');    
-    jsScript.setAttribute('src',"js파일경로");
+    jsScript.setAttribute('src',"./Ball/Build/UnityLoader.js");
     document.head.appendChild(jsScript);
+
+    jsScript = document.createElement('script');    
+    jsScript.setAttribute('src',"./Ball/TemplateData/UnityProgress.jss");
+    document.head.appendChild(jsScript);
+
+    jsScript = document.createElement('link');    
+    jsScript.setAttribute('href',"./Ball/TemplateData/style.css");
+    jsScript.setAttribute('rel',"stylesheet");
+    document.head.appendChild(jsScript);
+
+    jsScript = document.createElement('script');    
+    jsScript.innerHTML = `var unityInstance = UnityLoader.instantiate("unityContainer", "./Ball/Build/unity.json", {onProgress: UnityProgress});`;
+    document.head.appendChild(jsScript);
+
   }
 }
 </script>
