@@ -1,4 +1,4 @@
-# kokumung
+# frontend
 
 ## Project setup
 ```
