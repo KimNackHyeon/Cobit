@@ -7,7 +7,10 @@
         <div class="title">Game</div>
       </div>
     </div> -->
-    <unity src="Build/unity.json" width="1000" height="600" unityLoader="Build/UnityLoader.js"></unity>
+    <div>
+      <unity src="Build/unity.json" width="1000" height="600" unityLoader="Build/UnityLoader.js" ref="myInstance"></unity>
+      <button @click="onClick">버튼</button>
+    </div>
 </template>
 
 <script>
@@ -17,7 +20,8 @@ export default {
   components: { Unity },
   methods: {
     onClick () {
-      this.$refs.myInstance.message("object", "method", "param")
+      alert("click");
+      this.$refs.myInstance.message("New Unity Project (2)", "method", "param")
     }
   }
   
