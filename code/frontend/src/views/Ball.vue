@@ -1,6 +1,6 @@
-!<template>
+<template>
   <div class="webgl-content">
-      <div id="unityContainer" style="width: 960px; height: 600px"></div>
+      <div id="test" style="width: 960px; height: 600px"></div>
       <div class="footer">
         <div class="webgl-logo"></div>
         <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
@@ -17,7 +17,7 @@ export default {
     document.head.appendChild(jsScript);
 
     jsScript = document.createElement('script');    
-    jsScript.setAttribute('src',"./Ball/TemplateData/UnityProgress.jss");
+    jsScript.setAttribute('src',"./Ball/TemplateData/UnityProgress.js");
     document.head.appendChild(jsScript);
 
     jsScript = document.createElement('link');    
@@ -26,7 +26,7 @@ export default {
     document.head.appendChild(jsScript);
 
     jsScript = document.createElement('script');    
-    jsScript.innerHTML = `var unityInstance = UnityLoader.instantiate("unityContainer", "./Ball/Build/unity.json", {onProgress: UnityProgress});`;
+    jsScript.innerHTML = `var unityInstance = UnityLoader.instantiate("test", "./Ball/Build/unity.json", {onProgress: UnityProgress});`;
     document.head.appendChild(jsScript);
 
   }
