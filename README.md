@@ -6,7 +6,7 @@
 
 - #### 팀명(B102) :nose:
 
-  **코쿠멍** : :door:코딩의 문을 열기위한 열쇠 구멍 :key:  
+  **코쿠멍** : :door: 코딩의 문을 열기위한 열쇠 구멍 :key:  
 
 - #### 팀원 소개
 
@@ -43,9 +43,9 @@
 
 ## **:monkey_face: 기능**
 
-- 로그인 / 회원가입
-- 단계
-- 코딩 모험 - 스토리
+- **로그인 / 회원가입**
+- **단계**
+- **코딩 모험 - 스토리**
   - 미션
     - 미션 해결 방법
       1. STT(Speech To Text)
@@ -99,7 +99,7 @@
 **branch**
 
 ```
-master -> develop -> feature/fe(권남선, 류혜명, 박종준) or feature/be(김낙현, 박건호)
+master -> develop -> feature/fe or feature/be or feature/unity
 ```
 
 **merge**
