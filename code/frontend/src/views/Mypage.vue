@@ -26,30 +26,43 @@
         <div>
           코쿠멍
         </div>
-        <v-btn icon><v-icon style="color: black; margin-left: 1%;">mdi-pencil-circle-outline</v-icon></v-btn>
+        <v-btn icon><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <div style="height: 53%; border-bottom: 1px solid black; position: relative">
         캐릭터
         <v-btn class="changeBtn">캐릭터 바꾸기</v-btn>
       </div>
-      <div style="padding: 5%; height: 40%;">
+      <div style="padding: 4%; height: 40%;">
         <!-- 별 모음 -->
-        <div style="height: 30%">
+        <div style="height: 28%; display: flex; align-items: center">
           <!-- <div>
             <v-icon style="color: yellow; font-size: 3vw;">mdi-star</v-icon>
           </div> -->
-          <div>
-            <div class="onestar">
+          <div style="width: 100%">
+            <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[0]}}%
             </div>
-            <div class="twostar">
+            <div class="star twostar">
               <v-icon v-for="i in 2" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[1]}}%
             </div>
-            <div class="threestar">
+            <div class="star threestar">
               <v-icon v-for="i in 3" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[2]}}%
+            </div>
+          </div>
+        </div>
+        <div style="height: 4%"></div>
+        <!-- 칭호 -->
+        <div style="height: 28%; display: flex; align-items: center;">
+          <div style="display: inline-block; width: 10%; text-align: center;">
+            <v-icon style="font-size: 4.5vh;">mdi-account</v-icon>
+          </div>
+          <div class="nicknameBox">
+            <div class="nickname">
+              <v-icon style="color: gold;">mdi-trophy-variant</v-icon>
+              코딩 어린이
             </div>
           </div>
         </div>
@@ -134,7 +147,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5vw;
+    font-size: 2.5vh;
     font-weight: 600;
     border-bottom: 1px solid black;
 }
@@ -142,32 +155,44 @@ export default {
   position: absolute;
   top: 5%;
   right: 3%;
+  color: white !important;
+  font-size: 1.5vh !important;
+  font-weight: 600;
+  background-color: rgba(52, 85, 139, 1) !important;
+  padding: 3vh !important;
 }
-.onestar {
+.star {
   display: inline-block;
   text-align: center;
   font-size: 1.2vw;
+  font-weight: 600;
   padding: 1vh 0;
+}
+.onestar {
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
   border-right: none;
   background: rgba(218, 138, 103, 0.5);
 }
 .twostar {
-  display: inline-block;
-  text-align: center;
-  font-size: 1.2vw;
-  padding: 1vh 0px;
   background: silver;
 }
 .threestar {
-  display: inline-block;
-  text-align: center;
-  font-size: 1.2vw;
-  padding: 1vh 0px;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   border-left: none;
   background: rgba(255, 215, 0, 0.5);
+}
+.nicknameBox {
+  display: inline-block;
+  width: 90%;
+  text-align: center;
+  padding: 1vh;
+}
+.nickname {
+  padding: 1vh;
+  border: 1px solid gray;
+  border-radius: 15px;
+  font-weight: 600;
 }
 </style>
