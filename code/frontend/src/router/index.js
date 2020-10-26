@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Mypage from '../views/Mypage.vue'
 import CodeBlock from '../views/CodeBlock.vue'
+import GameMap from '../views/GameMap.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/codeblock',
     name: 'CodeBlock',
     component: CodeBlock
+  },
+  {
+    path: '/gamemap',
+    name: 'GameMap',
+    component: GameMap
   }
 ]
 

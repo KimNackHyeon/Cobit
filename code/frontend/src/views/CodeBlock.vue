@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
-        <unity src="../../unity/Build/unity.json" width="850" height="450" unityLoader="#" ref="myInstance"></unity>
+        <unity class="unity" src="../../unity/Build/unity.json" unityLoader="#" ref="myInstance"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
         <div class="block-box">
@@ -142,7 +142,7 @@ export default {
   width: 59%;
   margin-right: 1%;
   height: 450px;
-  background-color: grey;
+  /* background-color: grey; */
 }
 
 .code-block-container .code-box {
@@ -217,6 +217,11 @@ export default {
   width: 100px;
   height: 50px;
   background-color: bisque;
+}
+
+.code-block-container .unity-box .unity {
+  width: 100%;
+  height: 100%;
 }
 
 </style>
