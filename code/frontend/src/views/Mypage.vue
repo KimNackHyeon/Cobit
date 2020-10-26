@@ -24,7 +24,7 @@
     <div class="rightbox box">
       <div class="name">
         <div>
-          코쿠멍
+          {{name}}
         </div>
         <v-btn icon><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
@@ -62,8 +62,15 @@
           <div class="nicknameBox">
             <div class="nickname">
               <v-icon style="color: gold;">mdi-trophy-variant</v-icon>
-              코딩 어린이
+              {{nickname}}
             </div>
+          </div>
+        </div>
+        <!-- 출석 -->
+        <div style="height: 40%; display: flex; align-items: center; justify-content: center;">
+          <div class="attendBox">
+            <v-icon style="font-size: 5vh; color: black;">mdi-calendar-multiple-check</v-icon>
+            <div style="display: inline-block; margin-left: 3%;">출석</div>
           </div>
         </div>
       </div>
@@ -79,6 +86,8 @@ export default {
     return {
       star: [1, 3, 6],
       starpercent: [],
+      name: "코쿠멍",
+      nickname: "코딩 어린이",
     }
   },
   mounted() {
@@ -156,9 +165,9 @@ export default {
   top: 5%;
   right: 3%;
   color: white !important;
-  font-size: 1.5vh !important;
+  font-size: 1.7vh !important;
   font-weight: 600;
-  background-color: rgba(52, 85, 139, 1) !important;
+  background-color: rgb(52, 85, 139) !important;
   padding: 3vh !important;
 }
 .star {
@@ -194,5 +203,15 @@ export default {
   border: 1px solid gray;
   border-radius: 15px;
   font-weight: 600;
+}
+.attendBox {
+  padding: 1vh 6vh;
+  border-radius: 30px;
+  background-color:  lightsteelblue;;
+  width: 30vw;
+  text-align: center;
+  font-size: 2.3vh; 
+  font-weight: 600;
+  cursor: pointer;
 }
 </style>
