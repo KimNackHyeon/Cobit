@@ -25,9 +25,9 @@
       <div class="map-footer">
         <i class="fas fa-star"></i>
         <div class="map-gauge">
-          <div class="map-1star-gauge">★ 33%</div>
-          <div class="map-2star-gauge">★★ 33%</div>
-          <div class="map-3star-gauge">★★★ 33%</div>
+          <div class="map-1star-gauge">★ {{ mapStar.first }}%</div>
+          <div class="map-2star-gauge">★★ {{ mapStar.second }}%</div>
+          <div class="map-3star-gauge">★★★ {{ mapStar.third }}%</div>
         </div>
       </div>
     </div>
@@ -101,7 +101,11 @@ export default {
           user: false,
         }
       },
-      mapLength: 5,
+      mapStar: {
+        first: 33.3,
+        second: 33.3,
+        third: 0,
+      }
     }
   },
   components: {
@@ -112,13 +116,21 @@ export default {
     // window.addEventListener('scroll', this.handleScroll)
   },
   mounted() {
+    this.getStarRatio();
   },
   watch: {
   },
   methods: {
-    handleScroll() {
-      console.log('Base')
-    },
+    getStarRatio() {
+      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      const FIRST = document.querySelector('.map-1star-gauge');
+      const SECOND = document.querySelector('.map-2star-gauge');
+      const THIRD = document.querySelector('.map-3star-gauge');
+
+      FIRST.style.width = this.mapStar.first + '%';
+      SECOND.style.width = this.mapStar.second + '%';
+      THIRD.style.width = this.mapStar.third + '%';
+    }
   },
   beforeDestroy () {
     // window.removeEventListener('scroll', this.handleScroll)
@@ -331,20 +343,18 @@ export default {
   justify-content: center;
   align-items: center;
   font-weight: 700;
+  font-size: 20px;
 }
 
 .map-gauge .map-1star-gauge {
-  width: 33.3%;
   background-color: grey;
 }
 
 .map-gauge .map-2star-gauge {
-  width: 33.3%;
   background-color: rgb(253, 253, 105);
 }
 
 .map-gauge .map-3star-gauge {
-  width: 34%;
   background-color: #0088ff;
   border-bottom-right-radius: 30px;
   border-top-right-radius: 30px;
@@ -405,7 +415,7 @@ export default {
                 0 -.2vw #000;
   }
   .map-footer .map-gauge {
-    height: 4.5vh;
+    height: 5vw;
     margin-left: 4vw;
   }
   .map-gauge > div {
