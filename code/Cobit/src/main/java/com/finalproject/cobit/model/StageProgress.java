@@ -2,6 +2,9 @@ package com.finalproject.cobit.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -13,54 +16,57 @@ import lombok.NoArgsConstructor;
 @Entity
 public class StageProgress {
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
-
-	@ManyToOne
-	@JoinColumn(name = "stage_id")
-	private Stage stage;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@Column
-	private String star;
+	private Long userId;
+
+	@Column
+	private Long stageId;
+
+	@Column
+	private Long star;
 
 	public StageProgress() {
 	}
 
-	public StageProgress(User user, Stage stage, String star) {
+	public StageProgress(Long id, Long userId, Long stageId, Long star) {
 		super();
-		this.user = user;
-		this.stage = stage;
+		this.id = id;
+		this.userId = userId;
+		this.stageId = stageId;
 		this.star = star;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public Stage getStage() {
-		return stage;
+	public Long getStageId() {
+		return stageId;
 	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public void setStageId(Long stageId) {
+		this.stageId = stageId;
 	}
 
-	public String getStar() {
+	public Long getStar() {
 		return star;
 	}
 
-	public void setStar(String star) {
+	public void setStar(Long star) {
 		this.star = star;
 	}
 
 	@Override
 	public String toString() {
-		return "StageProgress [user=" + user + ", stage=" + stage + ", star=" + star + "]";
+		return "StageProgress [userId=" + userId + ", stageId=" + stageId + ", star=" + star + "]";
 	}
 
 }

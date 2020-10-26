@@ -1,7 +1,5 @@
 package com.finalproject.cobit.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,11 +30,9 @@ public class User {
 	private String nickname;
 
 	@Column
-	@ColumnDefault("/img/profile_default.png")
 	private String image;
 
 	@Column
-	@ColumnDefault("0")
 	private Long star;
 
 	public User() {

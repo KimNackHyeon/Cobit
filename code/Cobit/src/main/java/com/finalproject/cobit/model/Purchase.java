@@ -2,6 +2,9 @@ package com.finalproject.cobit.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -13,42 +16,45 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Purchase {
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@Column
+	private Long userId;
+
+	@Column
+	private Long productId;
 
 	public Purchase() {
 	}
 
-	public Purchase(User user, Product product) {
+	public Purchase(Long id, Long userId, Long productId) {
 		super();
-		this.user = user;
-		this.product = product;
+		this.id = id;
+		this.userId = userId;
+		this.productId = productId;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	@Override
 	public String toString() {
-		return "Purchase [user=" + user + ", product=" + product + "]";
+		return "Purchase [userId=" + userId + ", productId=" + productId + "]";
 	}
 
 }
