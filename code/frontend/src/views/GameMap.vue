@@ -7,14 +7,14 @@
       <div class="map-body">
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
           <div class="stage-num">{{ index }}</div>
-          <div v-if="inform.open" class="stage-area"></div>
+          <div v-if="inform.open" class="stage-area" @click="onModal(inform, index)"></div>
           <div v-if="inform.open" class="stage-star">
-            <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star"></i>
-            <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="far fa-star"></i>
+            <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
+            <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
           </div>
           <div v-if="!inform.open" class="stage-area lock-stage-area"></div>
           <div v-if="!inform.open" class="stage-star lock-stage-star">
-            <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <div class="map-road-box"></div>
           <div v-if="inform.user" class="map-character">
@@ -31,14 +31,20 @@
         </div>
       </div>
     </div>
+
+    <StageModal v-if="showModal" @close="showModal= false"/>
   </div>
 </template>
 
 <script>
+import StageModal from '../components/StageModal.vue';
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'GameMap',
   data() {
     return {
+      showModal: false,
       mapInform: {
         1: {
           open: true,
@@ -109,6 +115,7 @@ export default {
     }
   },
   components: {
+    StageModal,
   },
   computed: {
   },
@@ -121,6 +128,7 @@ export default {
   watch: {
   },
   methods: {
+    ...mapMutations(['setStageDetail', 'setStageNum']),
     getStarRatio() {
       this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       const FIRST = document.querySelector('.map-1star-gauge');
@@ -130,6 +138,11 @@ export default {
       FIRST.style.width = this.mapStar.first + '%';
       SECOND.style.width = this.mapStar.second + '%';
       THIRD.style.width = this.mapStar.third + '%';
+    },
+    onModal(detail, num) {
+      this.setStageDetail(detail);
+      this.setStageNum(num);
+      this.showModal = true;
     }
   },
   beforeDestroy () {
@@ -153,11 +166,21 @@ export default {
   width: 180px;
   height: 60px;
   background-color: #a4d4ff;
-  font-size: 30px;
+  font-size: 27px;
   font-weight: 500;
   font-family: BMJUA;
   border-radius: 30px;
   cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
+}
+
+.map-header .back-btn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
 }
 
 .map-header .back-btn .fa-chevron-left {
@@ -174,6 +197,11 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
 }
+
+.map-body::-webkit-scrollbar { height: 10px;}
+::-webkit-scrollbar-track { background-color: #ffffff; }
+::-webkit-scrollbar-thumb { background: #cee8ff; }
+::-webkit-scrollbar-button { display: none; }
 
 .map-body .map-stage-box {
   /* height: 40%;
@@ -260,18 +288,18 @@ export default {
 .stage-star .fa-star {
   font-size: 20px;
   margin: 0 2px;
-}
-
-.stage-star .fas {
-  color: rgb(243, 243, 0);
   text-shadow: -1.5px 0 #000,
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
 }
 
-.stage-star .far {
-  color: #000;
+.stage-star .star {
+  color: rgb(243, 243, 0);
+}
+
+.stage-star .unstar {
+  color: #fff;
 }
 
 .stage-star i:nth-child(2) {
@@ -280,6 +308,7 @@ export default {
 
 .lock-stage-star i {
   color: transparent !important;
+  text-shadow: none !important;
 }
 
 .map-body .map-road-box {
@@ -364,7 +393,7 @@ export default {
   .map-header .back-btn {
     width: 26vw;
     height: 8.5vw;
-    font-size: 4.5vw;
+    font-size: 4vw;
   }
   .map-body .map-stage-box {
     font-size: 5vw;
