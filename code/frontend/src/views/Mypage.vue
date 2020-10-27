@@ -27,18 +27,18 @@
         <div>
           {{name}}
         </div>
-        <v-btn icon @click="onUpdateName"><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="onRename"><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <!-- 캐릭터 이름 수정 -->
       <v-app class="vapp"></v-app>
-      <v-dialog max-width="50%" min-height="30%" v-model="updateName">
+      <v-dialog max-width="50%" min-height="30%" v-model="renamemodal">
         <v-card flat tile>
           <v-card-title style="justify-content: center; position: relative">
               <div style="font-size: 2vw">
                 캐릭터 이름 변경
               </div>
               <div style="position: absolute; right: 3%; top: 22%;">
-                <v-btn icon @click="updateName=false"><v-icon style="font-size: 3vw;">mdi-close</v-icon></v-btn>
+                <v-btn icon @click="renamemodal=false"><v-icon style="font-size: 3vw;">mdi-close</v-icon></v-btn>
               </div>
           </v-card-title>
           <v-divider></v-divider>
@@ -54,7 +54,6 @@
         </v-card>
         <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
           <v-btn text color="white" @click="onNewName" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
-          <!-- <v-btn text @click="updateName=false" style="background-color:#ECEFF1">취소</v-btn> -->
         </v-card-actions>
       </v-dialog>
       <div style="height: 53%; border-bottom: 1px solid black; position: relative">
@@ -97,10 +96,67 @@
         </div>
         <!-- 출석 -->
         <div style="height: 40%; display: flex; align-items: center; justify-content: center;">
-          <div class="attendBox">
+          <div class="attendBox" @click="onAttend">
             <v-icon style="font-size: 5vh; color: black;">mdi-calendar-multiple-check</v-icon>
+            <!-- <div class="icon">
+              <div class="calendar">
+                25
+                <div class="holes"></div>
+                <div class="flip"></div>
+              </div>
+            </div> -->
             <div style="display: inline-block; margin-left: 3%;">출석</div>
           </div>
+          <v-dialog max-width="90vw" min-height="90vh" v-model="attendmodal">
+            <v-card flat tile style="height: 80vh">
+              <div style="height: 3%"></div>
+              <!-- 제목 -->
+              <div class="attendtitle">
+                매일 매일 출석 체크
+              </div>
+              <div style="height: 85%; padding: 2vw 4vw;">
+                <!-- 왼쪽 박스 -->
+                <div class="attendleft">
+                  <!-- 출석일수 -->
+                  <div class="attendnumBox">
+                    <div class="attendtext">
+                      출석일수
+                    </div>
+                    <div class="attendnum">
+                      {{totalAttendDay}}일
+                    </div>
+                  </div>
+                  <div style="height: 5%"></div>
+                  <!-- 보상 아이템 -->
+                  <div class="attenditemBox">
+                    <div class="itemimg">
+                    </div>
+                  </div>
+                </div>
+                <!-- 오른쪽 박스 -->
+                <div class="attendright">
+                  <table style="text-align: center; border-collapse: collapse; height: 100%">
+                    <tbody>
+                      <tr v-for="i in 4" :key="i" style="height: 25%">
+                        <td v-for="j in 7" :key="j" style="width: 10vw">
+                          <div style="height: 25%; border-bottom: 1px solid gray">
+                            {{(i-1)*7 + j}}
+                          </div>
+                          <div style="height: 75%; display: flex; justify-content: center;">
+                            <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 7vh; color: red">mdi-check-circle-outline</v-icon>
+                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 7vh;">mdi-check-circle-outline</v-icon>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </v-card>
+            <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
+              <v-btn text color="white" @click="attendmodal=false" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
+            </v-card-actions>
+          </v-dialog>
         </div>
       </div>
     </div>
@@ -119,8 +175,12 @@ export default {
       starpercent: [],
       name: "코쿠멍",
       newname: "",
-      updateName: false,
+      renamemodal: false,
       nickname: "코딩 어린이",
+      attendmodal: false,
+      attendDay: [1, 3, 4],
+      noattendDay: [],
+      totalAttendDay: '',
     }
   },
   // components: {
@@ -142,16 +202,42 @@ export default {
     $(".onestar").css("width", `${this.starpercent[0]}%`)
     $(".twostar").css("width", `${this.starpercent[1]}%`)
     $(".threestar").css("width", `${this.starpercent[2]}%`)
-    console.log(this.starpercent)
+    // 총 출석일 계산
+    this.totalAttendDay = this.attendDay.length;
+    // 출석체크 도장
+    let today = new Date();
+    let date = today.getDate();
+    console.log(date)
+    for (var k=1; k<29; k++){
+      if (!this.attendDay.includes(k) && k<date) {
+        this.noattendDay.push(k)
+      }
+    }
+    console.log(this.noattendDay)
+    // for(var k=1; k<29; k++){
+    //   if(this.attendDay.includes(k)) {
+    //     console.log(`.check${k}`)
+    //     $(`.check${k}`).addClass("active")
+    //   }
+    //   else {
+    //     // $(`.check${k}`).css("color", "unset");
+    //   }
+    // }
   },
   methods: {
-    onUpdateName(){
-      this.updateName = !this.updateName
+    onRename(){
+      this.renamemodal = !this.renamemodal
     },
     onNewName() {
-      this.name = this.newname
-      this.newname = ''
-      this.updateName = false
+      if(this.newname.length > 0) {
+        this.name = this.newname
+        this.newname = ''
+        this.renamemodal = false
+      }
+      
+    },
+    onAttend() {
+      this.attendmodal = !this.attendmodal
     }
   }
 
@@ -159,6 +245,9 @@ export default {
 </script>
 
 <style scoped>
+.active {
+  color: red !important;
+}
 .mypage {
   display: flex;
   padding: 3%;
@@ -253,7 +342,7 @@ export default {
 .attendBox {
   padding: 1vh 6vh;
   border-radius: 30px;
-  background-color:  lightsteelblue;;
+  /* background-color:  lightsteelblue; */
   width: 30vw;
   text-align: center;
   font-size: 2.3vh; 
@@ -273,5 +362,67 @@ export default {
   height: 100%; 
   text-align: center;
   font-size: 1.8vw;
+}
+.attendtitle {
+  height: 8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5vw;
+  margin: 0 5%;
+  /* background: linear-gradient(to right, white 1%, #34558b 10%, #34558b 50%, #34558b 90%, white 99%);
+  color: white; */
+  font-weight: 600;
+}
+.attendleft {
+  float: left;
+  height: 100%;
+  width: 25%;
+}
+.attendnumBox {
+  border: 1px solid gray;
+  border-radius: 5px;
+  text-align: center;
+  height: 30%;
+  font-size: 2.5vh;
+}
+.attendright {
+  float: left;
+  height: 100%;
+  margin-left: 2%;
+  width: 73%;
+  box-sizing: border-box;
+  /* border: 1px solid gray; */
+}
+.attenditemBox {
+  border: 1px solid gray;
+  height: 65%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+td {
+  border: 1px solid gray;
+}
+.attendtext {
+  padding: 3%;
+  height: 25%;
+  border-bottom: 1px solid gray;
+}
+.attendnum {
+  margin: 3%;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5vh;
+}
+.itemimg {
+  width: 90%;
+  height: 40%;
+  background: url("../image/Hat3.png");
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 </style>
