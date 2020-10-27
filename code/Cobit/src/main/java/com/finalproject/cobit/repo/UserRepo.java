@@ -10,4 +10,5 @@ import com.finalproject.cobit.model.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long>{
 	List<User> findAll();
+	User getUserByEmail(String email);
 }
