@@ -4,13 +4,24 @@
       <div class="stage-modal-wrap">
         <div class="stage-modal-content">
           <div class='stage-modal-header'>
-
+            <img src="@/assets/images/blue-ribbon.png" alt="img">
+            <div class="stage-modal-name">Stage {{ StageNum }}</div>
           </div>
           <div class='stage-modal-body'>
-
+            <div class="stage-modal-star-area">
+              <i v-for="(star,idx) in StageDetail.star" :key="`m-star+${idx}`" class="fas fa-star star"></i>
+              <i v-for="(unstar,idx) in StageDetail.unstar" :key="`m-unstar+${idx}`" class="fas fa-star unstar"></i>
+            </div>
+            <div class="stage-modal-img-area">
+              <img src="@/assets/images/penguin-stage-default.jpg" alt="stage-img">
+            </div>
+            <div class="stage-modal-mission-area">
+              <div>임무</div>
+              <div>강해지기 위해 물고기를 먹어주세요</div>
+            </div>
           </div>
           <div class="stage-modal-footer">
-            
+            <div class="stage-modal-btn">start</div>
           </div>
         </div>
       </div>
@@ -19,7 +30,7 @@
 </template>
 
 <script>
-
+import { mapState } from 'vuex';
 
 export default {
   name: 'StageModal',
