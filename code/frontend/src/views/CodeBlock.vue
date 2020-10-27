@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
-        <unity class="unity" src="../../unity/Build/unity.json" unityLoader="#" ref="myInstance"></unity>
+        <unity class="unity" src="map/Build/map.json" unityLoader="map/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
         <div class="block-box">
