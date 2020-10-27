@@ -28,5 +28,4 @@ public class Purchase {
 	@Column
 	private Long productId;
 
-
 }
