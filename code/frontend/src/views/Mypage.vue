@@ -22,14 +22,43 @@
     </div>
     <!-- 자신의 캐릭터 -->
     <div class="rightbox box">
+      <!-- 캐릭터 이름 -->
       <div class="name">
         <div>
           {{name}}
         </div>
-        <v-btn icon><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="onUpdateName"><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
+      <!-- 캐릭터 이름 수정 -->
+      <v-app class="vapp"></v-app>
+      <v-dialog max-width="50%" min-height="30%" v-model="updateName">
+        <v-card flat tile>
+          <v-card-title style="justify-content: center; position: relative">
+              <div style="font-size: 2vw">
+                캐릭터 이름 변경
+              </div>
+              <div style="position: absolute; right: 3%; top: 22%;">
+                <v-btn icon @click="updateName=false"><v-icon style="font-size: 3vw;">mdi-close</v-icon></v-btn>
+              </div>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text style="height:220px;" class="pa-1 modaltext">
+            <div style="text-align: center;">
+              <p style="font-size:1.6vw" class="my-2">새로운 캐릭터 이름을 적어주세요.</p>
+              <p style="font-size:1.6vw" class="my-2"><strong>공백</strong>이나 <strong>특수문자</strong>를 사용할 수 없습니다.</p>
+            </div>
+            <div style="margin-top: 5%; width: 80%; height: 23%;">
+              <input class="nameinput" type="text" v-model="newname" style="">
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
+          <v-btn text color="white" @click="onNewName" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
+          <!-- <v-btn text @click="updateName=false" style="background-color:#ECEFF1">취소</v-btn> -->
+        </v-card-actions>
+      </v-dialog>
       <div style="height: 53%; border-bottom: 1px solid black; position: relative">
-        캐릭터
+        <!-- <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity> -->
         <v-btn class="changeBtn">캐릭터 바꾸기</v-btn>
       </div>
       <div style="padding: 4%; height: 40%;">
@@ -79,6 +108,8 @@
 </template>
 
 <script>
+// import Unity from 'vue-unity-webgl'
+import "../css/mypage.scss";
 import $ from 'jquery';
 
 export default {
@@ -87,9 +118,14 @@ export default {
       star: [1, 3, 6],
       starpercent: [],
       name: "코쿠멍",
+      newname: "",
+      updateName: false,
       nickname: "코딩 어린이",
     }
   },
+  // components: {
+  //   Unity
+  // },
   mounted() {
     // 별 총합 계산
     var totalstar = 0;
@@ -108,6 +144,16 @@ export default {
     $(".threestar").css("width", `${this.starpercent[2]}%`)
     console.log(this.starpercent)
   },
+  methods: {
+    onUpdateName(){
+      this.updateName = !this.updateName
+    },
+    onNewName() {
+      this.name = this.newname
+      this.newname = ''
+      this.updateName = false
+    }
+  }
 
 }
 </script>
@@ -213,5 +259,19 @@ export default {
   font-size: 2.3vh; 
   font-weight: 600;
   cursor: pointer;
+}
+.modaltext {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.nameinput {
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 100%; 
+  height: 100%; 
+  text-align: center;
+  font-size: 1.8vw;
 }
 </style>
