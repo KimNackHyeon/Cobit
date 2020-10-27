@@ -41,7 +41,7 @@ export default {
   watch: {
   },
   computed: {
-
+    ...mapState(['StageDetail', 'StageNum']),
   },
   created() {
   },
