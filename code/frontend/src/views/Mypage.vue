@@ -108,7 +108,9 @@ export default {
     $(".threestar").css("width", `${this.starpercent[2]}%`)
     console.log(this.starpercent)
   },
-
+  methods:{
+      
+    },
 }
 </script>
 
