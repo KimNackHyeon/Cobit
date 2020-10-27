@@ -58,7 +58,9 @@
       </v-dialog>
       <div style="height: 53%; border-bottom: 1px solid black; position: relative">
         <!-- <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity> -->
-        <v-btn class="changeBtn">캐릭터 바꾸기</v-btn>
+        <router-link to="/changecharacter">
+          <button class="changeBtn">캐릭터 바꾸기</button>
+        </router-link>
       </div>
       <div style="padding: 4%; height: 40%;">
         <!-- 별 모음 -->
@@ -207,22 +209,11 @@ export default {
     // 출석체크 도장
     let today = new Date();
     let date = today.getDate();
-    console.log(date)
     for (var k=1; k<29; k++){
       if (!this.attendDay.includes(k) && k<date) {
         this.noattendDay.push(k)
       }
     }
-    console.log(this.noattendDay)
-    // for(var k=1; k<29; k++){
-    //   if(this.attendDay.includes(k)) {
-    //     console.log(`.check${k}`)
-    //     $(`.check${k}`).addClass("active")
-    //   }
-    //   else {
-    //     // $(`.check${k}`).css("color", "unset");
-    //   }
-    // }
   },
   methods: {
     onRename(){
@@ -299,10 +290,10 @@ export default {
   position: absolute;
   top: 5%;
   right: 3%;
-  color: white !important;
+  /* color: white !important; */
   font-size: 1.7vh !important;
   font-weight: 600;
-  background-color: rgb(52, 85, 139) !important;
+  /* background-color: rgb(52, 85, 139) !important; */
   padding: 3vh !important;
 }
 .star {
