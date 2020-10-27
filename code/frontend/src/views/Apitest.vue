@@ -53,6 +53,7 @@ export default {
       this.canvas.getContext("2d").drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
       this.imageFile = new Image();
       this.imageFile.src = this.canvas.toDataURL();
+      this.uploadImage();
     },
     dataURLtoFile(dataurl, fileName){
         var arr = dataurl.split(','),
@@ -76,15 +77,16 @@ export default {
       formData.append("email","test@test.com");
       // formData.append("email",store.state.userInfo.email); // 사용자 이메일
 
-      axios.post(`http://localhost:9999/user/upload`, formData, { 
+      axios.post(`http://k3b102.p.ssafy.io:9999/cobit/user/upload`, formData, { 
           headers: { 'Content-Type': 'multipart/form-data' } 
       }).then(response => {
         // // console.log(response);
-        this.image = response.data;
+        // this.image = response.data;
+        console.log(response.data);
         window.Kakao.API.request({
           url: `/v1/vision/face/detect`,
           data: {
-          image_url: 'http://k3b102.p.ssafy.io/img/image.jpg'
+          image_url: 'http://k3b102.p.ssafy.io'+response.data
           },
           success: function (msg) {
           console.log(msg);
