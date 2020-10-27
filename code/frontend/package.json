@@ -10,6 +10,8 @@
   "dependencies": {
     "@mdi/font": "^5.7.55",
     "core-js": "^3.6.5",
+    "jqeury": "0.0.1-security",
+    "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-unity-webgl": "^1.2.0",
