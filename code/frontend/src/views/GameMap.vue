@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="map-container">
       <div class="map-header">
-        <div class="back-btn"><i class="fas fa-chevron-left"></i>돌아가기</div>
+        <div class="back-btn" @click="onModal2"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
@@ -17,7 +17,7 @@
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <div class="map-road-box"></div>
-          <div v-if="inform.user" class="map-character">
+          <div v-if="inform.user" class="map-character" @click="onModal(inform, index)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
         </div>
@@ -33,11 +33,13 @@
     </div>
 
     <StageModal v-if="showModal" @close="showModal= false"/>
+    <DifficultyModal v-if="showModal2" @close="showModal2= false"/>
   </div>
 </template>
 
 <script>
 import StageModal from '../components/StageModal.vue';
+import DifficultyModal from '../components/DifficultyModal.vue';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -45,6 +47,7 @@ export default {
   data() {
     return {
       showModal: false,
+      showModal2: false,
       mapInform: {
         1: {
           open: true,
@@ -116,6 +119,7 @@ export default {
   },
   components: {
     StageModal,
+    DifficultyModal,
   },
   computed: {
   },
@@ -143,6 +147,9 @@ export default {
       this.setStageDetail(detail);
       this.setStageNum(num);
       this.showModal = true;
+    },
+    onModal2() {
+      this.showModal2 = true;
     }
   },
   beforeDestroy () {
@@ -202,6 +209,8 @@ export default {
 ::-webkit-scrollbar-track { background-color: #ffffff; }
 ::-webkit-scrollbar-thumb { background: #cee8ff; }
 ::-webkit-scrollbar-button { display: none; }
+::-webkit-scrollbar-thumb:hover { background: #a4d5ff; }
+::-webkit-scrollbar-thumb:active {background: #84c5ff; }
 
 .map-body .map-stage-box {
   /* height: 40%;
@@ -449,6 +458,9 @@ export default {
   }
   .map-gauge > div {
     font-size: 3vw;
+  }
+  .map-gauge .map-1star-gauge {
+    margin-left: 2vw;
   }
 }
 </style>
