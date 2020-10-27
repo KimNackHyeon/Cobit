@@ -126,4 +126,142 @@ export default {
   display: flex;
   justify-content: center;
 }
+
+.stage-modal-header > img {
+  width: 80%;
+  height: 100px;
+}
+
+.stage-modal-header .stage-modal-name {
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+}
+
+.stage-modal-body .stage-modal-star-area {
+  font-size: 40px;
+}
+
+.stage-modal-body .stage-modal-star-area i {
+  text-shadow: -1.5px 0 #000,
+                0 1.5px #000,
+                1.5px 0 #000,
+                0 -1.5px #000;
+  margin: 0 10px;
+}
+
+.stage-modal-body .stage-modal-star-area .star {
+  color: rgb(243, 243, 0);
+}
+
+.stage-modal-body .stage-modal-star-area .unstar {
+  color: #fff;
+}
+
+.stage-modal-body .stage-modal-img-area {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.stage-modal-img-area > img {
+  width: 80%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.stage-modal-body .stage-modal-mission-area {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stage-modal-mission-area > div {
+  font-size: 18px;
+  font-family: 'BMJUA';
+  margin-bottom: 10px;
+}
+
+.stage-modal-mission-area > div:nth-child(1) {
+  background-color: tomato;
+  width: 50px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin-right: 10px;
+  color: #fff;
+  letter-spacing: 3px;
+  padding-left: 3px;
+}
+
+.stage-modal-footer .stage-modal-btn {
+  width: 80%;
+  height: 50px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #a4d4ff;
+  font-size: 25px;
+  font-family: 'BMJUA';
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
+}
+
+.stage-modal-footer .stage-modal-btn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+
+@media (max-width: 1280px) {
+  .stage-modal-wrap {
+    max-width: 60vw;
+  }
+  .stage-modal-content {
+    padding: 3vh 1vw;
+  }
+  .stage-modal-content .stage-modal-header {
+    font-size: 4vw;
+  }
+  .stage-modal-body .stage-modal-img-area {
+    margin: 3vw 0;
+  }
+  .stage-modal-header > img {
+    width: 80%;
+    height: 14vw;
+  }
+  .stage-modal-body .stage-modal-star-area {
+    font-size: 6vw;
+  }
+  .stage-modal-body .stage-modal-star-area i {
+    text-shadow: -.2vw 0 #000,
+                  0 .2vw #000,
+                  .2vw 0 #000,
+                  0 -.2vw #000;
+    margin: 0 1.5vw;
+  }
+  .stage-modal-mission-area > div {
+    font-size: 2.5vw;
+  }
+  .stage-modal-mission-area > div:nth-child(1) {
+    width: 7vw;
+    height: 4vw;
+  }
+  .stage-modal-footer .stage-modal-btn {
+    width: 80%;
+    height: 7vw;
+    font-size: 4vw;
+  }
+}
 </style>
