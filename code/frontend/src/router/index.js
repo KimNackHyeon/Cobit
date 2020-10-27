@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Mypage from '../views/Mypage.vue'
 import CodeBlock from '../views/CodeBlock.vue'
 import GameMap from '../views/GameMap.vue'
+import Apitest from '../views/Apitest.vue'
 
 Vue.use(VueRouter)
 
@@ -27,7 +28,12 @@ const routes = [
     path: '/gamemap',
     name: 'GameMap',
     component: GameMap
-  }
+  },
+  {
+    path: '/apitest',
+    name: 'Apitest',
+    component: Apitest
+  },
 ]
 
 const router = new VueRouter({
