@@ -1,11 +1,19 @@
 package com.finalproject.cobit.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.finalproject.cobit.model.User;
+import com.finalproject.cobit.repository.UserRepo;
+
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +34,7 @@ public class UserController {
 	/*
 	 *	   < API문서 주소 : http://localhost:8080/stock/swagger-ui.html (<=== CTRL+CLICK!!) >
 	*/
-	@GetMapping("/{id}")
-	public String getUser(@PathVariable String id) {
-		return id;
-	}
+	@Autowired
+	private UserRepo userRepo;
 	
 }
