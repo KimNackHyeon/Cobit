@@ -1,9 +1,10 @@
 <template>
   <div>
-    <video style="width:300px; height:300px;" autoplay ref="video" id="video" class="video"></video>
+    <video style="width:600px; height:400px;" autoplay ref="video" id="video" class="video"></video>
     <!-- <button class="snap" v-on:click="capture()">SNAP</button> -->
-    <canvas ref="canvas" class="canvas" id="canvas" width="300px" height="300px"></canvas>
+    <canvas ref="canvas" class="canvas" id="canvas" width="600px" height="400px"></canvas>
     <button class="snap" v-on:click="capture">SNAP</button>
+    <!-- <img :src="imageFile.src"/> -->
   </div>
 </template>
 
@@ -15,7 +16,7 @@ export default {
         return {
             imageUrl: null,
             file : null,
-            imageFile: null,
+            imageFile: "",
         }
     },
   methods:{
@@ -53,6 +54,7 @@ export default {
       this.canvas.getContext("2d").drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
       this.imageFile = new Image();
       this.imageFile.src = this.canvas.toDataURL();
+      // console.log(this.imageFile.src);
       this.uploadImage();
     },
     dataURLtoFile(dataurl, fileName){
@@ -69,7 +71,7 @@ export default {
         return new File([u8arr], fileName, {type:mime});
     },
     uploadImage() {
-      var file = this.dataURLtoFile(this.imageFile.src,'image.jpg');
+      var file = this.dataURLtoFile(this.imageFile.src,'image.png');
       console.log(file);
 
       var formData = new FormData();
@@ -87,9 +89,46 @@ export default {
           url: `/v1/vision/face/detect`,
           data: {
           image_url: 'http://k3b102.p.ssafy.io'+response.data
+          // image_url: 'http://k3b102.p.ssafy.io/img/image.jpg'
           },
           success: function (msg) {
-          console.log(msg);
+            console.log(msg.result);
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext("2d");
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.right_eye[0][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[0][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[1][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[1][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[2][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[2][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[3][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[3][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[4][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[4][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[5][0]*canvas.width,msg.result.faces[0].facial_points.right_eye[5][1]*canvas.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.left_eye[0][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[0][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[1][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[1][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[2][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[2][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[3][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[3][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[4][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[4][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[5][0]*canvas.width,msg.result.faces[0].facial_points.left_eye[5][1]*canvas.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.left_eyebrow[0][0]*canvas.width,msg.result.faces[0].facial_points.left_eyebrow[0][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[1][0]*canvas.width,msg.result.faces[0].facial_points.left_eyebrow[1][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[2][0]*canvas.width,msg.result.faces[0].facial_points.left_eyebrow[2][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[3][0]*canvas.width,msg.result.faces[0].facial_points.left_eyebrow[3][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[4][0]*canvas.width,msg.result.faces[0].facial_points.left_eyebrow[4][1]*canvas.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.right_eyebrow[0][0]*canvas.width,msg.result.faces[0].facial_points.right_eyebrow[0][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[1][0]*canvas.width,msg.result.faces[0].facial_points.right_eyebrow[1][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[2][0]*canvas.width,msg.result.faces[0].facial_points.right_eyebrow[2][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[3][0]*canvas.width,msg.result.faces[0].facial_points.right_eyebrow[3][1]*canvas.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[4][0]*canvas.width,msg.result.faces[0].facial_points.right_eyebrow[4][1]*canvas.height);
+            ctx.fill();
           },
           fail: function(msg){
             console.log(msg);
