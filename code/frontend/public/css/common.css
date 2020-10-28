@@ -36,10 +36,12 @@
 }
 /* font style end */
 html {
+  overflow: hidden;
   font-family: "Noto Sans KR", sans-serif !important;
 }
 
 .wrap {
+  overflow: hidden;
   transition: 0.3s ease;
   margin: 0 auto;
   width: 100%;
