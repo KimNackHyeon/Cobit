@@ -4,7 +4,7 @@
     <div class="leftbox">
       <div class="box" style=" height: 47%; position: relative; cursor: pointer;">
         <div style="width: 100%; height: 100%;">
-          <img class="practiceImg" src="../image/practice.png" alt="연습하기">
+          <img class="practiceImg" src="../assets/images/practice.png" alt="연습하기">
         </div>
         <div class="practiceTitle">
           연습하기
@@ -13,7 +13,7 @@
       <div style="height: 6%"></div>
       <div class="box" style="height: 47%; position: relative; cursor: pointer;">
         <div style="width: 100%; height: 100%;">
-          <img class="practiceImg" src="../image/practice.png" alt="모험하기">
+          <img class="practiceImg" src="../assets/images/practice.png" alt="모험하기">
         </div>
         <div class="practiceTitle">
           모험하기
@@ -56,8 +56,8 @@
           <v-btn text color="white" @click="onNewName" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
         </v-card-actions>
       </v-dialog>
-      <div style="height: 53%; border-bottom: 1px solid black; position: relative">
-        <!-- <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity> -->
+      <div style="height: 45vh; position: relative">
+        <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity>
         <router-link to="/changecharacter">
           <button class="changeBtn">캐릭터 바꾸기</button>
         </router-link>
@@ -131,6 +131,7 @@
                   <div style="height: 5%"></div>
                   <!-- 보상 아이템 -->
                   <div class="attenditemBox">
+                    <!-- <img src="../assets/images/red-ribbon3.png" alt=""> -->
                     <div class="itemimg">
                     </div>
                   </div>
@@ -166,7 +167,7 @@
 </template>
 
 <script>
-// import Unity from 'vue-unity-webgl'
+import Unity from 'vue-unity-webgl'
 import "../css/mypage.scss";
 import $ from 'jquery';
 
@@ -185,9 +186,9 @@ export default {
       totalAttendDay: '',
     }
   },
-  // components: {
-  //   Unity
-  // },
+  components: {
+    Unity
+  },
   mounted() {
     // 별 총합 계산
     var totalstar = 0;
@@ -272,29 +273,39 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2vw;
+  font-size: 30px;
   font-weight: 900;
+  font-family: 'BMJUA';
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 .name {
-    height: 7%;
+    height: 7vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.5vh;
-    font-weight: 600;
+    font-size: 28px;
+    /* font-weight: 600; */
+    font-family: 'BMJUA';
     border-bottom: 1px solid black;
 }
 .changeBtn {
   position: absolute;
   top: 5%;
   right: 3%;
-  /* color: white !important; */
-  font-size: 1.7vh !important;
+  color: black !important;
+  font-size: 1.7vw;
   font-weight: 600;
-  /* background-color: rgb(52, 85, 139) !important; */
-  padding: 3vh !important;
+  font-family: BMJUA;
+  background-color: rgba(164, 212, 255, 0.5) !important;
+  padding: 2.5vh !important;
+  border-radius: 10px;
+}
+.changeBtn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px rgba(255, 255, 255, 0.5) !important;
 }
 .star {
   display: inline-block;
@@ -412,8 +423,9 @@ td {
 .itemimg {
   width: 90%;
   height: 40%;
-  background: url("../image/Hat3.png");
+  background: url("../assets/images/Hat3.png");
   background-repeat: no-repeat;
   background-size: contain;
 }
+
 </style>
