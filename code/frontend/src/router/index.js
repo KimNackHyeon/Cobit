@@ -6,6 +6,7 @@ import CodeBlock from '../views/CodeBlock.vue'
 import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
+import Test2 from '../views/Test2.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path: '/apitest',
     name: 'Apitest',
     component: Apitest
+  },
+  {
+    path: '/test2',
+    name: 'Test2',
+    component: Test2
   },
 ]
 
