@@ -27,14 +27,14 @@
         <div>
           {{name}}
         </div>
-        <v-btn icon @click="onRename"><v-icon style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <!-- 캐릭터 이름 수정 -->
       <v-app class="vapp"></v-app>
-      <v-dialog max-width="50%" min-height="30%" v-model="renamemodal">
+      <v-dialog max-width="35%" min-height="50%" v-model="renamemodal">
         <v-card flat tile>
           <v-card-title style="justify-content: center; position: relative">
-              <div style="font-size: 2vw">
+              <div style="font-size: 25px; font-family: 'BMJUA';">
                 캐릭터 이름 변경
               </div>
               <div style="position: absolute; right: 3%; top: 22%;">
@@ -44,16 +44,17 @@
           <v-divider></v-divider>
           <v-card-text style="height:220px;" class="pa-1 modaltext">
             <div style="text-align: center;">
-              <p style="font-size:1.6vw" class="my-2">새로운 캐릭터 이름을 적어주세요.</p>
-              <p style="font-size:1.6vw" class="my-2"><strong>공백</strong>이나 <strong>특수문자</strong>를 사용할 수 없습니다.</p>
+              <p style="font-size:16px; font-family: 'BMJUA';" class="my-2">새로운 캐릭터 이름을 적어주세요.</p>
+              <p style="font-size:16px; font-family: 'BMJUA';" class="my-2"><span style="color: #64B5FF">공백</span>이나 <span style="color: #64B5FF">특수문자</span>를 사용할 수 없습니다.</p>
             </div>
-            <div style="margin-top: 5%; width: 80%; height: 23%;">
+            <div style="margin-top: 5%; width: 80%; height: 23%; display: flex; justify-content: center">
               <input class="nameinput" type="text" v-model="newname" style="">
             </div>
           </v-card-text>
         </v-card>
         <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
-          <v-btn text color="white" @click="onNewName" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
+          <!-- style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;" -->
+          <v-btn text color="black" @click="onNewName" class="confirmbtn" style="width: 75%;">확인</v-btn>
         </v-card-actions>
       </v-dialog>
       <div style="height: 45vh; position: relative">
@@ -107,7 +108,7 @@
                 <div class="flip"></div>
               </div>
             </div> -->
-            <div style="display: inline-block; margin-left: 3%;">출석</div>
+            <div style="display: inline-block; margin-left: 3%; font-size: 25px">출석</div>
           </div>
           <v-dialog max-width="90vw" min-height="90vh" v-model="attendmodal">
             <v-card flat tile style="height: 80vh">
@@ -146,8 +147,8 @@
                             {{(i-1)*7 + j}}
                           </div>
                           <div style="height: 75%; display: flex; justify-content: center;">
-                            <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 7vh; color: red">mdi-check-circle-outline</v-icon>
-                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 7vh;">mdi-check-circle-outline</v-icon>
+                            <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 50px; color: red">mdi-check-circle-outline</v-icon>
+                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon>
                           </div>
                         </td>
                       </tr>
@@ -157,7 +158,7 @@
               </div>
             </v-card>
             <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
-              <v-btn text color="white" @click="attendmodal=false" style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;">확인</v-btn>
+              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 50%;">확인</v-btn>
             </v-card-actions>
           </v-dialog>
         </div>
@@ -242,9 +243,9 @@ export default {
 }
 .mypage {
   display: flex;
-  padding: 3%;
+  padding: 2%;
   height: 100vh;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'BMJUA';
   /* background: #34558b; */
 }
 .leftbox {
@@ -289,12 +290,28 @@ export default {
     font-family: 'BMJUA';
     border-bottom: 1px solid black;
 }
+.pencilicon:hover {
+  color: #a4d4ff;
+}
+.confirmbtn {
+  height: 75% !important;
+  font-size: 20px !important;
+  font-family: BMJUA;
+  background-color: #a4d4ff !important;
+  border-radius: 30px;
+}
+.confirmbtn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px rgba(255, 255, 255, 0.5) !important;
+}
 .changeBtn {
   position: absolute;
   top: 5%;
   right: 3%;
   color: black !important;
-  font-size: 1.7vw;
+  font-size: 20px;
   font-weight: 600;
   font-family: BMJUA;
   background-color: rgba(164, 212, 255, 0.5) !important;
@@ -347,8 +364,8 @@ export default {
   /* background-color:  lightsteelblue; */
   width: 30vw;
   text-align: center;
-  font-size: 2.3vh; 
-  font-weight: 600;
+  /* font-size: 2.3vh;  */
+  /* font-weight: 600; */
   cursor: pointer;
 }
 .modaltext {
@@ -359,22 +376,24 @@ export default {
 }
 .nameinput {
   border: 1px solid black;
-  border-radius: 10px;
-  width: 100%; 
-  height: 100%; 
+  border-radius: 30px;
+  width: 80%; 
+  height: 90%; 
   text-align: center;
-  font-size: 1.8vw;
+  font-family: 'BMJUA';
+  font-size: 18px;
 }
 .attendtitle {
   height: 8%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5vw;
+  font-size: 30px;
   margin: 0 5%;
   /* background: linear-gradient(to right, white 1%, #34558b 10%, #34558b 50%, #34558b 90%, white 99%);
   color: white; */
   font-weight: 600;
+  font-family: 'BMJUA';
 }
 .attendleft {
   float: left;
@@ -387,6 +406,7 @@ export default {
   text-align: center;
   height: 30%;
   font-size: 2.5vh;
+  font-family: 'BMJUA';
 }
 .attendright {
   float: left;
@@ -394,6 +414,7 @@ export default {
   margin-left: 2%;
   width: 73%;
   box-sizing: border-box;
+  font-family: 'BMJUA';
   /* border: 1px solid gray; */
 }
 .attenditemBox {
@@ -409,7 +430,7 @@ td {
 }
 .attendtext {
   padding: 3%;
-  height: 25%;
+  height: 27%;
   border-bottom: 1px solid gray;
 }
 .attendnum {

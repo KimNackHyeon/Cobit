@@ -2,9 +2,7 @@
   <div>
     <div class="changecharacter">
         <div class="header">
-          <!-- <router-link to="/mypage"> -->
-          <div class="back-btn"><i class="fas fa-chevron-left"></i>돌아가기</div>
-          <!-- </router-link> -->
+          <div class="back-btn" @click="onBack"><i class="fas fa-chevron-left"></i>돌아가기</div>
         </div>
       <div class="boxs">
         <!-- 캐릭터 꾸미기 -->
@@ -18,7 +16,7 @@
           <div class="itembox">
             <span class="itemtitle">색깔</span>
             <div class="items">
-              <div v-for="(color, i) in colors" :key="i" :style="{background: color}" class="color"></div>
+              <div v-for="(color, i) in colors" :key="i" :style="{background: color}" class="color" @click="onChangeColor(color)"></div>
             </div>
           </div>
           <div class="itembox">
@@ -41,7 +39,7 @@
         <!-- 캐릭터 보여주는 곳 -->
         <div class="rightbox">
           <div class="character">
-            <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity>
+            <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance"></unity>
           </div>
           <div class="savebox">
             <div class="save-btn">저장하기</div> 
@@ -53,7 +51,10 @@
 </template>
 
 <script>
-import Unity from 'vue-unity-webgl'
+import '../css/changecharacter.scss';
+import Unity from 'vue-unity-webgl';
+// import SendMessage from 'vue-unity-webgl';
+// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
 
 export default {
   components: {
@@ -61,12 +62,24 @@ export default {
   },
   data() {
     return {
-      colors: ["black", "red", "yellow", "green", "blue", "pupple"],
+      colors: ["black", "red", "yellow", "green", "blue", "purple"],
       eyes: [],
       mouses: [],
       items: [],
     }
-  }
+  },
+  methods: {
+    onBack() {
+      this.$router.push('/mypage')
+    },
+    onChangeColor(color) {
+      console.log(color)
+      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
+      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
+      this.$refs.myInstance.message('body', 'ChangeColor', color)
+      
+    }
+  },
 }
 </script>
 
