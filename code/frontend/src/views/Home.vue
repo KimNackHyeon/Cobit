@@ -23,6 +23,7 @@ import "../css/home.scss"
 import axios from 'axios'
 import store from '../vuex/store'
 
+
 export default {
   name: 'Home',
   methods: {
@@ -33,7 +34,7 @@ export default {
             },
             GetMe(authObj){
                 console.log(authObj);
-                // this.$cookies.set("auth-token", authObj.access_token);
+                this.$cookies.set("auth-token", authObj.access_token);
                 window.Kakao.API.request({
                     url:'/v2/user/me',
                     success : res => {
@@ -54,7 +55,7 @@ export default {
                          })
                          .then(res => {
                             console.log(res);
-                            store.commit('setKakaoUserInfo', userInfo);
+                            store.commit('setKakaoUserInfo', res.data);
                             this.$router.push("/mypage");
                          })
                          
