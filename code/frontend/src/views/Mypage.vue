@@ -171,6 +171,7 @@
 import Unity from 'vue-unity-webgl'
 import "../css/mypage.scss";
 import $ from 'jquery';
+import store from '../vuex/store'
 
 export default {
   data() {
@@ -185,6 +186,7 @@ export default {
       attendDay: [1, 3, 4],
       noattendDay: [],
       totalAttendDay: '',
+      startCount:'',
     }
   },
   components: {
@@ -206,6 +208,7 @@ export default {
     $(".onestar").css("width", `${this.starpercent[0]}%`)
     $(".twostar").css("width", `${this.starpercent[1]}%`)
     $(".threestar").css("width", `${this.starpercent[2]}%`)
+
     // 총 출석일 계산
     this.totalAttendDay = this.attendDay.length;
     // 출석체크 도장
@@ -216,6 +219,7 @@ export default {
         this.noattendDay.push(k)
       }
     }
+
   },
   methods: {
     onRename(){
@@ -232,6 +236,12 @@ export default {
     onAttend() {
       this.attendmodal = !this.attendmodal
     }
+  },
+  created(){
+    // 로그인된 정보 입력
+    console.log(store.state.kakaoUserInfo);
+    this.name = store.state.kakaoUserInfo.nickname;
+    this.startCount = store.state.kakaoUserInfo.star;
   }
 
 }

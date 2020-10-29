@@ -33,7 +33,10 @@
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
-              내 얼굴로 캐릭터 만들기
+              <router-link to="/apitest">
+               <button> 내 얼굴로 캐릭터 만들기</button>
+              </router-link>
+              
           </div>
         </div>
         <!-- 캐릭터 보여주는 곳 -->
