@@ -1,4 +1,7 @@
 .mypage {
+  background-image: url('../assets/images/mypage_bg.png');
+  background-size: cover;
+  background-position: center;
   .v-application--wrap {
     min-height: unset !important;
   }
