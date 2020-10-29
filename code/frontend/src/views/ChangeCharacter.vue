@@ -74,8 +74,6 @@ export default {
     },
     onChangeColor(color) {
       console.log(color)
-      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
-      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
       this.$refs.myInstance.message('body', 'ChangeColor', color)
       
     }
@@ -168,10 +166,11 @@ export default {
   padding: 0 20px;
 }
 .color {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  margin-right: 2vw;
+  margin-right: auto;
+  cursor: pointer;
 }
 /* .color:hover {
   box-shadow: 0 0 15px black;

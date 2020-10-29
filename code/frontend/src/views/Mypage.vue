@@ -27,7 +27,7 @@
         <div>
           {{name}}
         </div>
-        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: white; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <!-- 캐릭터 이름 수정 -->
       <v-app class="vapp"></v-app>
@@ -88,7 +88,7 @@
         <!-- 칭호 -->
         <div style="height: 28%; display: flex; align-items: center;">
           <div style="display: inline-block; width: 10%; text-align: center;">
-            <v-icon style="font-size: 4.5vh;">mdi-account</v-icon>
+            <v-icon style="font-size: 4.5vh; color: white">mdi-account</v-icon>
           </div>
           <div class="nicknameBox">
             <div class="nickname">
@@ -100,7 +100,7 @@
         <!-- 출석 -->
         <div style="height: 40%; display: flex; align-items: center; justify-content: center;">
           <div class="attendBox" @click="onAttend">
-            <v-icon style="font-size: 5vh; color: black;">mdi-calendar-multiple-check</v-icon>
+            <v-icon style="font-size: 5vh; color: white;">mdi-calendar-multiple-check</v-icon>
             <!-- <div class="icon">
               <div class="calendar">
                 25
@@ -108,10 +108,10 @@
                 <div class="flip"></div>
               </div>
             </div> -->
-            <div style="display: inline-block; margin-left: 3%; font-size: 25px">출석</div>
+            <div style="display: inline-block; margin-left: 3%; font-size: 25px; color: white">출석</div>
           </div>
           <v-dialog max-width="90vw" min-height="90vh" v-model="attendmodal">
-            <v-card flat tile style="height: 80vh">
+            <v-card flat tile style="height: 80vh;">
               <div style="height: 3%"></div>
               <!-- 제목 -->
               <div class="attendtitle">
@@ -281,14 +281,15 @@ export default {
   border-bottom-right-radius: 10px;
 }
 .name {
-    height: 7vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 28px;
-    /* font-weight: 600; */
-    font-family: 'BMJUA';
-    border-bottom: 1px solid black;
+  color: white;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  /* font-weight: 600; */
+  font-family: 'BMJUA';
+  border-bottom: 1px solid black;
 }
 .pencilicon:hover {
   color: #a4d4ff;
@@ -354,9 +355,10 @@ export default {
 }
 .nickname {
   padding: 1vh;
-  border: 1px solid gray;
+  border: 1px solid white;
   border-radius: 15px;
   font-weight: 600;
+  color: white;
 }
 .attendBox {
   padding: 1vh 6vh;
