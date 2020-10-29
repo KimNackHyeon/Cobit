@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="apitest">
     <button class="snap" v-on:click="capture">CAPTURE</button><br>
     <button class="snap" v-on:click="findface">FIND</button>
     <video style="width:600px; height:400px;" autoplay ref="video" id="video" class="video"></video>
@@ -72,7 +72,9 @@ export default {
         return new File([u8arr], fileName, {type:mime});
     },
     uploadImage() {
-      var file = this.dataURLtoFile(this.imageFile.src,'image.png');
+      var date = new Date();
+      var fileName = date.getMonth()+1 +"" + date.getDate()+"" +date.getHours() +""+date.getMinutes() + ""+date.getSeconds()+".png";
+      var file = this.dataURLtoFile(this.imageFile.src,fileName);
       console.log(file);
 
       var formData = new FormData();
@@ -92,9 +94,9 @@ export default {
       window.Kakao.API.request({
           url: `/v1/vision/face/detect`,
           data: {
-          // image_url: 'http://k3b102.p.ssafy.io'+img
+          image_url: 'http://k3b102.p.ssafy.io'+img
           // image_url: 'http://k3b102.p.ssafy.io/img/1/profile/image.png'
-          image_url: 'http://k3b102.p.ssafy.io/img/1/profile/image3.png'
+          // image_url: 'http://k3b102.p.ssafy.io/img/1/profile/image3.png'
           },
           success: function (msg) {
             console.log(msg.result);
@@ -150,5 +152,4 @@ export default {
 </script>
 
 <style>
-
 </style>
