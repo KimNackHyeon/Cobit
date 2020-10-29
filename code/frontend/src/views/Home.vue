@@ -55,7 +55,7 @@ export default {
                          .then(res => {
                             console.log(res);
                             store.commit('setKakaoUserInfo', userInfo);
-                            // this.$router.push("/mypage");
+                            this.$router.push("/mypage");
                          })
                          
                     },

@@ -46,22 +46,22 @@ public class UserController {
 
 	@ApiOperation(value = "회원정보 가져오기")
 	@GetMapping("")
-	public User getUser(@RequestParam Long id) {
-		Optional<User> userOpt = userRepo.findById(id);
+	public User getUser(@RequestParam String email) {
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
 		return userOpt.get();
 	}
 
 	@ApiOperation(value = "회원가입")
 	@PostMapping("")
-	public ResponseEntity<Boolean> signUp(@RequestBody User user) {
+	public User signUp(@RequestBody User user) {
 		
 		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
 		if(userOpt.isPresent()) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return userOpt.get();
 		}else {
 			user.setStar(0L);
 			userRepo.save(user);
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return user;
 		}
 	}
 
