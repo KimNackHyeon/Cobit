@@ -2,14 +2,14 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
-        <unity class="unity" src="map/Build/map.json" unityLoader="map/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="map/Build/map.json" unityLoader="map/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
-        <div class="block-box">
           <div class="block-menu-bar">
             <div class="menu move-menu" @click="onMove">이동</div>
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
           </div>
+        <div class="block-box">
           <div v-show="isMove" class="block-list">
             <div v-for="(item, index) in items.block0" :key="`a+${index}`" class="block block0" draggable="true" @dragstart="dragstart">앞으로가기</div>
             <div v-for="(item, index) in items.block1" :key="`b+${index}`" class="block block1" draggable="true" @dragstart="dragstart">오른쪽으로가기</div>
@@ -23,7 +23,7 @@
             <div class="block">장애물추가</div>
           </div>
         </div>
-        <div class="play-box">
+        <div id="play-box" class="play-box">
         </div>
       </div>
     </div>
@@ -95,12 +95,19 @@ export default {
       event.preventDefault();
     },
     drop(event) {
+      const target = document.getElementById('play-box');
+      const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
+      // const relativeTop = clientRect.top; // Viewport의 시작지점을 기준으로한 상대좌표 Y 값.
+      const relativeLeft = clientRect.left;
+      const relativeRight = clientRect.right;
+      // const relativeBottom = clientRect.bottom;
+      // console.log(relativeTop+" "+relativeLeft+" "+relativeRight+" "+relativeBottom);
       event.stopPropagation();
       event.preventDefault();
       let posX = event.pageX;
       let posY = event.pageY;
-      if (posX >= 1170 && posX <= 1450) {
-        if (posY >= 113 && posY <= 520) {
+      if (posX >= relativeLeft && posX <= relativeRight) {
+        // if (posY >= relativeBottom && posY <= relativeTop) {
           document.querySelector(`.${this.targetClass}`).style.position = 'absolute';
           document.querySelector(`.${this.targetClass}`).style.top = 0;
           document.querySelector(`.${this.targetClass}`).style.left = 0;
@@ -118,7 +125,7 @@ export default {
             const NAME = this.targetClass2
             this.items[NAME] += 1
           }
-        }
+        // }
       }
       console.log(posX, posY, this.distX, this.distY)
       // $('#mydiv').css('margin-left', posX + this.distX + 'px')
@@ -132,58 +139,66 @@ export default {
 </script>
 
 <style scoped>
+.wrap{
+  padding:0px;
+  width:100%;
+  height:100%;
+}
 .code-block-container {
   display: flex;
-  margin-top: 100px;
+  /* margin-top: 100px; */
   width: 100%;
+  height:100%;
 }
 
 .code-block-container .unity-box {
-  width: 59%;
-  margin-right: 1%;
-  height: 450px;
+  width: 60%;
+  /* margin-right: 1%; */
+  height: 100%;
   /* background-color: grey; */
 }
 
 .code-block-container .code-box {
   width: 40%;
-  height: 450px;
+  height: 100%;
   /* background-color: bisque; */
   display: flex;
   position: relative;
 }
 
 .code-box .block-box {
-  width: 40%;
+  width: 30%;
   /* background-color: blue; */
   display: flex;
+  height:100%
 }
 
 .code-box .play-box {
-  width: 60%;
+  width: 70%;
+  height:100%;
   /* background-color: brown; */
   border: 1px solid #a4d4ff;
   /* position: relative; */
 }
 
-.block-box .block-menu-bar {
-  width: 30%;
+.block-menu-bar {
+  margin-left:-100px;
+  width: 100px;
 }
 
 .block-box .block-list {
-  width: 70%;
+  width: 100%;
   padding: 10px;
   /* background-color: #0F4C81; */
   border: 1px solid #a4d4ff;
-  margin: 0 2px;
 }
 
-.block-box .block-menu-bar .on-menu-bar {
+.block-menu-bar .on-menu-bar {
   background-color: #a4d4ff;
   font-weight: 700;
 }
 
-.block-box .block-menu-bar .menu {
+.block-menu-bar .menu {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -223,5 +238,4 @@ export default {
   width: 100%;
   height: 100%;
 }
-
 </style>
