@@ -18,6 +18,7 @@
           </div>
         </div>
         <div class="play-box">
+          <span v-for="(command,index) in commandList" :key="`com+${index}`">{{ command }}</span><span class="play-start" @click="goMove">출발</span>
         </div>
       </div>
     </div>
@@ -33,6 +34,7 @@ export default {
     return {
       isMove: true,
       isObstacle: false,
+      commandList: [],
     }
   },
   components: {
@@ -64,16 +66,23 @@ export default {
       OBSTACLE.classList.add('on-menu-bar');
     },
     goUp() {
-      this.$refs.myInstance.message('JavascriptHook', 'UpMove')
+      this.commandList.push('↑')
+      this.$refs.myInstance.message('JavascriptHook', 'Up')
     },
     goDown() {
-      this.$refs.myInstance.message('JavascriptHook', 'DownMove')
+      this.commandList.push('↓')
+      this.$refs.myInstance.message('JavascriptHook', 'Down')
     },
     goRight() {
-      this.$refs.myInstance.message('JavascriptHook', 'RightMove')
+      this.commandList.push('→')
+      this.$refs.myInstance.message('JavascriptHook', 'Right')
     },
     goLeft() {
-      this.$refs.myInstance.message('JavascriptHook', 'LeftMove')
+      this.commandList.push('←')
+      this.$refs.myInstance.message('JavascriptHook', 'Left')
+    },
+    goMove() {
+      this.$refs.myInstance.message('JavascriptHook', 'Go')
     }
   },
   beforeDestroy () {
@@ -168,6 +177,19 @@ export default {
   width: 100px;
   height: 50px;
   background-color: bisque;
+}
+.play-box > span {
+  margin-right: 10px;
+}
+.play-box .play-start {
+  width: 100px;
+  height: 30px;
+  padding: 5px 10px;
+  margin: 10px;
+  border-radius: 20px;
+  background-color: cornflowerblue;
+  color: #fff;
+  cursor: pointer;
 }
 
 .test-container .unity-box .unity {
