@@ -20,13 +20,13 @@
             </div>
           </div>
           <div class="itembox">
-            <span class="itemtitle">눈</span>
+            <span class="itemtitle">눈썹</span>
             <div>
               <!-- <img src="" alt=""> -->
             </div>
           </div>
           <div class="itembox">
-            <span class="itemtitle">입</span>
+            <span class="itemtitle">눈</span>
           </div>
           <div class="itembox">
             <span class="itemtitle">아이템</span>

@@ -54,7 +54,7 @@
         </v-card>
         <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
           <!-- style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;" -->
-          <v-btn text color="black" @click="onNewName" class="confirmbtn" style="width: 75%;">확인</v-btn>
+          <v-btn text color="black" @click="onNewName" class="confirmbtn" style="width: 75%; font-size: 20px">확인</v-btn>
         </v-card-actions>
       </v-dialog>
       <div style="height: 45vh; position: relative">
@@ -70,7 +70,15 @@
             <v-icon style="color: yellow; font-size: 3vw;">mdi-star</v-icon>
           </div> -->
           <div style="width: 100%">
-            <div class="star onestar">
+            <div style="float: left; width: 10%; text-align: center;">
+              <v-icon style="font-size: 35px; color: yellow;">mdi-star</v-icon>
+            </div>
+            <div class="starbar">
+              <div class="mystar"></div>
+              <div class="startotal"></div>
+              <div class="starnum"><span>{{star}} / 90</span></div>
+            </div>
+            <!-- <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[0]}}%
             </div>
@@ -81,7 +89,7 @@
             <div class="star threestar">
               <v-icon v-for="i in 3" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[2]}}%
-            </div>
+            </div> -->
           </div>
         </div>
         <div style="height: 4%"></div>
@@ -158,7 +166,7 @@
               </div>
             </v-card>
             <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
-              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 50%;">확인</v-btn>
+              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px">확인</v-btn>
             </v-card-actions>
           </v-dialog>
         </div>
@@ -175,14 +183,15 @@ import $ from 'jquery';
 export default {
   data() {
     return {
-      star: [1, 3, 6],
+      // star: [1, 3, 6],
+      star: 10,
       starpercent: [],
       name: "코쿠멍",
       newname: "",
       renamemodal: false,
       nickname: "코딩 어린이",
       attendmodal: false,
-      attendDay: [1, 3, 4],
+      attendDay: [1],
       noattendDay: [],
       totalAttendDay: '',
     }
@@ -192,20 +201,24 @@ export default {
   },
   mounted() {
     // 별 총합 계산
-    var totalstar = 0;
-    for(var i=0; i<this.star.length; i++){
-      totalstar += this.star[i]
-    }
+    // var totalstar = 0;
+    // for(var i=0; i<this.star.length; i++){
+    //   totalstar += this.star[i]
+    // }
     // 별 비율 계산
-    for(var j=0; j<this.star.length; j++){
-      var star = this.star[j]
-      var number = star / totalstar
-      this.starpercent.push(number.toFixed(2)*100)
-    }
+    // for(var j=0; j<this.star.length; j++){
+    //   var star = this.star[j]
+    //   var number = star / totalstar
+    //   this.starpercent.push(number.toFixed(2)*100)
+    // }
     // 별의 갯수에 따라 width 설정
-    $(".onestar").css("width", `${this.starpercent[0]}%`)
-    $(".twostar").css("width", `${this.starpercent[1]}%`)
-    $(".threestar").css("width", `${this.starpercent[2]}%`)
+    // $(".onestar").css("width", `${this.starpercent[0]}%`)
+    // $(".twostar").css("width", `${this.starpercent[1]}%`)
+    // $(".threestar").css("width", `${this.starpercent[2]}%`)
+    // 모은 별 갯수에 따른 % 계산
+    const starratio = (this.star / 90)*100;
+    $('.mystar').css("width", `${starratio}%`)
+    $('.startotal').css("width", `${100-starratio}%`)
     // 총 출석일 계산
     this.totalAttendDay = this.attendDay.length;
     // 출석체크 도장
@@ -296,7 +309,7 @@ export default {
 }
 .confirmbtn {
   height: 75% !important;
-  font-size: 20px !important;
+  /* font-size: 20px !important; */
   font-family: BMJUA;
   background-color: #a4d4ff !important;
   border-radius: 30px;
@@ -324,6 +337,39 @@ export default {
               0 0 0 0 rgba(0,0,0,0),
               inset 4px 4px 6px -1px rgba(0,0,0,0.2),
               inset -3px -3px 4px -1px rgba(255, 255, 255, 0.5) !important;
+}
+.starbar {
+  display: inline-block;
+  width: 88%;
+  /* background: white; */
+  border-radius: 15px;
+  /* text-align: center; */
+  font-size: 25px;
+  font-weight: 600;
+  /* margin: 1%; */
+  /* padding: 1%; */
+  color: black;
+  position: relative;
+}
+.mystar {
+  height: 5vh;
+  display: inline-block;
+  background: #a4d4ff;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+.startotal {
+  height: 5vh;
+  display: inline-block;
+  background-color: white;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.starnum {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  left: 45%;
 }
 .star {
   display: inline-block;
