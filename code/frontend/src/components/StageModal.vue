@@ -4,7 +4,7 @@
       <div class="stage-modal-wrap">
         <div class="stage-modal-content">
           <div class='stage-modal-header'>
-            <img src="@/assets/images/blue-ribbon.png" alt="img">
+            <img src="@/assets/images/stage1.png" alt="img">
             <div class="stage-modal-name">Stage {{ StageNum }}</div>
           </div>
           <div class='stage-modal-body'>
