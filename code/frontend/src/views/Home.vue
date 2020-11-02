@@ -35,7 +35,8 @@ export default {
             },
             GetMe(authObj){
                 console.log(authObj.access_token);
-                this.$cookies.set('auth-token', authObj.access_token);
+                this.$cookies.set('access_token', authObj.access_token);
+                this.$cookies.set('refresh_token', authObj.refresh_token);
                 // VueCookies.set('auth-token', authObj.access_token);
                 window.Kakao.API.request({
                     url:'/v2/user/me',

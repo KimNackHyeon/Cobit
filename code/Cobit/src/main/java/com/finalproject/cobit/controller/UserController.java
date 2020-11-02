@@ -112,5 +112,12 @@ public class UserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	
+	@ApiOperation(value = "출석현황 가져오기")
+	@GetMapping("/attend")
+	public User getAttend(@RequestParam String email) {
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
+		return userOpt.get();
+	}
 
 }
