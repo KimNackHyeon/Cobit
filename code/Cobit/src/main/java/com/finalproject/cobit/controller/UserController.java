@@ -2,6 +2,7 @@ package com.finalproject.cobit.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.finalproject.cobit.model.Attend;
 import com.finalproject.cobit.model.User;
+import com.finalproject.cobit.repo.AttendRepo;
 import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
@@ -43,6 +46,9 @@ public class UserController {
 
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	AttendRepo attendRepo;
 
 	@ApiOperation(value = "회원정보 가져오기")
 	@GetMapping("")
@@ -68,7 +74,9 @@ public class UserController {
 	@ApiOperation(value = "회원정보 수정")
 	@PutMapping("")
 	public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
-		userRepo.save(user);
+		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
+		userOpt.get().setNickname(user.getNickname());
+		userRepo.save(userOpt.get());
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
@@ -109,6 +117,19 @@ public class UserController {
 		String result = "/img/" + user.getId() + "/profile/" + filename;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
+	
+	@ApiOperation(value = "출석현황 가져오기")
+	@GetMapping("/attend")
+	public List<Attend> getAttend(@RequestParam String email, @RequestParam Long month ) {
+		List<Attend> list = attendRepo.getUserByEmailAndMonth(email, month);
+		return list;
+	}
+	
+	@ApiOperation(value = "출석체크")
+	@PostMapping("/attend")
+	public ResponseEntity<Boolean> saveAttend(@RequestBody Attend attend ) {
+		attendRepo.save(attend);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 
 }
