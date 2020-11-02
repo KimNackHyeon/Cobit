@@ -48,7 +48,7 @@
               <p style="font-size:16px; font-family: 'BMJUA';" class="my-2"><span style="color: #64B5FF">공백</span>이나 <span style="color: #64B5FF">특수문자</span>를 사용할 수 없습니다.</p>
             </div>
             <div style="margin-top: 5%; width: 80%; height: 23%; display: flex; justify-content: center">
-              <input class="nameinput" type="text" v-model="newname" style="">
+              <input class="nameinput" type="text" v-model="newname">
             </div>
           </v-card-text>
         </v-card>
@@ -172,6 +172,7 @@ import Unity from 'vue-unity-webgl'
 import "../css/mypage.scss";
 import $ from 'jquery';
 import store from '../vuex/store'
+import axios from 'axios'
 
 export default {
   data() {
@@ -231,6 +232,14 @@ export default {
         this.newname = ''
         this.renamemodal = false
       }
+
+      axios.put(`http://localhost:9999/cobit/user`,{
+        email : store.state.kakaoUserInfo.email,
+        nickname : this.name
+      }).then(res => {
+        console.log(res);
+        store.state.kakaoUserInfo.nickname = this.name;
+      });
       
     },
     onAttend() {

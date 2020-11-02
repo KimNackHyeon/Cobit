@@ -68,7 +68,9 @@ public class UserController {
 	@ApiOperation(value = "회원정보 수정")
 	@PutMapping("")
 	public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
-		userRepo.save(user);
+		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
+		userOpt.get().setNickname(user.getNickname());
+		userRepo.save(userOpt.get());
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
