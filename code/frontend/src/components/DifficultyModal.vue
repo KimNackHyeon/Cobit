@@ -4,7 +4,7 @@
       <i class="fas fa-times" @click.self="$emit('close')"></i>
       <div class="diff-modal-wrap">
         <div class="diff-modal-content diff-modal-on-stage">
-          <img src="@/assets/images/diff1.jpg" alt="초급">
+          <img src="@/assets/images/stage1.png" alt="초급">
           <div class="diff-modal-name">초 급</div>
         </div>
         <div v-if="false" class="diff-modal-content diff-modal-on-stage">
