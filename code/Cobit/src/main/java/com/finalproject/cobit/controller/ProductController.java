@@ -3,15 +3,20 @@ package com.finalproject.cobit.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finalproject.cobit.model.Product;
-import com.finalproject.cobit.model.Stage;
+import com.finalproject.cobit.model.Purchase;
 import com.finalproject.cobit.repo.ProductRepo;
+import com.finalproject.cobit.repo.PurchaseRepo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,12 +40,22 @@ public class ProductController {
 
 	@Autowired
 	ProductRepo productRepo;
+	
+	@Autowired
+	PurchaseRepo purchaseRepo;
 
 	@ApiOperation(value = "상품 정보 가져오기")
 	@GetMapping("")
-	public Product getStage(@RequestParam Long id) {
+	public Product getProduct(@RequestParam Long id) {
 		Optional<Product> productOpt = productRepo.findById(id);
 		return productOpt.get();
+	}
+	
+	@ApiOperation(value = "상품 정보 구매하기")
+	@PostMapping("")
+	public ResponseEntity<Boolean> saveProduct(@RequestBody Purchase p) {
+		purchaseRepo.save(p);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
 }
