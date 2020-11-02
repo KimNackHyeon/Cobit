@@ -111,7 +111,6 @@ public class UserController {
 		String result = "/img/" + user.getId() + "/profile/" + filename;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
 	
 	@ApiOperation(value = "출석현황 가져오기")
 	@GetMapping("/attend")
