@@ -15,6 +15,7 @@
             <div class="block block1" @click="goRight">오른쪽으로</div>
             <div class="block block2" @click="goLeft">왼쪽으로</div>
             <div class="block block3" @click="goDown">아래쪽으로</div>
+            <div class="block block3" @click="goJump">점프</div>
           </div>
         </div>
         <div class="play-box">
@@ -80,6 +81,10 @@ export default {
     goLeft() {
       this.commandList.push('←')
       this.$refs.myInstance.message('JavascriptHook', 'Left')
+    },
+    goJump() {
+      this.commandList.push('점프')
+      this.$refs.myInstance.message('JavascriptHook', 'Jump')
     },
     goMove() {
       this.$refs.myInstance.message('JavascriptHook', 'Go')
