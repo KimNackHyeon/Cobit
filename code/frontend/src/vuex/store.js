@@ -17,7 +17,7 @@ export default new Vuex.Store({
     kakaoUserInfo:{
       email:null,
       nickname:null,
-      start:null,
+      star:null,
       // profile_image_url:null
     }
   },

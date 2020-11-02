@@ -22,7 +22,7 @@
 import "../css/home.scss"
 import axios from 'axios'
 import store from '../vuex/store'
-import VueCookies from 'vue-cookies'
+// import VueCookies from 'vue-cookies'
 
 
 export default {
@@ -35,8 +35,8 @@ export default {
             },
             GetMe(authObj){
                 console.log(authObj.access_token);
-                // this.$cookies.set('auth-token', authObj.access_token);
-                VueCookies.set('auth-token', authObj.access_token);
+                this.$cookies.set('auth-token', authObj.access_token);
+                // VueCookies.set('auth-token', authObj.access_token);
                 window.Kakao.API.request({
                     url:'/v2/user/me',
                     success : res => {
@@ -48,16 +48,16 @@ export default {
                         }
                         console.log(userInfo);
                         // console.log(kakao_account);
-                         axios.post(`http://k3b102.p.ssafy.io:9999/cobit/user`,{
-                             email : userInfo.email,
-                             nickname : userInfo.nickname,
-                             pw : authObj.access_token,
-                         })
-                         .then(res => {
-                            console.log(res);
-                            store.commit('setKakaoUserInfo', res.data);
-                            this.$router.push("/mypage");
-                         })
+                        axios.post(`http://localhost:9999/cobit/user`,{
+                            email : userInfo.email,
+                            nickname : userInfo.nickname,
+                            pw : authObj.access_token,
+                        })
+                        .then(res => {
+                          console.log(res);
+                          store.commit('setKakaoUserInfo', res.data);
+                          // this.$router.push("/mypage");
+                        })
                          
                     },
                 })
