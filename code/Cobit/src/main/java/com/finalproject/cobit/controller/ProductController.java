@@ -1,5 +1,7 @@
 package com.finalproject.cobit.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,22 @@ public class ProductController {
 	public ResponseEntity<Boolean> saveProduct(@RequestBody Purchase p) {
 		purchaseRepo.save(p);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "내 아이템 정보 가져오기")
+	@GetMapping("/user")
+	public List<Product> getPurchase(@RequestParam Long id) {
+		
+		// 회원 구매 목록 가져오기
+		List<Purchase> purList = purchaseRepo.getPurchaseByUserId(id);
+		
+		List<Product> proList = new ArrayList<Product>();
+		for (Purchase p : purList) {
+			Optional<Product> proOpt = productRepo.findById(p.getProductId());
+			proList.add(proOpt.get());
+		}
+		
+		return proList;
 	}
 
 }
