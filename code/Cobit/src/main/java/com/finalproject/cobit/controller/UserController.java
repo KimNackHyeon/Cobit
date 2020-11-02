@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiResponses;
 		@ApiResponse(code = 403, message = "금지되거나 / 유효하지 않은 API Key를 입력하거나 / 잘못된 기호의 종목을 입력하거나 / 비활성화 된 API Key를 가지고 있다면 403 코드가 나타납니다."),
 		@ApiResponse(code = 404, message = "US Stock Symbol이 잘못되거나 / 알 수 없는 기호가 입력되었을 때 404 코드가 나타납니다."),
 		@ApiResponse(code = 500, message = "이 코드가 나올 시 저에게 문의주세요. 메일 : \"rjsgh1232@naver.com\"") })
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("*")
 @Api(value = "User API")
 @RestController
 @RequestMapping("/user")
