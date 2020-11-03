@@ -7,6 +7,7 @@ import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
 import Test3 from '../views/Test3.vue'
+import Speech from '../views/SpeechDetectionStarted.vue'
 
 Vue.use(VueRouter)
 

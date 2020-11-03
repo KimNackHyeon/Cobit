@@ -15,6 +15,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state:{
     kakaoUserInfo:{
+      id:null,
       email:null,
       nickname:null,
       star:null,

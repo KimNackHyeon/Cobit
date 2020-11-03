@@ -29,6 +29,9 @@ public class Product {
 
 	@Column
 	private String content;
+	
+	@Column
+	private Long type;
 
 
 }
