@@ -83,7 +83,9 @@ export default {
       console.log(color)
       // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
       // SendMessage('pen_before_jump/body', 'ChangeColor', color);
+
       this.$refs.myInstance.message('body', 'ChangeColor', color);
+
       this.myItems.color = color;
     },
     loadMyCharacter(){
@@ -92,7 +94,7 @@ export default {
       axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         this.myItems = res.data;
-        console.log(this.myItems);
+        // console.log(this.myItems);
         this.onChangeColor(this.myItems.color);
       })
     },
@@ -111,7 +113,7 @@ export default {
               const kakao_account = res.kakao_account;
               axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
-                console.log(res);
+                // console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
               })
           },
@@ -133,10 +135,9 @@ export default {
   },
   mounted(){
     setTimeout(() => {
-      console.log(this.items);
+      // console.log(this.items);
       this.loadMyCharacter();
     }, 2000);
-    
   }
 }
 </script>
