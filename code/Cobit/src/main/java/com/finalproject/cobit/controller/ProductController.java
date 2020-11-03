@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finalproject.cobit.model.Product;
 import com.finalproject.cobit.model.Purchase;
+import com.finalproject.cobit.model.User;
 import com.finalproject.cobit.repo.ProductRepo;
 import com.finalproject.cobit.repo.PurchaseRepo;
+import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,6 +47,9 @@ public class ProductController {
 	
 	@Autowired
 	PurchaseRepo purchaseRepo;
+	
+	@Autowired
+	UserRepo userRepo;
 
 	@ApiOperation(value = "상품 정보 가져오기")
 	@GetMapping("")
@@ -62,10 +67,12 @@ public class ProductController {
 	
 	@ApiOperation(value = "내 아이템 정보 가져오기")
 	@GetMapping("/user")
-	public List<Product> getPurchase(@RequestParam Long id) {
+	public List<Product> getPurchase(@RequestParam String email) {
+		
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
 		
 		// 회원 구매 목록 가져오기
-		List<Purchase> purList = purchaseRepo.getPurchaseByUserId(id);
+		List<Purchase> purList = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
 		
 		List<Product> proList = new ArrayList<Product>();
 		for (Purchase p : purList) {

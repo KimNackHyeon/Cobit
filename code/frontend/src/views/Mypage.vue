@@ -267,6 +267,7 @@ export default {
         }
       }).then(res=>{
         console.log(res);
+        this.attendDay = [];
         res.data.forEach(d => {
           this.attendDay.push(d.day);
         });
@@ -295,7 +296,9 @@ export default {
               })
           },
       })
-    }    
+    }else{
+      this.$router.push('/');
+    }
   }
 
 }

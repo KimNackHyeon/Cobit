@@ -45,7 +45,7 @@
             <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance"></unity>
           </div>
           <div class="savebox">
-            <div class="save-btn">저장하기</div> 
+            <div class="save-btn" @click="saveItem">저장하기</div> 
           </div>
         </div>
       </div>
@@ -58,6 +58,8 @@ import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
 // import SendMessage from 'vue-unity-webgl';
 // import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
+import axios from 'axios';
+// import store from '../vuex/store'
 
 export default {
   components: {
@@ -80,9 +82,43 @@ export default {
       // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
       // SendMessage('pen_before_jump/body', 'ChangeColor', color);
       this.$refs.myInstance.message('body', 'ChangeColor', color)
-      
+    },
+    loadMyCharacter(){
+      // 캐릭터 정보 불러오기
+      console.log("캐릭터 정보 불러오기");
+      this.items.forEach(item => {
+        if(item.type == 1){
+          this.onChangeColor(item.name);
+        }
+      });
     }
   },
+  created(){
+    if(this.$cookies.isKey("access_token")){
+      window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              const kakao_account = res.kakao_account;
+              axios.get(`http://localhost:9999/cobit/product/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.items = res.data;
+                console.log(this.items);
+                this.$store.commit('setKakaoUserInfo', res.data);
+                
+              })
+          },
+      })
+    } else{
+      this.$router.push('/');
+    }
+  },
+  mounted(){
+    setTimeout(() => {
+      console.log(this.items);
+      this.loadMyCharacter();
+    }, 2000);
+    
+  }
 }
 </script>
 
