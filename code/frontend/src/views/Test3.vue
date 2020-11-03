@@ -26,11 +26,15 @@
         </div>
       </div>
     </div>
+
+    <ClearModal v-if="isClear" @close="isClear= false"/>
   </div>
 </template>
 
 <script>
 import Unity from 'vue-unity-webgl'
+import ClearModal from '../components/ClearModal.vue';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'Test3',
@@ -39,11 +43,14 @@ export default {
       isMove: true,
       isObstacle: false,
       commandList: [],
-      test: [3],
+      isClear: false,
+      isFail: false,
+      stageNum: 1,
     }
   },
   components: {
-    Unity
+    Unity,
+    ClearModal,
   },
   computed: {
   },
@@ -57,6 +64,7 @@ export default {
   watch: {
   },
   methods: {
+    ...mapMutations(['setInStageNum', 'setInStageStar']),
     onMove() {
       this.isMove = true; this.isObstacle = false
       const MOVE = document.querySelector('.move-menu');
@@ -107,10 +115,15 @@ export default {
       this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
     },
     handleClear() {
-      console.log(event)
+      this.onModal();
     },
     handleFail() {
       console.log(event)
+    },
+    onModal() {
+      this.isClear = true;
+      this.setInStageNum(this.stageNum);
+      this.setInStageStar(3);
     },
   },
   beforeDestroy () {
