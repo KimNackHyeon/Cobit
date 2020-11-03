@@ -22,6 +22,11 @@ const routes = [
     component: Mypage
   },
   {
+    path: '/speech',
+    name: 'Speech',
+    component: Speech
+  },
+  {
     path: '/codeblock',
     name: 'CodeBlock',
     component: CodeBlock
