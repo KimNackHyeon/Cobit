@@ -41,6 +41,8 @@
 import StageModal from '../components/StageModal.vue';
 import DifficultyModal from '../components/DifficultyModal.vue';
 import { mapMutations } from 'vuex';
+import axios from 'axios';
+import store from '../vuex/store';
 
 export default {
   name: 'GameMap',
@@ -125,6 +127,20 @@ export default {
   },
   created() {
     // window.addEventListener('scroll', this.handleScroll)
+    if(this.$cookies.isKey("access_token")){
+      window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              const kakao_account = res.kakao_account;
+              axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.loadMyStage();
+              })
+          },
+      })
+    }
+
   },
   mounted() {
     this.getStarRatio();
@@ -150,6 +166,12 @@ export default {
     },
     onModal2() {
       this.showModal2 = true;
+    },
+    loadMyStage(){
+      axios.get(`http://localhost:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
+      .then(res => {
+        console.log(res);
+      })
     }
   },
   beforeDestroy () {

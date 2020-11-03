@@ -1,22 +1,18 @@
 package com.finalproject.cobit.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finalproject.cobit.model.Stage;
-import com.finalproject.cobit.model.User;
+import com.finalproject.cobit.model.StageProgress;
+import com.finalproject.cobit.repo.StageProgressRepo;
 import com.finalproject.cobit.repo.StageRepo;
 
 import io.swagger.annotations.Api;
@@ -41,12 +37,22 @@ public class StageController {
 
 	@Autowired
 	StageRepo stageRepo;
+	
+	@Autowired
+	StageProgressRepo spRepo;
 
 	@ApiOperation(value = "스테이지 정보 가져오기")
 	@GetMapping("")
 	public Stage getStage(@RequestParam Long id) {
 		Optional<Stage> stageOpt = stageRepo.findById(id);
 		return stageOpt.get();
+	}
+	
+	@ApiOperation(value = "나의 스테이지 정보 가져오기")
+	@GetMapping("/user")
+	public List<StageProgress> getMyStage(@RequestParam Long id) {
+		List<StageProgress> list = spRepo.getStageProgressByUserId(id);
+		return list;
 	}
 
 }
