@@ -2,6 +2,7 @@ package com.finalproject.cobit.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.finalproject.cobit.model.Attend;
 import com.finalproject.cobit.model.User;
+import com.finalproject.cobit.repo.AttendRepo;
 import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
@@ -31,7 +34,7 @@ import io.swagger.annotations.ApiResponses;
 		@ApiResponse(code = 403, message = "금지되거나 / 유효하지 않은 API Key를 입력하거나 / 잘못된 기호의 종목을 입력하거나 / 비활성화 된 API Key를 가지고 있다면 403 코드가 나타납니다."),
 		@ApiResponse(code = 404, message = "US Stock Symbol이 잘못되거나 / 알 수 없는 기호가 입력되었을 때 404 코드가 나타납니다."),
 		@ApiResponse(code = 500, message = "이 코드가 나올 시 저에게 문의주세요. 메일 : \"rjsgh1232@naver.com\"") })
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("*")
 @Api(value = "User API")
 @RestController
 @RequestMapping("/user")
@@ -43,25 +46,37 @@ public class UserController {
 
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	AttendRepo attendRepo;
 
 	@ApiOperation(value = "회원정보 가져오기")
 	@GetMapping("")
-	public User getUser(@RequestParam Long id) {
-		Optional<User> userOpt = userRepo.findById(id);
+	public User getUser(@RequestParam String email) {
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
 		return userOpt.get();
 	}
 
 	@ApiOperation(value = "회원가입")
 	@PostMapping("")
-	public ResponseEntity<Boolean> signUp(@RequestBody User user) {
-		userRepo.save(user);
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	public User signUp(@RequestBody User user) {
+		
+		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
+		if(userOpt.isPresent()) {
+			return userOpt.get();
+		}else {
+			user.setStar(0L);
+			userRepo.save(user);
+			return user;
+		}
 	}
 
 	@ApiOperation(value = "회원정보 수정")
 	@PutMapping("")
 	public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
-		userRepo.save(user);
+		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
+		userOpt.get().setNickname(user.getNickname());
+		userRepo.save(userOpt.get());
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
@@ -79,7 +94,7 @@ public class UserController {
 		System.out.println("UPLOAD =======================");
 		String filename = image.getOriginalFilename(); // 파일 이름
 		System.out.println(filename);
-		User user = userRepo.getUserByEmail(email); // 폴더명
+		User user = userRepo.getUserByEmail(email).get(); // 폴더명
 //		String filepath = "/image/" + member.getNo() + "/profile";// 폴더 상대 경로
 		String filepath = "/dist/img/" + user.getId() + "/profile";// 폴더 상대 경로
 
@@ -102,6 +117,19 @@ public class UserController {
 		String result = "/img/" + user.getId() + "/profile/" + filename;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
+	
+	@ApiOperation(value = "출석현황 가져오기")
+	@GetMapping("/attend")
+	public List<Attend> getAttend(@RequestParam String email, @RequestParam Long month ) {
+		List<Attend> list = attendRepo.getUserByEmailAndMonth(email, month);
+		return list;
+	}
+	
+	@ApiOperation(value = "출석체크")
+	@PostMapping("/attend")
+	public ResponseEntity<Boolean> saveAttend(@RequestBody Attend attend ) {
+		attendRepo.save(attend);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 
 }

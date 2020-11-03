@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <video style="width:300px; height:300px;" autoplay ref="video" id="video" class="video"></video>
+  <div id="apitest">
+    <button class="snap" v-on:click="capture">CAPTURE</button><br>
+    <button class="snap" v-on:click="findface">FIND</button>
+    <video style="width:600px; height:400px;" autoplay ref="video" id="video" class="video"></video>
     <!-- <button class="snap" v-on:click="capture()">SNAP</button> -->
-    <canvas ref="canvas" class="canvas" id="canvas" width="300px" height="300px"></canvas>
-    <button class="snap" v-on:click="capture">SNAP</button>
+    <canvas ref="canvas" class="canvas" id="canvas" width="600px" height="400px"></canvas>
+    <!-- <img :src="imageFile.src"/> -->
   </div>
 </template>
 
@@ -15,7 +17,7 @@ export default {
         return {
             imageUrl: null,
             file : null,
-            imageFile: null,
+            imageFile: "",
         }
     },
   methods:{
@@ -53,6 +55,7 @@ export default {
       this.canvas.getContext("2d").drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
       this.imageFile = new Image();
       this.imageFile.src = this.canvas.toDataURL();
+      // console.log(this.imageFile.src);
       this.uploadImage();
     },
     dataURLtoFile(dataurl, fileName){
@@ -69,33 +72,75 @@ export default {
         return new File([u8arr], fileName, {type:mime});
     },
     uploadImage() {
-      var file = this.dataURLtoFile(this.imageFile.src,'image.jpg');
+      var date = new Date();
+      var fileName = date.getMonth()+1 +"" + date.getDate()+"" +date.getHours() +""+date.getMinutes() + ""+date.getSeconds()+".png";
+      var file = this.dataURLtoFile(this.imageFile.src,fileName);
       console.log(file);
 
       var formData = new FormData();
-      formData.append("image", file); // 변경할 프로필 사진
+      formData.append("image", file); 
       formData.append("email","test@test.com");
       // formData.append("email",store.state.userInfo.email); // 사용자 이메일
 
-      axios.post(`http://k3b102.p.ssafy.io:9999/cobit/user/upload`, formData, { 
+      axios.post(`http://localhost:9999/cobit/user/upload`, formData, { 
           headers: { 'Content-Type': 'multipart/form-data' } 
       }).then(response => {
-        // // console.log(response);
-        // this.image = response.data;
         console.log(response.data);
-        window.Kakao.API.request({
+        this.findface(response.data);
+      });
+    },
+    findface(img){
+      console.log(img);
+      window.Kakao.API.request({
           url: `/v1/vision/face/detect`,
           data: {
-          image_url: 'http://k3b102.p.ssafy.io'+response.data
+          image_url: 'http://localhost'+img
+          // image_url: 'http://localhost/img/1/profile/image.png'
+          // image_url: 'http://localhost/img/1/profile/image3.png'
           },
           success: function (msg) {
-          console.log(msg);
+            console.log(msg.result);
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext("2d");
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.right_eye[0][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[0][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[1][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[1][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[2][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[2][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[3][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[3][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[4][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[4][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eye[5][0]*msg.result.width,msg.result.faces[0].facial_points.right_eye[5][1]*msg.result.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.left_eye[0][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[0][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[1][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[1][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[2][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[2][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[3][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[3][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[4][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[4][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eye[5][0]*msg.result.width,msg.result.faces[0].facial_points.left_eye[5][1]*msg.result.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.left_eyebrow[0][0]*msg.result.width,msg.result.faces[0].facial_points.left_eyebrow[0][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[1][0]*msg.result.width,msg.result.faces[0].facial_points.left_eyebrow[1][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[2][0]*msg.result.width,msg.result.faces[0].facial_points.left_eyebrow[2][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[3][0]*msg.result.width,msg.result.faces[0].facial_points.left_eyebrow[3][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.left_eyebrow[4][0]*msg.result.width,msg.result.faces[0].facial_points.left_eyebrow[4][1]*msg.result.height);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(msg.result.faces[0].facial_points.right_eyebrow[0][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[0][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[1][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[1][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[2][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[2][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[3][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[3][1]*msg.result.height);
+            ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[4][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[4][1]*msg.result.height);
+            ctx.fill();
           },
           fail: function(msg){
             console.log(msg);
           }
           });
-      });
     }
 
 
@@ -107,5 +152,4 @@ export default {
 </script>
 
 <style>
-
 </style>

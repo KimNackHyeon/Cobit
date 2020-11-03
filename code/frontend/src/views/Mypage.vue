@@ -48,7 +48,7 @@
               <p style="font-size:16px; font-family: 'BMJUA';" class="my-2"><span style="color: #64B5FF">공백</span>이나 <span style="color: #64B5FF">특수문자</span>를 사용할 수 없습니다.</p>
             </div>
             <div style="margin-top: 5%; width: 80%; height: 23%; display: flex; justify-content: center">
-              <input class="nameinput" type="text" v-model="newname" style="">
+              <input class="nameinput" type="text" v-model="newname">
             </div>
           </v-card-text>
         </v-card>
@@ -148,7 +148,9 @@
                           </div>
                           <div style="height: 75%; display: flex; justify-content: center;">
                             <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 50px; color: red">mdi-check-circle-outline</v-icon>
-                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon>
+                            <!-- <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
+                            <v-icon v-else-if="today == ((i-1)*7 + j)" style="font-size: 50px;" @click="attendCheck">mdi-check-circle-outline</v-icon>
+                            <!-- <v-icon v-else style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
                           </div>
                         </td>
                       </tr>
@@ -171,6 +173,8 @@
 import Unity from 'vue-unity-webgl'
 import "../css/mypage.scss";
 import $ from 'jquery';
+import store from '../vuex/store'
+import axios from 'axios'
 
 export default {
   data() {
@@ -182,9 +186,13 @@ export default {
       renamemodal: false,
       nickname: "코딩 어린이",
       attendmodal: false,
-      attendDay: [1, 3, 4],
+      attendDay: [],
       noattendDay: [],
       totalAttendDay: '',
+      startCount:'',
+      today: 5,
+      nMonth:11,
+      isAttend: false
     }
   },
   components: {
@@ -206,16 +214,6 @@ export default {
     $(".onestar").css("width", `${this.starpercent[0]}%`)
     $(".twostar").css("width", `${this.starpercent[1]}%`)
     $(".threestar").css("width", `${this.starpercent[2]}%`)
-    // 총 출석일 계산
-    this.totalAttendDay = this.attendDay.length;
-    // 출석체크 도장
-    let today = new Date();
-    let date = today.getDate();
-    for (var k=1; k<29; k++){
-      if (!this.attendDay.includes(k) && k<date) {
-        this.noattendDay.push(k)
-      }
-    }
   },
   methods: {
     onRename(){
@@ -227,11 +225,65 @@ export default {
         this.newname = ''
         this.renamemodal = false
       }
+
+      axios.put(`http://localhost:9999/cobit/user`,{
+        email : store.state.kakaoUserInfo.email,
+        nickname : this.name
+      }).then(res => {
+        console.log(res);
+        store.state.kakaoUserInfo.nickname = this.name;
+      });
       
     },
     onAttend() {
       this.attendmodal = !this.attendmodal
+    },
+    attendCheck(){
+      if(!this.isAttend){
+        alert('출석체크');
+        this.isAttend = true;
+        axios.post(`http://localhost:9999/cobit/user/attend`,{
+          email : store.sate.kakaoUserInfo.email,
+          day : this.today,
+          month : this.nMonth,
+        }).then(()=>{
+
+        })
+      }
     }
+  },
+  created(){
+    // 로그인된 정보 입력
+    console.log(store.state.kakaoUserInfo);
+    this.name = store.state.kakaoUserInfo.nickname;
+    this.startCount = store.state.kakaoUserInfo.star;
+
+    var date = new Date();
+    axios.get(`http://localhost:9999/cobit/user/attend`,{
+      params : {
+        email : store.state.kakaoUserInfo.email,
+        month : date.getMonth()+1
+      }
+    }).then(res=>{
+      console.log(res);
+      res.data.forEach(d => {
+        this.attendDay.push(d.day);
+      });
+      // 총 출석일 계산
+      this.totalAttendDay = this.attendDay.length;
+      var date = new Date();
+      this.today = date.getDate();
+      this.nMonth = date.getMonth() +1;
+      // // 출석체크 도장
+      // let today = new Date();
+      // let date = today.getDate();
+      // for (var k=1; k<29; k++){
+      //   if (!this.attendDay.includes(k) && k<date) {
+      //     this.noattendDay.push(k)
+      //   }
+      // }
+      // console.log(this.noattendDay); 
+    })
   }
 
 }

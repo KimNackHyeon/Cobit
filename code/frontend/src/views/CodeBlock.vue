@@ -10,20 +10,19 @@
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
           </div>
         <div class="block-box">
-          <div v-show="isMove" class="block-list">
-            <div v-for="(item, index) in items.block0" :key="`a+${index}`" class="block block0" draggable="true" @dragstart="dragstart">앞으로가기</div>
-            <div v-for="(item, index) in items.block1" :key="`b+${index}`" class="block block1" draggable="true" @dragstart="dragstart">오른쪽으로가기</div>
-            <div v-for="(item, index) in items.block2" :key="`c+${index}`" class="block block2" draggable="true" @dragstart="dragstart">왼쪽으로가기</div>
-            <div v-for="(item, index) in items.block3" :key="`d+${index}`" class="block block3" draggable="true" @dragstart="dragstart">뒤로가기</div>
-            <div v-for="(item, index) in items.block4" :key="`e+${index}`" class="block block4" draggable="true" @dragstart="dragstart">오른쪽으로 90˚ 회전</div>
-            <div v-for="(item, index) in items.block5" :key="`f+${index}`" class="block block5" draggable="true" @dragstart="dragstart">왼쪽으로 90˚ 회전</div>
-            <div v-for="(item, index) in items.block6" :key="`g+${index}`" class="block block6" draggable="true" @dragstart="dragstart">점프하기</div>
+           <div v-show="isMove" class="block-list">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
+              {{m.move_kor}}
+            </div>
           </div>
           <div v-show="isObstacle" class="block-list">
             <div class="block">장애물추가</div>
           </div>
         </div>
         <div id="play-box" class="play-box">
+          <div v-for="(m,index) in resultStep" :key="index" class="block" :class="'block'+m.num+' '+m.class" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:'absolute',top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" v-text="moves[m.num].move_kor">
+              
+            </div>
         </div>
       </div>
     </div>
@@ -41,14 +40,52 @@ export default {
       isObstacle: false,
       distX: '',
       distY: '',
-      targetClass: '',
-      targetClass2: '',
-      targetNum: '',
-      targetFlag: false,
-      items: {
-        block0: 1, block1: 1, block2: 1, block3: 1, block4: 1, block5: 1, block6: 1
-      },
-      classId: 'a',
+      moves:[
+        {
+          num:0,
+          move:'forward',
+          move_kor:'앞으로 가기'
+        },
+        {
+          num:1,
+          move:'right',
+          move_kor:'오른쪽으로 가기'
+        },
+        {
+          num:2,
+          move:'left',
+          move_kor:'왼쪽으로 가기'
+        },
+        {
+          num:3,
+          move:'back',
+          move_kor:'뒤로 가기'
+        },
+        {
+          num:4,
+          move:'turnRight',
+          move_kor:'오른쪽으로 90˚ 회전'
+        },
+        {
+          num:5,
+          move:'turnLeft',
+          move_kor:'왼쪽으로 90˚ 회전'
+        },
+        {
+          num:6,
+          move:'jump',
+          move_kor:'점프 하기'
+        }
+      ],
+      resultStep:[
+      ],
+      selectnum:0,
+      isAdded: false,
+      targetdivNum:0,
+      mouseXposition:0,
+      mouseYposition:0,
+      isOnMove:false,
+      targetdiv:'',
     }
   },
   components: {
@@ -65,6 +102,23 @@ export default {
   watch: {
   },
   methods: {
+    getNeighbor(event){
+      var x = this.distX+event.pageX;
+      var y = this.distY+event.pageY;
+    //  console.log(x);
+      
+     this.resultStep.forEach( step => {
+      //  console.log(Number(step.marginleft.split('px')[0]));
+      var stepx = Number(step.marginleft.split('px')[0]);
+      var stepy = Number(step.marginTop.split('px')[0]);
+       if(x<stepx+30&&x>stepx-30&&y<stepy+30&&y>stepy-30){
+         console.log(this.moves[step.num].move_kor);
+         step.class = 'overMe';
+       }else{
+         step.class = '';
+       }
+     });
+    },
     onMove() {
       this.isMove = true; this.isObstacle = false
       const MOVE = document.querySelector('.move-menu');
@@ -79,58 +133,64 @@ export default {
       MOVE.classList.remove('on-menu-bar');
       OBSTACLE.classList.add('on-menu-bar');
     },
-    dragstart(event) {
+    dragstartAdd(event){
+      let posX = event.pageX;
+      let posY = event.pageY;
+      console.log(event.target);
+      this.targetdiv = event.target;
+      this.distX = event.srcElement.offsetLeft - posX;
+      this.distY = event.srcElement.offsetTop - posY;
+      this.selectnum = event.target.className;
+      this.isAdded = false;
+      this.isOnMove = true;//움직이고있다.
+    },
+    dragstart(mynum,event) {
+      this.targetdivNum = mynum;
+      console.log(event.target);
+      this.targetdiv = event.target;
       // event.target.style.position = 'absolute';
       let posX = event.pageX;
       let posY = event.pageY;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
-      event.target.classList.add(`${this.classId}`)
-      this.classId += '0'
-      this.targetClass = event.target.classList[2]
-      this.targetClass2 = event.target.classList[1]
+      this.isAdded = true;
+      this.isOnMove = true; //움직이고있다.
     },
     dragover(event) {
       event.stopPropagation();
       event.preventDefault();
-    },
+      //마우스가 움직이면서 계속 마우스 위치를 가져온다.
+      this.getNeighbor(event);
+      },
     drop(event) {
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
-      // const relativeTop = clientRect.top; // Viewport의 시작지점을 기준으로한 상대좌표 Y 값.
       const relativeLeft = clientRect.left;
       const relativeRight = clientRect.right;
-      // const relativeBottom = clientRect.bottom;
-      // console.log(relativeTop+" "+relativeLeft+" "+relativeRight+" "+relativeBottom);
       event.stopPropagation();
       event.preventDefault();
       let posX = event.pageX;
       let posY = event.pageY;
+      this.onMove = false ; //블록움직임이 끝났다.
       if (posX >= relativeLeft && posX <= relativeRight) {
-        // if (posY >= relativeBottom && posY <= relativeTop) {
-          document.querySelector(`.${this.targetClass}`).style.position = 'absolute';
-          document.querySelector(`.${this.targetClass}`).style.top = 0;
-          document.querySelector(`.${this.targetClass}`).style.left = 0;
-          document.querySelector(`.${this.targetClass}`).style.marginLeft = posX + this.distX + 'px';
-          document.querySelector(`.${this.targetClass}`).style.marginTop = posY + this.distY + 'px';
-          const CLONE = document.querySelectorAll(`.${this.targetClass2}`)
-          for (let i=0; i<CLONE.length; i++) {
-            if (CLONE[i].classList.length == 2) {
-              this.targetFlag = false
-            } else {
-              this.targetFlag = true
-            }
-          }
-          if(this.targetFlag) {
-            const NAME = this.targetClass2
-            this.items[NAME] += 1
-          }
-        // }
+        if(!this.isAdded){
+        var selectedNum = this.selectnum;
+        selectedNum = selectedNum.split("block")[2].split(' ')[0]
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:''});
+        }else{
+          this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
+          this.resultStep[this.targetdivNum].marginTop = posY + this.distY + 'px';
+        }
+        // console.log(event);
+        var content = window.document.getElementsByClassName("overMe");
+        if(content.length!=0){
+          // var td = this.targetdiv;
+          // this.targetdiv.remove();
+          console.log(event);
+          content[0].appendChild(this.targetdiv);
+        }
       }
-      console.log(posX, posY, this.distX, this.distY)
-      // $('#mydiv').css('margin-left', posX + this.distX + 'px')
-      //     .css('margin-top', posY + this.distY + 'px');
-    }
+    },
   },
   beforeDestroy () {
     // window.removeEventListener('scroll', this.handleScroll)
@@ -213,8 +273,11 @@ export default {
   transition: background-color .5s ease;
 }
 
-.block-box .block-list .block {
-  padding: 10px;
+.block {
+  width:105px;
+  height:45px;
+  text-align: center;
+  padding: 5px;
   border-radius: 20px;
   background-color: #0F4C81;
   margin-bottom: 10px;
@@ -237,5 +300,9 @@ export default {
 .code-block-container .unity-box .unity {
   width: 100%;
   height: 100%;
+}
+
+.overMe{
+  background-color: red;
 }
 </style>

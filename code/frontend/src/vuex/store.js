@@ -8,11 +8,19 @@ const state = {
   StageDetail: {},
   StageNum: 0,
 }
+console.log(state);
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state,
+  state:{
+    kakaoUserInfo:{
+      email:null,
+      nickname:null,
+      star:null,
+      // profile_image_url:null
+    }
+  },
   getters,
   mutations,
   actions
