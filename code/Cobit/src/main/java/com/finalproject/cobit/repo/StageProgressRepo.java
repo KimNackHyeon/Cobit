@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.finalproject.cobit.model.Stage;
+import com.finalproject.cobit.model.StageProgress;
 
 @Repository
-public interface StageRepo extends JpaRepository<Stage, Long>{
-	List<Stage> findAll();
-
-	List<Stage> getStageByType(Long type);
+public interface StageProgressRepo extends JpaRepository<StageProgress, Long>{
+//	List<Stage> findAll();
+	List<StageProgress> getStageProgressByUserId(Long userId);
 }
