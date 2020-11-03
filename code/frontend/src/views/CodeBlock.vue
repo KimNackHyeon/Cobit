@@ -20,9 +20,23 @@
           </div>
         </div>
         <div id="play-box" class="play-box">
-          <div v-for="(m,index) in resultStep" :key="index" class="block" :class="'block'+m.num+' '+m.class" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:'absolute',top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" v-text="moves[m.num].move_kor">
+          <div v-show="isMove" class="block-list">
+            <div style="display: flex; justify-content: center;">
+              <div id="play" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
             </div>
+            <div id="underplay" style="display: flex; justify-content: center;">
+            <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
+              </div>
+              </div>
+              {{resultmoves}}
+            <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
+              <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
+              </div>  
+              <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -86,6 +100,9 @@ export default {
       mouseYposition:0,
       isOnMove:false,
       targetdiv:'',
+      resultmoves:[],
+      playClass:{background:'#1dc360',show:'none'},
+      playson:0
     }
   },
   components: {
@@ -105,19 +122,33 @@ export default {
     getNeighbor(event){
       var x = this.distX+event.pageX;
       var y = this.distY+event.pageY;
-    //  console.log(x);
-      
+      var playtarget = document.getElementById('play');
+      const playRect = playtarget.getBoundingClientRect();
+
+        // console.log(playRect.left+this.distX+" "+(playRect.right+this.distX));
+        // console.log(playRect.top+this.distY+" "+(playRect.bottom+this.distY));
+        // console.log(x+" "+y);
+      if(x<playRect.right+this.distX&&x>playRect.left+this.distX&&y<playRect.bottom+this.distY&&playRect.top+this.distY){
+        this.playClass={background:'green',show:'block'};
+      }else{
+        this.playClass={background:'#1dc360',show:'none'};
+      }
+
      this.resultStep.forEach( step => {
-      //  console.log(Number(step.marginleft.split('px')[0]));
-      var stepx = Number(step.marginleft.split('px')[0]);
-      var stepy = Number(step.marginTop.split('px')[0]);
-       if(x<stepx+30&&x>stepx-30&&y<stepy+30&&y>stepy-30){
-         console.log(this.moves[step.num].move_kor);
+      var stepx = step.x;
+      var stepy = step.y;
+       if(step.index!=this.targetdivNum&&(x<stepx+30&&x>stepx-30&&y<stepy+30&&y>stepy-30)){
          step.class = 'overMe';
+         step.overMe = 'block';
        }else{
          step.class = '';
+         step.overMe = 'none';
        }
      });
+ 
+    },
+    deleteNode(event){
+      event.target.deleteNode();
     },
     onMove() {
       this.isMove = true; this.isObstacle = false
@@ -136,7 +167,7 @@ export default {
     dragstartAdd(event){
       let posX = event.pageX;
       let posY = event.pageY;
-      console.log(event.target);
+      // console.log(event.target);
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
@@ -146,7 +177,7 @@ export default {
     },
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
-      console.log(event.target);
+      // console.log(event.target);
       this.targetdiv = event.target;
       // event.target.style.position = 'absolute';
       let posX = event.pageX;
@@ -167,6 +198,8 @@ export default {
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
       const relativeLeft = clientRect.left;
       const relativeRight = clientRect.right;
+      
+
       event.stopPropagation();
       event.preventDefault();
       let posX = event.pageX;
@@ -176,19 +209,61 @@ export default {
         if(!this.isAdded){
         var selectedNum = this.selectnum;
         selectedNum = selectedNum.split("block")[2].split(' ')[0]
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:''});
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1});
         }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
           this.resultStep[this.targetdivNum].marginTop = posY + this.distY + 'px';
+          this.resultStep[this.targetdivNum].x = posX + this.distX;
+          this.resultStep[this.targetdivNum].y = posY + this.distY;
+          var parent = this.targetdivNum;
+          var son = this.resultStep[parent].son;
+          while(son != -1){
+            console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
+            this.resultStep[son].x = Number(this.resultStep[parent].x);
+            this.resultStep[son].y = Number(this.resultStep[parent].y)+47;
+            parent = son;
+            son = this.resultStep[son].son;
+          }
         }
         // console.log(event);
+        if(this.playClass.show=='block'){
+          this.playson = this.targetdivNum;
+          var tempson = this.playson;
+          while(tempson != -1){
+              this.resultmoves.push(tempson);
+              tempson = this.resultStep[tempson].son;
+            }
+          document.getElementById('underplay').appendChild(this.targetdiv);
+        }
+
         var content = window.document.getElementsByClassName("overMe");
         if(content.length!=0){
-          // var td = this.targetdiv;
-          // this.targetdiv.remove();
-          console.log(event);
-          content[0].appendChild(this.targetdiv);
+          console.log(content[0])
+          this.resultStep[this.targetdivNum].marginleft = '0px';
+          this.resultStep[this.targetdivNum].marginTop = '45px';
+          this.resultStep[this.targetdivNum].position = 'unset';
+          // this.resultStep[this.targetdivNum].x = content[0].getBoundingClientRect().left+this.distX+50;
+          // this.resultStep[this.targetdivNum].y = content[0].getBoundingClientRect().top+45;
+          console.log(this.resultStep);
+
+          content[0].nextSibling.after(this.targetdiv);
         }
+        this.resultStep.forEach( step => {
+          if(step.overMe=='block'){
+            console.log();
+            this.resultStep[step.index].son = this.targetdivNum;
+            var parent = step.index;
+            var son = this.targetdivNum;
+            while(son != -1){
+              console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
+              this.resultStep[son].x = Number(this.resultStep[parent].x);
+              this.resultStep[son].y = this.resultStep[parent].y+47;
+              parent = son;
+              son = this.resultStep[son].son;
+            }
+            step.overMe = 'none'
+          }
+     });
       }
     },
   },
@@ -251,6 +326,7 @@ export default {
   padding: 10px;
   /* background-color: #0F4C81; */
   border: 1px solid #a4d4ff;
+  overflow-y: scroll;
 }
 
 .block-menu-bar .on-menu-bar {
@@ -305,4 +381,18 @@ export default {
 .overMe{
   background-color: red;
 }
+
+#play{
+  top:0;
+  left: 3px;
+  width:100px;
+  height:5vw;
+  border-radius: 5vw;
+  min-width: 50px;
+  min-height:50px;
+  display:flex;
+  justify-content: center;
+}
+
+
 </style>
