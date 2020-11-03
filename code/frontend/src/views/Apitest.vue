@@ -14,11 +14,11 @@ import axios from 'axios'
 
 export default {
   data() {
-        return {
-            imageUrl: null,
-            file : null,
-            imageFile: "",
-        }
+      return {
+        imageUrl: null,
+        file : null,
+        imageFile: "",
+      }
     },
   methods:{
       init() {
