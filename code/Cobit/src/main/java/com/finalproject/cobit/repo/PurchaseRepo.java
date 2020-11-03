@@ -9,7 +9,7 @@ import com.finalproject.cobit.model.Purchase;
 
 @Repository
 public interface PurchaseRepo extends JpaRepository<Purchase, Long>{
-	List<Purchase> getPurchaseByUserIdAndProductId(Long userId, Long productId);
+//	List<Purchase> getPurchaseByUserIdAndProductId(Long userId, Long productId);
 
-	List<Purchase> getPurchaseByUserId(Long id);
+	Purchase getPurchaseByUserId(Long id);
 }

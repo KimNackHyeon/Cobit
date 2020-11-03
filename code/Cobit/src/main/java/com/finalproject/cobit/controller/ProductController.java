@@ -44,43 +44,37 @@ public class ProductController {
 
 	@Autowired
 	ProductRepo productRepo;
-	
+
 	@Autowired
 	PurchaseRepo purchaseRepo;
-	
+
 	@Autowired
 	UserRepo userRepo;
 
-	@ApiOperation(value = "상품 정보 가져오기")
+	@ApiOperation(value = "상품 정보 모두 가져오기")
 	@GetMapping("")
-	public Product getProduct(@RequestParam Long id) {
-		Optional<Product> productOpt = productRepo.findById(id);
-		return productOpt.get();
+	public List<Product> getProduct() {
+		return productRepo.findAll();
 	}
-	
-	@ApiOperation(value = "상품 정보 구매하기")
+
+	@ApiOperation(value = "상품 정보 저장하기")
 	@PostMapping("")
-	public ResponseEntity<Boolean> saveProduct(@RequestBody Purchase p) {
+	public ResponseEntity<Boolean> saveProducts(@RequestBody Purchase p) {
+		System.out.println(p);
+
 		purchaseRepo.save(p);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "내 아이템 정보 가져오기")
 	@GetMapping("/user")
-	public List<Product> getPurchase(@RequestParam String email) {
-		
+	public Purchase getPurchase(@RequestParam String email) {
+
 		Optional<User> userOpt = userRepo.getUserByEmail(email);
-		
+
 		// 회원 구매 목록 가져오기
-		List<Purchase> purList = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
-		
-		List<Product> proList = new ArrayList<Product>();
-		for (Purchase p : purList) {
-			Optional<Product> proOpt = productRepo.findById(p.getProductId());
-			proList.add(proOpt.get());
-		}
-		
-		return proList;
+		Purchase p = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
+		return p;
 	}
 
 }
