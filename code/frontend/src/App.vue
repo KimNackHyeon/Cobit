@@ -6,6 +6,7 @@
 
 <script>
 import "../public/css/common.css";
+// import axios from 'axios'
 
 export default {
   name: 'App',
@@ -13,5 +14,8 @@ export default {
   data: () => ({
     //
   }),
+
+  created(){
+  }
 };
 </script>

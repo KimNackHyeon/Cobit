@@ -1,17 +1,26 @@
 package com.finalproject.cobit.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finalproject.cobit.model.Product;
-import com.finalproject.cobit.model.Stage;
+import com.finalproject.cobit.model.Purchase;
+import com.finalproject.cobit.model.User;
 import com.finalproject.cobit.repo.ProductRepo;
+import com.finalproject.cobit.repo.PurchaseRepo;
+import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,11 +45,36 @@ public class ProductController {
 	@Autowired
 	ProductRepo productRepo;
 
-	@ApiOperation(value = "상품 정보 가져오기")
+	@Autowired
+	PurchaseRepo purchaseRepo;
+
+	@Autowired
+	UserRepo userRepo;
+
+	@ApiOperation(value = "상품 정보 모두 가져오기")
 	@GetMapping("")
-	public Product getStage(@RequestParam Long id) {
-		Optional<Product> productOpt = productRepo.findById(id);
-		return productOpt.get();
+	public List<Product> getProduct() {
+		return productRepo.findAll();
+	}
+
+	@ApiOperation(value = "상품 정보 저장하기")
+	@PostMapping("")
+	public ResponseEntity<Boolean> saveProducts(@RequestBody Purchase p) {
+		System.out.println(p);
+
+		purchaseRepo.save(p);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "내 아이템 정보 가져오기")
+	@GetMapping("/user")
+	public Purchase getPurchase(@RequestParam String email) {
+
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
+
+		// 회원 구매 목록 가져오기
+		Purchase p = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
+		return p;
 	}
 
 }

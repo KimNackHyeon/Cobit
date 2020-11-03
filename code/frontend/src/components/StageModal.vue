@@ -17,7 +17,7 @@
             </div>
             <div class="stage-modal-mission-area">
               <div>임무</div>
-              <div>강해지기 위해 물고기를 먹어주세요</div>
+              <div>{{StageDetail.content}}</div>
             </div>
           </div>
           <div class="stage-modal-footer">

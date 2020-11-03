@@ -23,7 +23,7 @@
     <!-- 자신의 캐릭터 -->
     <div class="rightbox box">
       <!-- 캐릭터 이름 -->
-      <div class="name">
+      <div class="name" style="color:white;">
         <div>
           {{name}}
         </div>
@@ -79,7 +79,7 @@
             <div class="starbar">
               <div class="mystar"></div>
               <div class="startotal"></div>
-              <div class="starnum"><span>{{star}} / 90</span></div>
+              <div class="starnum"><span>{{startCount}} / 90</span></div>
             </div>
             <!-- <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
@@ -187,7 +187,8 @@ import Unity from 'vue-unity-webgl'
 import "../css/mypage.scss";
 import $ from 'jquery';
 import store from '../vuex/store'
-// import axios from 'axios'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -195,7 +196,7 @@ export default {
       // star: [1, 3, 6],
       star: 10,
       starpercent: [],
-      name: "코쿠멍",
+      name: null,
       newname: "",
       renamemodal: false,
       nickname: "코딩 어린이",
@@ -214,6 +215,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.name);
     // 별 총합 계산
     // var totalstar = 0;
     // for(var i=0; i<this.star.length; i++){
@@ -243,13 +245,14 @@ export default {
         this.newname = ''
         this.renamemodal = false
       }
-      // axios.put(`http://localhost:9999/cobit/user`,{
-      //   email : store.state.kakaoUserInfo.email,
-      //   nickname : this.name
-      // }).then(res => {
-      //   console.log(res);
-      //   store.state.kakaoUserInfo.nickname = this.name;
-      // });
+
+      axios.put(`http://k3b102.p.ssafy.io:9999/cobit/user`,{
+        email : store.state.kakaoUserInfo.email,
+        nickname : this.name
+      }).then(res => {
+        console.log(res);
+        store.state.kakaoUserInfo.nickname = this.name;
+      });
       
     },
     onAttend() {
@@ -257,50 +260,63 @@ export default {
     },
     attendCheck(){
       if(!this.isAttend){
-        alert('출석체크');
         this.isAttend = true;
-        // axios.post(`http://localhost:9999/cobit/user/attend`,{
-        //   email : store.sate.kakaoUserInfo.email,
-        //   day : this.today,
-        //   month : this.nMonth,
-        // }).then(()=>{
-
-        // })
+        axios.post(`http://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+          email : store.state.kakaoUserInfo.email,
+          day : this.today,
+          month : this.nMonth,
+        }).then(()=>{
+          Swal.fire(
+            '출석완료!',
+            '',
+            'success'
+          )
+          this.loadAttend();
+        })
       }
+    },
+    loadAttend(){
+      // 출석 정보 가져오기
+      var date = new Date();
+      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+        params : {
+          email : store.state.kakaoUserInfo.email,
+          month : date.getMonth()+1
+        }
+      }).then(res=>{
+        console.log(res);
+        this.attendDay = [];
+        res.data.forEach(d => {
+          this.attendDay.push(d.day);
+        });
+        // 총 출석일 계산
+        this.totalAttendDay = this.attendDay.length;
+        var date = new Date();
+        this.today = date.getDate();
+        this.nMonth = date.getMonth() +1;
+      })
     }
   },
   created(){
-    // 로그인된 정보 입력
-    console.log(store.state.kakaoUserInfo);
-    this.name = store.state.kakaoUserInfo.nickname;
-    this.startCount = store.state.kakaoUserInfo.star;
-
-    // var date = new Date();
-    // axios.get(`http://localhost:9999/cobit/user/attend`,{
-    //   params : {
-    //     email : store.state.kakaoUserInfo.email,
-    //     month : date.getMonth()+1
-    //   }
-    // }).then(res=>{
-    //   console.log(res);
-    //   res.data.forEach(d => {
-    //     this.attendDay.push(d.day);
-    //   });
-      // 총 출석일 계산
-      this.totalAttendDay = this.attendDay.length;
-      var date = new Date();
-      this.today = date.getDate();
-      this.nMonth = date.getMonth() +1;
-      // // 출석체크 도장
-      // let today = new Date();
-      // let date = today.getDate();
-      // for (var k=1; k<29; k++){
-      //   if (!this.attendDay.includes(k) && k<this.today) {
-      //     this.noattendDay.push(k)
-      //   }
-      // }
-      // console.log(this.noattendDay); 
-    // })
+    if(this.$cookies.isKey("access_token")){
+      console.log("로그인")
+      window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              const kakao_account = res.kakao_account;
+              axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                console.log(res);
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.name = store.state.kakaoUserInfo.nickname;
+                this.startCount = store.state.kakaoUserInfo.star;
+                this.loadAttend();
+              })
+          },
+      })
+    }else{
+      this.$router.push('/');
+    }
   }
 
 }

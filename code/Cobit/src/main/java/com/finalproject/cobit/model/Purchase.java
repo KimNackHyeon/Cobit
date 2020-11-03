@@ -24,8 +24,11 @@ public class Purchase {
 
 	@Column
 	private Long userId;
-
+	
 	@Column
-	private Long productId;
+	private String color;
+	
+	@Column
+	private String eye;
 
 }

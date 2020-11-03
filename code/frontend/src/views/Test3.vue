@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="test-container">
       <div class="unity-box">
-        <unity class="unity" src="Test2/Build/Test2.json" unityLoader="Test2/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">
@@ -16,6 +16,9 @@
             <div class="block block2" @click="goLeft">왼쪽으로</div>
             <div class="block block3" @click="goDown">아래쪽으로</div>
             <div class="block block3" @click="goJump">점프</div>
+            <div class="block block3" @click="goFor">반복문</div>
+            <div class="block block3" @click="goFor2">반복문2</div>
+            <div class="block block3" @click="goFor3">반복문3</div>
           </div>
         </div>
         <div class="play-box">
@@ -36,6 +39,7 @@ export default {
       isMove: true,
       isObstacle: false,
       commandList: [],
+      test: [3],
     }
   },
   components: {
@@ -44,7 +48,8 @@ export default {
   computed: {
   },
   created() {
-    // window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('clear', this.handleClear)
+    window.addEventListener('fail', this.handleFail)
   },
   mounted() {
     this.onMove();
@@ -88,10 +93,29 @@ export default {
     },
     goMove() {
       this.$refs.myInstance.message('JavascriptHook', 'Go')
-    }
+    },
+    goFor() {
+      this.commandList.push('반복')
+      this.$refs.myInstance.message('JavascriptHook', 'Loop', '2,Jump')
+    },
+    goFor2() {
+      this.commandList.push('반복2')
+      this.$refs.myInstance.message('JavascriptHook', 'Loop', '3,Jump,Down,Up')
+    },
+    goFor3() {
+      this.commandList.push('반복3')
+      this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
+    },
+    handleClear() {
+      console.log(event)
+    },
+    handleFail() {
+      console.log(event)
+    },
   },
   beforeDestroy () {
-    // window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('clear', this.handleClear)
+    window.removeEventListener('fail', this.handleFail)
   },
 }
 </script>

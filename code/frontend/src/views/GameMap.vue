@@ -30,6 +30,7 @@
           <div class="map-3star-gauge">★★★ {{ mapStar.third }}%</div>
         </div>
       </div>
+      
     </div>
 
     <StageModal v-if="showModal" @close="showModal= false"/>
@@ -41,6 +42,8 @@
 import StageModal from '../components/StageModal.vue';
 import DifficultyModal from '../components/DifficultyModal.vue';
 import { mapMutations } from 'vuex';
+import axios from 'axios';
+import store from '../vuex/store';
 
 export default {
   name: 'GameMap',
@@ -48,73 +51,13 @@ export default {
     return {
       showModal: false,
       showModal2: false,
-      mapInform: {
-        1: {
-          open: true,
-          star: 3,
-          unstar: 0,
-          user: false,
-        },
-        2: {
-          open: true,
-          star: 2,
-          unstar: 1,
-          user: false,
-        },
-        3: {
-          open: true,
-          star: 1,
-          unstar: 2,
-          user: false,
-        },
-        4: {
-          open: true,
-          star: 0,
-          unstar: 3,
-          user: true,
-        },
-        5: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        6: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        7: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        8: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        9: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        10: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        }
-      },
+      mapInform: [],
       mapStar: {
         first: 33.3,
         second: 33.3,
         third: 0,
       }
+
     }
   },
   components: {
@@ -125,6 +68,20 @@ export default {
   },
   created() {
     // window.addEventListener('scroll', this.handleScroll)
+    if(this.$cookies.isKey("access_token")){
+      this.loadStage();
+      window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              const kakao_account = res.kakao_account;
+              axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.loadMyStage();
+              })
+          },
+      })
+    }
   },
   mounted() {
     this.getStarRatio();
@@ -150,8 +107,50 @@ export default {
     },
     onModal2() {
       this.showModal2 = true;
-    }
+    },
+    loadMyStage(){
+      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
+      .then(res => {
+        // console.log(res);
+        var index = 0;
+        res.data.forEach(d => {
+          const map = {
+            open: true,
+            star: d.star,
+            unstar: 3 - d.star,
+            user: false,
+            content : this.mapInform[d.stageId-1].content,
+          }
+          this.$set(this.mapInform, d.stageId-1, map)
+          // this.mapInform[d.stageId-1] = map;
+          index++;
+        });
+        this.$set(this.mapInform, index, {
+          open : false,
+          star : 0,
+          unstar : 3,
+          user : true,
+          content : this.mapInform[index].content,
+        })
+      })
+    },
+    loadStage(){
+      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/stage?type=${1}`)
+      .then(res => {
+        res.data.forEach(map =>{
+          this.mapInform.push( {
+              open: false,
+              star: 0,
+              unstar: 3,
+              user: false,
+              content : map.content,
+            });
+        });
+        
+      })
+    },
   },
+  
   beforeDestroy () {
     // window.removeEventListener('scroll', this.handleScroll)
   },
