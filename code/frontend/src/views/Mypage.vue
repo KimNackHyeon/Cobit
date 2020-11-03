@@ -175,6 +175,7 @@ import "../css/mypage.scss";
 import $ from 'jquery';
 import store from '../vuex/store'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -241,14 +242,18 @@ export default {
     },
     attendCheck(){
       if(!this.isAttend){
-        alert('출석체크');
         this.isAttend = true;
         axios.post(`http://localhost:9999/cobit/user/attend`,{
-          email : store.sate.kakaoUserInfo.email,
+          email : store.state.kakaoUserInfo.email,
           day : this.today,
           month : this.nMonth,
         }).then(()=>{
-
+          Swal.fire(
+            '출석완료!',
+            '',
+            'success'
+          )
+          this.loadAttend();
         })
       }
     },
