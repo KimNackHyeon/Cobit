@@ -74,7 +74,7 @@ export default {
           url:'/v2/user/me',
           success : res => {
               const kakao_account = res.kakao_account;
-              axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+              axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.loadMyStage();
@@ -109,7 +109,7 @@ export default {
       this.showModal2 = true;
     },
     loadMyStage(){
-      axios.get(`http://localhost:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
+      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
       .then(res => {
         // console.log(res);
         var index = 0;
@@ -135,7 +135,7 @@ export default {
       })
     },
     loadStage(){
-      axios.get(`http://localhost:9999/cobit/stage?type=${1}`)
+      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/stage?type=${1}`)
       .then(res => {
         res.data.forEach(map =>{
           this.mapInform.push( {
