@@ -27,7 +27,7 @@
         <div>
           {{name}}
         </div>
-        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: black; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: white; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <!-- 캐릭터 이름 수정 -->
       <v-app class="vapp"></v-app>
@@ -54,7 +54,7 @@
         </v-card>
         <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
           <!-- style="background-color:rgb(22, 150, 245); height: 80%; width: 25%; font-size: 1.7vw;" -->
-          <v-btn text color="black" @click="onNewName" class="confirmbtn" style="width: 75%;">확인</v-btn>
+          <v-btn text color="black" @click="onNewName" class="confirmbtn" style="width: 75%; font-size: 20px">확인</v-btn>
         </v-card-actions>
       </v-dialog>
       <div style="height: 45vh; position: relative">
@@ -70,7 +70,15 @@
             <v-icon style="color: yellow; font-size: 3vw;">mdi-star</v-icon>
           </div> -->
           <div style="width: 100%">
-            <div class="star onestar">
+            <div style="float: left; width: 10%; text-align: center;">
+              <v-icon style="font-size: 35px; color: yellow;">mdi-star</v-icon>
+            </div>
+            <div class="starbar">
+              <div class="mystar"></div>
+              <div class="startotal"></div>
+              <div class="starnum"><span>{{star}} / 90</span></div>
+            </div>
+            <!-- <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[0]}}%
             </div>
@@ -81,14 +89,14 @@
             <div class="star threestar">
               <v-icon v-for="i in 3" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
               {{starpercent[2]}}%
-            </div>
+            </div> -->
           </div>
         </div>
         <div style="height: 4%"></div>
         <!-- 칭호 -->
         <div style="height: 28%; display: flex; align-items: center;">
           <div style="display: inline-block; width: 10%; text-align: center;">
-            <v-icon style="font-size: 4.5vh;">mdi-account</v-icon>
+            <v-icon style="font-size: 4.5vh; color: white">mdi-account</v-icon>
           </div>
           <div class="nicknameBox">
             <div class="nickname">
@@ -100,7 +108,7 @@
         <!-- 출석 -->
         <div style="height: 40%; display: flex; align-items: center; justify-content: center;">
           <div class="attendBox" @click="onAttend">
-            <v-icon style="font-size: 5vh; color: black;">mdi-calendar-multiple-check</v-icon>
+            <v-icon style="font-size: 5vh; color: white;">mdi-calendar-multiple-check</v-icon>
             <!-- <div class="icon">
               <div class="calendar">
                 25
@@ -108,10 +116,10 @@
                 <div class="flip"></div>
               </div>
             </div> -->
-            <div style="display: inline-block; margin-left: 3%; font-size: 25px">출석</div>
+            <div style="display: inline-block; margin-left: 3%; font-size: 25px; color: white">출석</div>
           </div>
           <v-dialog max-width="90vw" min-height="90vh" v-model="attendmodal">
-            <v-card flat tile style="height: 80vh">
+            <v-card flat tile style="height: 80vh;">
               <div style="height: 3%"></div>
               <!-- 제목 -->
               <div class="attendtitle">
@@ -160,7 +168,7 @@
               </div>
             </v-card>
             <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
-              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 50%;">확인</v-btn>
+              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px">확인</v-btn>
             </v-card-actions>
           </v-dialog>
         </div>
@@ -179,7 +187,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      star: [1, 3, 6],
+      // star: [1, 3, 6],
+      star: 10,
       starpercent: [],
       name: "코쿠멍",
       newname: "",
@@ -200,16 +209,16 @@ export default {
   },
   mounted() {
     // 별 총합 계산
-    var totalstar = 0;
-    for(var i=0; i<this.star.length; i++){
-      totalstar += this.star[i]
-    }
+    // var totalstar = 0;
+    // for(var i=0; i<this.star.length; i++){
+    //   totalstar += this.star[i]
+    // }
     // 별 비율 계산
-    for(var j=0; j<this.star.length; j++){
-      var star = this.star[j]
-      var number = star / totalstar
-      this.starpercent.push(number.toFixed(2)*100)
-    }
+    // for(var j=0; j<this.star.length; j++){
+    //   var star = this.star[j]
+    //   var number = star / totalstar
+    //   this.starpercent.push(number.toFixed(2)*100)
+    // }
     // 별의 갯수에 따라 width 설정
     $(".onestar").css("width", `${this.starpercent[0]}%`)
     $(".twostar").css("width", `${this.starpercent[1]}%`)
@@ -333,21 +342,22 @@ export default {
   border-bottom-right-radius: 10px;
 }
 .name {
-    height: 7vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 28px;
-    /* font-weight: 600; */
-    font-family: 'BMJUA';
-    border-bottom: 1px solid black;
+  color: white;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  /* font-weight: 600; */
+  font-family: 'BMJUA';
+  border-bottom: 1px solid black;
 }
 .pencilicon:hover {
   color: #a4d4ff;
 }
 .confirmbtn {
   height: 75% !important;
-  font-size: 20px !important;
+  /* font-size: 20px !important; */
   font-family: BMJUA;
   background-color: #a4d4ff !important;
   border-radius: 30px;
@@ -375,6 +385,39 @@ export default {
               0 0 0 0 rgba(0,0,0,0),
               inset 4px 4px 6px -1px rgba(0,0,0,0.2),
               inset -3px -3px 4px -1px rgba(255, 255, 255, 0.5) !important;
+}
+.starbar {
+  display: inline-block;
+  width: 88%;
+  /* background: white; */
+  border-radius: 15px;
+  /* text-align: center; */
+  font-size: 25px;
+  font-weight: 600;
+  /* margin: 1%; */
+  /* padding: 1%; */
+  color: black;
+  position: relative;
+}
+.mystar {
+  height: 5vh;
+  display: inline-block;
+  background: #a4d4ff;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+.startotal {
+  height: 5vh;
+  display: inline-block;
+  background-color: white;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.starnum {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  left: 45%;
 }
 .star {
   display: inline-block;
@@ -406,9 +449,10 @@ export default {
 }
 .nickname {
   padding: 1vh;
-  border: 1px solid gray;
+  border: 1px solid white;
   border-radius: 15px;
   font-weight: 600;
+  color: white;
 }
 .attendBox {
   padding: 1vh 6vh;

@@ -20,23 +20,28 @@
             </div>
           </div>
           <div class="itembox">
-            <span class="itemtitle">눈</span>
+            <span class="itemtitle">눈썹</span>
             <div>
               <!-- <img src="" alt=""> -->
             </div>
           </div>
           <div class="itembox">
-            <span class="itemtitle">입</span>
+            <span class="itemtitle">눈</span>
           </div>
           <div class="itembox">
             <span class="itemtitle">아이템</span>
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
-              <router-link to="/apitest">
-               <button> 내 얼굴로 캐릭터 만들기</button>
-              </router-link>
-              
+              <!-- <router-link to="/apitest"> -->
+               <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
+              <!-- </router-link> -->
+              <v-app class="vapp"></v-app>
+              <v-dialog max-width="60%" min-height="50%" v-model="cameramodal">
+                <v-card flat tile>
+                  <apitest />
+                </v-card>
+              </v-dialog>
           </div>
         </div>
         <!-- 캐릭터 보여주는 곳 -->
@@ -56,12 +61,12 @@
 <script>
 import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
-// import SendMessage from 'vue-unity-webgl';
-// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
+import Apitest from '../views/Apitest.vue'
 
 export default {
   components: {
-    Unity
+    Unity,
+    Apitest
   },
   data() {
     return {
@@ -69,6 +74,7 @@ export default {
       eyes: [],
       mouses: [],
       items: [],
+      cameramodal: false,
     }
   },
   methods: {
@@ -77,8 +83,6 @@ export default {
     },
     onChangeColor(color) {
       console.log(color)
-      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
-      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
       this.$refs.myInstance.message('body', 'ChangeColor', color)
       
     }
@@ -171,10 +175,11 @@ export default {
   padding: 0 20px;
 }
 .color {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  margin-right: 2vw;
+  margin-right: auto;
+  cursor: pointer;
 }
 /* .color:hover {
   box-shadow: 0 0 15px black;
@@ -232,5 +237,8 @@ export default {
               0 0 0 0 rgba(0,0,0,0),
               inset 4px 4px 6px -1px rgba(0,0,0,0.2),
               inset -3px -3px 4px -1px #ffffff !important;
+}
+.myfacebtn {
+  color: black;
 }
 </style>
