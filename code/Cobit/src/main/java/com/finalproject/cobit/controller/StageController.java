@@ -41,11 +41,11 @@ public class StageController {
 	@Autowired
 	StageProgressRepo spRepo;
 
-	@ApiOperation(value = "스테이지 정보 가져오기")
+	@ApiOperation(value = "모든 스테이지 정보 가져오기")
 	@GetMapping("")
-	public Stage getStage(@RequestParam Long id) {
-		Optional<Stage> stageOpt = stageRepo.findById(id);
-		return stageOpt.get();
+	public List<Stage> getStage() {
+		List<Stage> list = stageRepo.findAll();
+		return list;
 	}
 	
 	@ApiOperation(value = "나의 스테이지 정보 가져오기")

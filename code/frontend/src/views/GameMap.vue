@@ -30,6 +30,7 @@
           <div class="map-3star-gauge">★★★ {{ mapStar.third }}%</div>
         </div>
       </div>
+      
     </div>
 
     <StageModal v-if="showModal" @close="showModal= false"/>
@@ -50,73 +51,13 @@ export default {
     return {
       showModal: false,
       showModal2: false,
-      mapInform: {
-        1: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        2: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        3: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        4: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        5: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        6: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        7: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        8: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        9: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        },
-        10: {
-          open: false,
-          star: 0,
-          unstar: 3,
-          user: false,
-        }
-      },
+      mapInform: [],
       mapStar: {
         first: 33.3,
         second: 33.3,
         third: 0,
       }
+
     }
   },
   components: {
@@ -128,6 +69,7 @@ export default {
   created() {
     // window.addEventListener('scroll', this.handleScroll)
     if(this.$cookies.isKey("access_token")){
+      this.loadStage();
       window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
@@ -137,16 +79,9 @@ export default {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.loadMyStage();
               })
-
-              axios.get(`http://localhost:9999/cobit/stage`)
-              .then(res => {
-                console.log(res);
-              })
-
           },
       })
     }
-
   },
   mounted() {
     this.getStarRatio();
@@ -176,9 +111,7 @@ export default {
     loadMyStage(){
       axios.get(`http://localhost:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
       .then(res => {
-        console.log(res);
-        console.log(this.mapInform);
-
+        // console.log(res);
         var index = 0;
         res.data.forEach(d => {
           const map = {
@@ -186,21 +119,38 @@ export default {
             star: d.star,
             unstar: 3 - d.star,
             user: false,
+            content : this.mapInform[d.stageId-1].content,
           }
-          this.mapInform[d.stageId-1] = map;
+          this.$set(this.mapInform, d.stageId-1, map)
+          // this.mapInform[d.stageId-1] = map;
           index++;
         });
-        this.mapInform[index] = {
+        this.$set(this.mapInform, index, {
           open : false,
           star : 0,
           unstar : 3,
           user : true,
-        }
-
+          content : this.mapInform[index].content,
+        })
+      })
+    },
+    loadStage(){
+      axios.get(`http://localhost:9999/cobit/stage?type=${1}`)
+      .then(res => {
+        res.data.forEach(map =>{
+          this.mapInform.push( {
+              open: false,
+              star: 0,
+              unstar: 3,
+              user: false,
+              content : map.content,
+            });
+        });
         
       })
-    }
+    },
   },
+  
   beforeDestroy () {
     // window.removeEventListener('scroll', this.handleScroll)
   },

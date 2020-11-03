@@ -10,4 +10,6 @@ import com.finalproject.cobit.model.Stage;
 @Repository
 public interface StageRepo extends JpaRepository<Stage, Long>{
 	List<Stage> findAll();
+
+	List<Stage> getStageByType(Long type);
 }
