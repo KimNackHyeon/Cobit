@@ -220,9 +220,9 @@ export default {
     //   this.starpercent.push(number.toFixed(2)*100)
     // }
     // 별의 갯수에 따라 width 설정
-    $(".onestar").css("width", `${this.starpercent[0]}%`)
-    $(".twostar").css("width", `${this.starpercent[1]}%`)
-    $(".threestar").css("width", `${this.starpercent[2]}%`)
+    const starratio = (this.star / 90) * 100
+    $(".mystar").css("width", `${starratio}%`)
+    $(".startotal").css("width", `${100 - starratio}%`)
   },
   methods: {
     onRename(){
