@@ -52,28 +52,28 @@ export default {
       showModal2: false,
       mapInform: {
         1: {
-          open: true,
-          star: 3,
-          unstar: 0,
+          open: false,
+          star: 0,
+          unstar: 3,
           user: false,
         },
         2: {
-          open: true,
-          star: 2,
-          unstar: 1,
+          open: false,
+          star: 0,
+          unstar: 3,
           user: false,
         },
         3: {
-          open: true,
-          star: 1,
-          unstar: 2,
+          open: false,
+          star: 0,
+          unstar: 3,
           user: false,
         },
         4: {
-          open: true,
+          open: false,
           star: 0,
           unstar: 3,
-          user: true,
+          user: false,
         },
         5: {
           open: false,
@@ -137,6 +137,12 @@ export default {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.loadMyStage();
               })
+
+              axios.get(`http://localhost:9999/cobit/stage`)
+              .then(res => {
+                console.log(res);
+              })
+
           },
       })
     }
@@ -171,6 +177,27 @@ export default {
       axios.get(`http://localhost:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
       .then(res => {
         console.log(res);
+        console.log(this.mapInform);
+
+        var index = 0;
+        res.data.forEach(d => {
+          const map = {
+            open: true,
+            star: d.star,
+            unstar: 3 - d.star,
+            user: false,
+          }
+          this.mapInform[d.stageId-1] = map;
+          index++;
+        });
+        this.mapInform[index] = {
+          open : false,
+          star : 0,
+          unstar : 3,
+          user : true,
+        }
+
+        
       })
     }
   },
