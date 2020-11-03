@@ -7,6 +7,7 @@ import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
 import Test2 from '../views/Test2.vue'
+import Speech from '../views/SpeechDetectionStarted.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,11 @@ const routes = [
     path: '/mypage',
     name: 'Mypage',
     component: Mypage
+  },
+  {
+    path: '/speech',
+    name: 'Speech',
+    component: Speech
   },
   {
     path: '/codeblock',
