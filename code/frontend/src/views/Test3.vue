@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="test-container">
       <div class="unity-box">
-        <unity class="unity" src="Test2/Build/Test2.json" unityLoader="Test2/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">
@@ -48,7 +48,8 @@ export default {
   computed: {
   },
   created() {
-    // window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('clear', this.handleClear)
+    window.addEventListener('fail', this.handleFail)
   },
   mounted() {
     this.onMove();
@@ -104,10 +105,17 @@ export default {
     goFor3() {
       this.commandList.push('반복3')
       this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
-    }
+    },
+    handleClear() {
+      console.log(event)
+    },
+    handleFail() {
+      console.log(event)
+    },
   },
   beforeDestroy () {
-    // window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('clear', this.handleClear)
+    window.removeEventListener('fail', this.handleFail)
   },
 }
 </script>
