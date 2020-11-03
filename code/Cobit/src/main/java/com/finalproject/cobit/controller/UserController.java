@@ -46,16 +46,23 @@ public class UserController {
 
 	@ApiOperation(value = "회원정보 가져오기")
 	@GetMapping("")
-	public User getUser(@RequestParam Long id) {
-		Optional<User> userOpt = userRepo.findById(id);
+	public User getUser(@RequestParam String email) {
+		Optional<User> userOpt = userRepo.getUserByEmail(email);
 		return userOpt.get();
 	}
 
 	@ApiOperation(value = "회원가입")
 	@PostMapping("")
-	public ResponseEntity<Boolean> signUp(@RequestBody User user) {
-		userRepo.save(user);
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	public User signUp(@RequestBody User user) {
+		
+		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
+		if(userOpt.isPresent()) {
+			return userOpt.get();
+		}else {
+			user.setStar(0L);
+			userRepo.save(user);
+			return user;
+		}
 	}
 
 	@ApiOperation(value = "회원정보 수정")
@@ -79,7 +86,7 @@ public class UserController {
 		System.out.println("UPLOAD =======================");
 		String filename = image.getOriginalFilename(); // 파일 이름
 		System.out.println(filename);
-		User user = userRepo.getUserByEmail(email); // 폴더명
+		User user = userRepo.getUserByEmail(email).get(); // 폴더명
 //		String filepath = "/image/" + member.getNo() + "/profile";// 폴더 상대 경로
 		String filepath = "/dist/img/" + user.getId() + "/profile";// 폴더 상대 경로
 

@@ -33,7 +33,15 @@
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
-              내 얼굴로 캐릭터 만들기
+              <!-- <router-link to="/apitest"> -->
+               <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
+              <!-- </router-link> -->
+              <v-app class="vapp"></v-app>
+              <v-dialog max-width="60%" min-height="50%" v-model="cameramodal">
+                <v-card flat tile>
+                  <apitest />
+                </v-card>
+              </v-dialog>
           </div>
         </div>
         <!-- 캐릭터 보여주는 곳 -->
@@ -53,12 +61,12 @@
 <script>
 import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
-// import SendMessage from 'vue-unity-webgl';
-// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
+import Apitest from '../views/Apitest.vue'
 
 export default {
   components: {
-    Unity
+    Unity,
+    Apitest
   },
   data() {
     return {
@@ -66,6 +74,7 @@ export default {
       eyes: [],
       mouses: [],
       items: [],
+      cameramodal: false,
     }
   },
   methods: {
@@ -228,5 +237,8 @@ export default {
               0 0 0 0 rgba(0,0,0,0),
               inset 4px 4px 6px -1px rgba(0,0,0,0.2),
               inset -3px -3px 4px -1px #ffffff !important;
+}
+.myfacebtn {
+  color: black;
 }
 </style>
