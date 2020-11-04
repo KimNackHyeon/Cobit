@@ -330,25 +330,25 @@ var UnityLoader = UnityLoader || {
     //
     // [Firefox]
     // eWg@blob:http://localhost:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:10:1
-    // P7h@blob:http://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:28:1
-    // invoke_iiii@blob:http://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:334616
-    // DJd@blob:http://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:15:1
-    // Runtime.dynCall@blob:http://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:7469
-    // _emscripten_set_main_loop/browserIterationFunc@blob:http://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:207510
-    // Browser.mainLoop.runIter@blob:http://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:189915
+    // P7h@blob:https://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:28:1
+    // invoke_iiii@blob:https://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:334616
+    // DJd@blob:https://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:15:1
+    // Runtime.dynCall@blob:https://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:7469
+    // _emscripten_set_main_loop/browserIterationFunc@blob:https://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:207510
+    // Browser.mainLoop.runIter@blob:https://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:189915
     //
     // [Firefox WebAssembly]
     // wasm-function[24622]@blob:null/2e0a79af-37a7-ac43-9534-4ac66e23fea4:8059611:1
     // wasm-function[24000]@blob:null/2e0a79af-37a7-ac43-9534-4ac66e23fea4:7932153:1
     //
     // [Safari]
-    // eWg@blob:http://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:10:238896
-    // P7h@blob:http://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:28:33689
-    // invoke_iiii@blob:http://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:334638
-    // DJd@blob:http://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:15:260809
-    // dynCall@blob:http://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:7496
-    // browserIterationFunc@blob:http://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:207525
-    // runIter@blob:http://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:189919
+    // eWg@blob:https://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:10:238896
+    // P7h@blob:https://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:28:33689
+    // invoke_iiii@blob:https://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:334638
+    // DJd@blob:https://k3b102.p.ssafy.io:8080/6efe7f5a-b930-45c3-9175-296366f9d9f4:15:260809
+    // dynCall@blob:https://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:7496
+    // browserIterationFunc@blob:https://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:207525
+    // runIter@blob:https://k3b102.p.ssafy.io:8080/597cffca-fc52-4586-9da7-f9c8e591738b:1:189919
 
     init: (function () {
       Error.stackTraceLimit = 50;

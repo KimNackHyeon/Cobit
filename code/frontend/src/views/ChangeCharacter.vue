@@ -21,12 +21,16 @@
           </div>
           <div class="itembox">
             <span class="itemtitle">눈썹</span>
-            <div>
-              <!-- <img src="" alt=""> -->
+            <div class="eyebrowbox">
+              <div class="noEyebrow" @click="onChangeEyebrow('eyebrow0')">없음</div>
+              <img v-for="i in 3" :key="i" :src="require(`../assets/images/eyebrow${i}.png`)" :alt="`eyebrow${i}`" @click="onChangeEyebrow(`eyebrow${i}`)">
             </div>
           </div>
           <div class="itembox">
             <span class="itemtitle">눈</span>
+            <div class="eyebox">
+              <img src="../assets/images/eye3.png" alt="eye3">
+            </div>
           </div>
           <div class="itembox">
             <span class="itemtitle">아이템</span>
@@ -61,8 +65,6 @@
 <script>
 import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
-// import SendMessage from 'vue-unity-webgl';
-// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
 import axios from 'axios';
 import store from '../vuex/store';
 import Apitest from '../views/Apitest.vue'
@@ -89,18 +91,13 @@ export default {
       this.$router.push('/mypage')
     },
     onChangeColor(color) {
-      console.log(color)
-      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
-      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
-
       this.$refs.myInstance.message('body', 'ChangeColor', color);
-
       this.myItems.color = color;
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         this.myItems = res.data;
         // console.log(this.myItems);
@@ -108,10 +105,14 @@ export default {
       })
     },
     saveItem(){
-      axios.post(`http://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
         this.$router.push('/mypage');
       });
+    },
+    onChangeEyebrow(eyebrow) {
+      console.log(eyebrow)
+      this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
     }
   },
   created(){
@@ -120,7 +121,7 @@ export default {
           url:'/v2/user/me',
           success : res => {
               const kakao_account = res.kakao_account;
-              axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 // console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
@@ -128,7 +129,7 @@ export default {
           },
       })
 
-      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/product`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product`)
       .then(res => {
         console.log(res);
         res.data.forEach(item => {
@@ -243,7 +244,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: auto;
+  margin: auto;
   cursor: pointer;
 }
 /* .color:hover {
@@ -304,5 +305,31 @@ export default {
 }
 .myfacebtn {
   color: white;
+}
+.eyebrowbox {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.eyebrowbox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.noEyebrow {
+  margin: auto;
+  cursor: pointer;
+}
+.eyebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.eyebox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
 }
 </style>
