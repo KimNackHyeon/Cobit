@@ -7,6 +7,8 @@ import mutations from './mutations'
 const state = {
   StageDetail: {},
   StageNum: 0,
+  InStageNum: '',
+  InStageStar: '',
 }
 console.log(state);
 
@@ -20,7 +22,7 @@ export default new Vuex.Store({
       nickname:null,
       star:null,
       // profile_image_url:null
-    }
+    },
   },
   getters,
   mutations,

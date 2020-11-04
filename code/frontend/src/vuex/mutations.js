@@ -17,4 +17,10 @@ export default {
     state.kakaoUserInfo.nickname = null;
     state.kakaoUserInfo.star = null;
   },
+  setInStageNum(state, data) {
+    state.InStageNum = data
+  },
+  setInStageStar(state, data) {
+    state.InStageStar = data
+  }
 }
