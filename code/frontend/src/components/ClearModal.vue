@@ -16,7 +16,7 @@
           </div>
           <div class="clear-modal-footer">
             <div class="clear-modal-btn" @click="nextLevel">다음 단계로</div>
-            <div class="clear-modal-btn">다시하기</div>
+            <div class="clear-modal-btn" @click="reStart">다시하기</div>
           </div>
         </div>
       </div>
@@ -45,8 +45,12 @@ export default {
   methods: {
     ...mapMutations(['setInStageNum']),
     nextLevel() {
-      this.setInStageNum(this.InStageNum+1);
+      this.$emit('next');
       this.$emit('close')
+    },
+    reStart() {
+      this.$emit('close')
+      this.$emit('restart')
     }
   }
 }

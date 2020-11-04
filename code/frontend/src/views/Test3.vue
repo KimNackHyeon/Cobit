@@ -27,13 +27,15 @@
       </div>
     </div>
 
-    <ClearModal v-if="isClear" @close="isClear= false"/>
+    <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
+    <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
   </div>
 </template>
 
 <script>
 import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
+import FailModal from '../components/FailModal.vue';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -45,12 +47,13 @@ export default {
       commandList: [],
       isClear: false,
       isFail: false,
-      stageNum: 1,
+      stageNum: 0,
     }
   },
   components: {
     Unity,
     ClearModal,
+    FailModal,
   },
   computed: {
   },
@@ -60,6 +63,7 @@ export default {
   },
   mounted() {
     this.onMove();
+    this.nextLevel();
   },
   watch: {
   },
@@ -114,16 +118,26 @@ export default {
       this.commandList.push('반복3')
       this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
     },
+    reStart() {
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+    },
+    nextLevel() {
+      this.stageNum += 1
+      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+    },
     handleClear() {
       this.onModal();
     },
     handleFail() {
-      console.log(event)
+      this.onModal2();
     },
     onModal() {
       this.isClear = true;
       this.setInStageNum(this.stageNum);
       this.setInStageStar(3);
+    },
+    onModal2() {
+      this.isFail = true;
     },
   },
   beforeDestroy () {
