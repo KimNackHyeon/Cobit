@@ -38,7 +38,7 @@
                 캐릭터 이름 변경
               </div>
               <div style="position: absolute; right: 3%; top: 22%;">
-                <v-btn icon @click="renamemodal=false"><v-icon style="font-size: 3vw;">mdi-close</v-icon></v-btn>
+                <v-btn icon @click="renamemodal=false"><v-icon style="font-size: 28px;">mdi-close</v-icon></v-btn>
               </div>
           </v-card-title>
           <v-divider></v-divider>
@@ -47,8 +47,11 @@
               <p style="font-size:16px; font-family: 'BMJUA';" class="my-2">새로운 캐릭터 이름을 적어주세요.</p>
               <p style="font-size:16px; font-family: 'BMJUA';" class="my-2"><span style="color: #64B5FF">공백</span>이나 <span style="color: #64B5FF">특수문자</span>를 사용할 수 없습니다.</p>
             </div>
-            <div style="margin-top: 5%; width: 80%; height: 23%; display: flex; justify-content: center">
+            <div style="margin-top: 5%; width: 80%; height: 23%; display: flex; justify-content: center; position: relative">
               <input class="nameinput" type="text" v-model="newname">
+              <div style="position: absolute; right: 12%; top: 10%;">
+                <v-btn icon @click="delNewname"><v-icon style="font-size: 25px; color: black;">mdi-close</v-icon></v-btn>
+              </div>
             </div>
           </v-card-text>
         </v-card>
@@ -140,9 +143,11 @@
                   <div style="height: 5%"></div>
                   <!-- 보상 아이템 -->
                   <div class="attenditemBox">
-                    <!-- <img src="../assets/images/red-ribbon3.png" alt=""> -->
+                    <img class="ribbonimg" src="../assets/images/red-ribbon4.png" alt="">
+                    <div class="itemtitle">보상 아이템</div>
                     <div class="itemimg">
                     </div>
+                    <div class="itemname">황금 모자</div>
                   </div>
                 </div>
                 <!-- 오른쪽 박스 -->
@@ -208,6 +213,7 @@ export default {
   components: {
     Unity
   },
+
   mounted() {
     console.log(this.name);
     // 별 총합 계산
@@ -222,13 +228,16 @@ export default {
     //   this.starpercent.push(number.toFixed(2)*100)
     // }
     // 별의 갯수에 따라 width 설정
-    $(".onestar").css("width", `${this.starpercent[0]}%`)
-    $(".twostar").css("width", `${this.starpercent[1]}%`)
-    $(".threestar").css("width", `${this.starpercent[2]}%`)
+    const starratio = (this.star / 90) * 100
+    $(".mystar").css("width", `${starratio}%`)
+    $(".startotal").css("width", `${100 - starratio}%`)
   },
   methods: {
     onRename(){
       this.renamemodal = !this.renamemodal
+    },
+    delNewname() {
+      this.newname = "";
     },
     onNewName() {
       if(this.newname.length > 0) {
@@ -376,6 +385,9 @@ export default {
   font-family: BMJUA;
   background-color: #a4d4ff !important;
   border-radius: 30px;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
 }
 .confirmbtn:hover {
   box-shadow: 0 0 0 0 rgba(0,0,0,0),
@@ -391,7 +403,7 @@ export default {
   font-size: 20px;
   font-weight: 600;
   font-family: BMJUA;
-  background-color: rgba(164, 212, 255, 0.5) !important;
+  background-color: rgba(164, 212, 255, 0.7) !important;
   padding: 2.5vh !important;
   border-radius: 10px;
 }
@@ -535,6 +547,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 td {
   border: 1px solid gray;
@@ -552,12 +565,29 @@ td {
   justify-content: center;
   font-size: 5vh;
 }
+.ribbonimg {
+  width: 260px;
+  position: absolute;
+  top: -75px;
+}
 .itemimg {
-  width: 90%;
+  width: 65%;
   height: 40%;
   background: url("../assets/images/Hat3.png");
   background-repeat: no-repeat;
   background-size: contain;
 }
-
+.itemtitle {
+  position: absolute;
+  font-size: 25px;
+  font-family: 'BMJUA';
+  top: -15px;
+  color: gold;
+}
+.itemname {
+  position: absolute;
+  font-size: 25px;
+  font-family: 'BMJUA';
+  bottom: 25px;
+}
 </style>
