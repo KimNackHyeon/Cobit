@@ -1,10 +1,17 @@
 <template>
   <div id="apitest">
-    <button class="snap" v-on:click="capture">CAPTURE</button><br>
-    <button class="snap" v-on:click="findface">FIND</button>
-    <video style="width:600px; height:400px;" autoplay ref="video" id="video" class="video"></video>
+    <!-- <button class="snap" v-on:click="findface">FIND</button> -->
+    <div class="videobox">
+      <video style="width:500px; height:400px;" autoplay ref="video" id="video" class="video"></video>
+    </div>
     <!-- <button class="snap" v-on:click="capture()">SNAP</button> -->
-    <canvas ref="canvas" class="canvas" id="canvas" width="600px" height="400px"></canvas>
+    <div class="picturebtnbox">
+      <button class="snap picturebtn" v-on:click="capture">사진찍기</button>
+    </div>
+    <div class="canvasbox">
+      <canvas ref="canvas" class="canvas" id="canvas" width="500px" height="400px"></canvas>
+    </div>
+    
     <!-- <img :src="imageFile.src"/> -->
   </div>
 </template>
@@ -151,5 +158,33 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.videobox {
+  display: flex;
+  justify-content: center;
+  padding-top: 5%;
+}
+.picturebtnbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+}
+.picturebtn {
+  width: 350px;
+  height: 60px;
+  background-color: #a4d4ff;
+  font-size: 27px;
+  font-weight: 500;
+  font-family: BMJUA;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
+}
+.canvasbox {
+  display: flex;
+  justify-content: center;
+}
 </style>

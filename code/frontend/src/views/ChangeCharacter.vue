@@ -37,7 +37,7 @@
                <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
               <!-- </router-link> -->
               <v-app class="vapp"></v-app>
-              <v-dialog max-width="60%" min-height="50%" v-model="cameramodal">
+              <v-dialog max-width="70%" min-height="50%" v-model="cameramodal">
                 <v-card flat tile>
                   <apitest />
                 </v-card>
@@ -168,8 +168,9 @@ export default {
   border-radius: 30px;
   cursor: pointer;
   transition: box-shadow .3s ease;
-  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
-              -6px -6px 10px -1px #ffffff;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2);
+  /* box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff; */
 }
 .header .back-btn:hover {
   box-shadow: 0 0 0 0 rgba(0,0,0,0),
@@ -191,16 +192,17 @@ export default {
   width: 50%;
 }
 .mycharacterbox {
-  height: 12vh;
-  border: 2px solid black;
+  height: 16vh;
+  border: 2px solid white;
   border-radius: 15px;
   margin-bottom: 2vh;
   position: relative;
+  background-color: rgba(255,255, 255, 0.2);
 }
 .mycharacters {
   overflow-x: auto;
   overflow-y: hidden;
-  height: 12vh;
+  height: 16vh;
   display: flex;
   justify-content: left;
   align-items: center;
@@ -212,14 +214,16 @@ export default {
 }
 .itembox {
   height: 10vh;
-  border: 2px solid black;
+  border: 2px solid white;
   border-radius: 15px;
   margin-bottom: 2vh;
   position: relative;
+  background-color: rgba(255,255, 255, 0.2);
 }
 .itemtitle {
   position: absolute;
-  background-color: white;
+  /* background-color: white; */
+  color: white;
   top: -10px;
   left: 10px;
   font-size: 18px;
@@ -269,7 +273,7 @@ export default {
 .cameraimg {
   font-size: 55px;
   margin-right: 10px;
-  color: black;
+  color: white;
 }
 .savebox {
   height: 10vh;
@@ -290,8 +294,7 @@ export default {
   border-radius: 30px;
   cursor: pointer;
   transition: box-shadow .3s ease;
-  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
-              -6px -6px 10px -1px #ffffff;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2);
 }
 .save-btn:hover {
   box-shadow: 0 0 0 0 rgba(0,0,0,0),
@@ -300,6 +303,6 @@ export default {
               inset -3px -3px 4px -1px #ffffff !important;
 }
 .myfacebtn {
-  color: black;
+  color: white;
 }
 </style>
