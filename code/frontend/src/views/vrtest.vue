@@ -1,14 +1,11 @@
 <template>
-    <div>
-        <h2>TEST</h2>
-        <Pano source="../assets/images/mypage_bg.png"></Pano>
-        <!-- <iframe allowfullscreen src="examples/panorama_image.html"></iframe> -->
+    <div style="width:100%; height:100%;">
+        <h2>VR TEST</h2>
+        <iframe allowfullscreen src="https://k3b102.p.ssafy.io/vr.html" style="width:100%; height:100%;"></iframe>
     </div>
 </template>
 <script>
-    import { Pano } from 'vuejs-vr'
- 
     export default {
-        components: { Pano }
+        
     }
 </script>
