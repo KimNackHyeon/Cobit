@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="test-container">
       <div class="unity-box">
-        <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">
@@ -26,11 +26,17 @@
         </div>
       </div>
     </div>
+
+    <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
+    <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
   </div>
 </template>
 
 <script>
 import Unity from 'vue-unity-webgl'
+import ClearModal from '../components/ClearModal.vue';
+import FailModal from '../components/FailModal.vue';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'Test3',
@@ -39,15 +45,20 @@ export default {
       isMove: true,
       isObstacle: false,
       commandList: [],
-      test: [3],
+      isClear: false,
+      isFail: false,
+      stageNum: 1,
     }
   },
   components: {
-    Unity
+    Unity,
+    ClearModal,
+    FailModal,
   },
   computed: {
   },
   created() {
+    window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
   },
@@ -57,6 +68,7 @@ export default {
   watch: {
   },
   methods: {
+    ...mapMutations(['setInStageNum', 'setInStageStar']),
     onMove() {
       this.isMove = true; this.isObstacle = false
       const MOVE = document.querySelector('.move-menu');
@@ -104,16 +116,45 @@ export default {
     },
     goFor3() {
       this.commandList.push('반복3')
-      this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
+      this.$refs.myInstance.message('JavascriptHook', 'Loop', '5,Right,Up')
+    },
+    LevelLoad() {
+      this.commandList = []
+      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+    },
+    reStart() {
+      this.commandList = []
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
+    },
+    nextLevel() {
+      this.commandList = []
+      this.stageNum += 1
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
+    },
+    handleStart() {
+      setTimeout(() => {
+        this.LevelLoad();
+      }, 10);
     },
     handleClear() {
-      console.log(event)
+      this.onModal();
     },
     handleFail() {
-      console.log(event)
+      this.onModal2();
+    },
+    onModal() {
+      this.isClear = true;
+      this.setInStageNum(this.stageNum);
+      this.setInStageStar(3);
+    },
+    onModal2() {
+      this.isFail = true;
     },
   },
   beforeDestroy () {
+    window.removeEventListener('start', this.handleStart)
     window.removeEventListener('clear', this.handleClear)
     window.removeEventListener('fail', this.handleFail)
   },
