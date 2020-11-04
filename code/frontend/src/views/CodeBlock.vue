@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
-        <unity class="unity" style="width:100%; height:100%;" src="map/Build/map.json" unityLoader="map/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
           <div class="block-menu-bar">
@@ -22,34 +22,51 @@
         <div id="play-box" class="play-box">
           <div v-show="isMove" class="block-list">
             <div style="display: flex; justify-content: center;">
-              <div id="play" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
+              <div id="play" @click="clickPlayBtn" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
             </div>
             <div id="underplay" style="display: flex; justify-content: center;">
             <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
               </div>
               </div>
-              {{resultmoves}}
             <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
               <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
               </div>  
               <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
               </div>
             </div>
+            <v-btn id="historyBtn" @mouseover="openHistory" @mouseout="closeHistory">
+              <v-icon>mdi-history</v-icon>
+              <h3>히스토리</h3>
+            </v-btn>
+            <div id="history" :style="{display:this.showhistory}">
+              <div v-for="(step,index) in history" :key="index" >
+                {{step.move_kor}}
+              </div>
+              <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
+    <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
   </div>
 </template>
 
 <script>
 import Unity from 'vue-unity-webgl'
+import ClearModal from '../components/ClearModal.vue';
+import FailModal from '../components/FailModal.vue';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'CodeBlock',
   data() {
     return {
+      isClear: false,
+      isFail: false,
+      stageNum: 1,
       isMove: true,
       isObstacle: false,
       distX: '',
@@ -57,37 +74,37 @@ export default {
       moves:[
         {
           num:0,
-          move:'forward',
+          move:'Up',
           move_kor:'앞으로 가기'
         },
         {
           num:1,
-          move:'right',
+          move:'Right',
           move_kor:'오른쪽으로 가기'
         },
         {
           num:2,
-          move:'left',
+          move:'Left',
           move_kor:'왼쪽으로 가기'
         },
         {
           num:3,
-          move:'back',
+          move:'Down',
           move_kor:'뒤로 가기'
         },
         {
           num:4,
-          move:'turnRight',
+          move:'TurnRight',
           move_kor:'오른쪽으로 90˚ 회전'
         },
         {
           num:5,
-          move:'turnLeft',
+          move:'TurnLeft',
           move_kor:'왼쪽으로 90˚ 회전'
         },
         {
           num:6,
-          move:'jump',
+          move:'Jump',
           move_kor:'점프 하기'
         }
       ],
@@ -102,16 +119,23 @@ export default {
       targetdiv:'',
       resultmoves:[],
       playClass:{background:'#1dc360',show:'none'},
-      playson:0
+      playson:0,
+      alreadyOverPlay:false,
+      history:[],
+      showhistory:'none'
     }
   },
   components: {
-    Unity
+    Unity,
+    ClearModal,
+    FailModal,
   },
   computed: {
   },
   created() {
-    // window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('start', this.handleStart)
+    window.addEventListener('clear', this.handleClear)
+    window.addEventListener('fail', this.handleFail)
   },
   mounted() {
     this.onMove();
@@ -119,6 +143,26 @@ export default {
   watch: {
   },
   methods: {
+     ...mapMutations(['setInStageNum', 'setInStageStar']),
+    clickPlayBtn(){
+      this.resultmoves.forEach( step => {
+      this.$refs.myInstance.message('JavascriptHook',step.move);
+     });
+     for(var i=0; i<this.resultmoves.length;i++){
+       this.history.push(this.resultmoves[i]);
+     }
+
+     this.resultmoves = [];
+     this.resultStep = [];
+     this.playClass.background='#1dc360';
+     this.$refs.myInstance.message('JavascriptHook',"Go");
+    },
+    openHistory(){
+      this.showhistory = 'block';
+    },
+    closeHistory(){
+      this.showhistory = 'none';
+    },
     getNeighbor(event){
       var x = this.distX+event.pageX;
       var y = this.distY+event.pageY;
@@ -193,6 +237,17 @@ export default {
       //마우스가 움직이면서 계속 마우스 위치를 가져온다.
       this.getNeighbor(event);
       },
+    updateLink(){
+      var parent = this.targetdivNum;
+        var son = this.resultStep[parent].son;
+        while(son != -1){
+          console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
+          this.resultStep[son].x = Number(this.resultStep[parent].x);
+          this.resultStep[son].y = Number(this.resultStep[parent].y)+47;
+          parent = son;
+          son = this.resultStep[son].son;
+        }
+    },
     drop(event) {
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
@@ -210,30 +265,28 @@ export default {
         var selectedNum = this.selectnum;
         selectedNum = selectedNum.split("block")[2].split(' ')[0]
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1});
+        this.updateLink();
         }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
           this.resultStep[this.targetdivNum].marginTop = posY + this.distY + 'px';
           this.resultStep[this.targetdivNum].x = posX + this.distX;
           this.resultStep[this.targetdivNum].y = posY + this.distY;
-          var parent = this.targetdivNum;
-          var son = this.resultStep[parent].son;
-          while(son != -1){
-            console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
-            this.resultStep[son].x = Number(this.resultStep[parent].x);
-            this.resultStep[son].y = Number(this.resultStep[parent].y)+47;
-            parent = son;
-            son = this.resultStep[son].son;
-          }
+          this.updateLink();
         }
         // console.log(event);
         if(this.playClass.show=='block'){
           this.playson = this.targetdivNum;
           var tempson = this.playson;
           while(tempson != -1){
-              this.resultmoves.push(tempson);
+              this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
               tempson = this.resultStep[tempson].son;
+              this.alreadyOverPlay = true;
             }
           document.getElementById('underplay').appendChild(this.targetdiv);
+          this.resultStep[this.targetdivNum].position = 'unset';
+          this.resultStep[this.targetdivNum].marginleft = '0px';
+          this.resultStep[this.targetdivNum].marginTop = '0px';
+          console.log(this.resultStep);
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -264,11 +317,50 @@ export default {
             step.overMe = 'none'
           }
      });
+     this.playClass.show='none';
       }
+    },
+    LevelLoad() {
+      this.commandList = []
+      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+    },
+    reStart() {
+      this.commandList = []
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
+    },
+    nextLevel() {
+      this.commandList = []
+      this.stageNum += 1
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
+    },
+    handleStart() {
+      setTimeout(() => {
+        this.LevelLoad();
+      }, 10);
+    },
+    handleClear() {
+      this.onModal();
+      this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
+    },
+    handleFail() {
+      this.onModal2();
+      this.history.push({move:'fail',move_kor:"스테이지"+this.stageNum+' 실패!',num:-2})
+    },
+    onModal() {
+      this.isClear = true;
+      this.setInStageNum(this.stageNum);
+      this.setInStageStar(3);
+    },
+    onModal2() {
+      this.isFail = true;
     },
   },
   beforeDestroy () {
-    // window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('start', this.handleStart)
+    window.removeEventListener('clear', this.handleClear)
+    window.removeEventListener('fail', this.handleFail)
   },
 }
 </script>
@@ -394,5 +486,22 @@ export default {
   justify-content: center;
 }
 
+#historyBtn{
+  position:absolute;
+  bottom:0;
+  right:0;
+  margin:5px;
+}
 
+#history{
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    bottom: 10%;
+    right: 10%;
+    background: white;
+    z-index: 2;
+    box-shadow: 3px 3px 9px #00000078;
+    border-radius: 16px;
+}
 </style>
