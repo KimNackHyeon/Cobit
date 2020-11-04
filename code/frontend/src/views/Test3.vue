@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="test-container">
       <div class="unity-box">
-        <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">
@@ -47,7 +47,7 @@ export default {
       commandList: [],
       isClear: false,
       isFail: false,
-      stageNum: 0,
+      stageNum: 1,
     }
   },
   components: {
@@ -58,12 +58,12 @@ export default {
   computed: {
   },
   created() {
+    window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
   },
   mounted() {
     this.onMove();
-    this.nextLevel();
   },
   watch: {
   },
@@ -116,14 +116,27 @@ export default {
     },
     goFor3() {
       this.commandList.push('반복3')
-      this.$refs.myInstance.message('JavascriptHook', 'Loop', '6,Down')
+      this.$refs.myInstance.message('JavascriptHook', 'Loop', '5,Right,Up')
+    },
+    LevelLoad() {
+      this.commandList = []
+      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
     },
     nextLevel() {
+      this.commandList = []
       this.stageNum += 1
-      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      this.LevelLoad();
+    },
+    handleStart() {
+      setTimeout(() => {
+        this.LevelLoad();
+      }, 10);
     },
     handleClear() {
       this.onModal();
@@ -141,6 +154,7 @@ export default {
     },
   },
   beforeDestroy () {
+    window.removeEventListener('start', this.handleStart)
     window.removeEventListener('clear', this.handleClear)
     window.removeEventListener('fail', this.handleFail)
   },
