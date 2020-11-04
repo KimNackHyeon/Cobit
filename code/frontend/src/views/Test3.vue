@@ -48,6 +48,7 @@ export default {
       isClear: false,
       isFail: false,
       stageNum: 1,
+      starNum: 1,
     }
   },
   components: {
@@ -139,19 +140,34 @@ export default {
       }, 10);
     },
     handleClear() {
+      this.getStar();
       this.onModal();
     },
     handleFail() {
       this.onModal2();
     },
     onModal() {
-      this.isClear = true;
       this.setInStageNum(this.stageNum);
-      this.setInStageStar(3);
+      this.setInStageStar(this.starNum);
+      this.isClear = true;
     },
     onModal2() {
       this.isFail = true;
     },
+    getStar() {
+      const LENG = this.commandList.length
+      if(this.stageNum == 1) {
+        if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
+      } if(this.stageNum == 2) {
+        if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
+      } if(this.stageNum == 3) {
+        if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
+      } if(this.stageNum == 4) {
+        if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
+      } if(this.stageNum == 5) {
+        if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+      }
+    }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
