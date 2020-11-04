@@ -8,21 +8,21 @@
           <div class="diff-modal-name">초 급</div>
         </div>
         <div v-if="false" class="diff-modal-content diff-modal-on-stage">
-          <img src="@/assets/images/diff2.jpg" alt="중급">
+          <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
         <div class="diff-modal-content">
           <div class="diff-modal-unlock"><i class="fas fa-lock"></i></div>
-          <img src="@/assets/images/diff2.jpg" alt="중급">
+          <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
         <div v-if="false" class="diff-modal-content diff-modal-on-stage">
-          <img src="@/assets/images/diff3.jpg" alt="고급">
+          <img src="@/assets/images/stage3.png" alt="고급">
           <div class="diff-modal-name">고 급</div>
         </div>
         <div class="diff-modal-content">
           <div class="diff-modal-unlock"><i class="fas fa-lock"></i></div>
-          <img src="@/assets/images/diff3.jpg" alt="고급">
+          <img src="@/assets/images/stage3.png" alt="고급">
           <div class="diff-modal-name">고 급</div>
         </div>
       </div>
