@@ -7,6 +7,7 @@ import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
 import Test3 from '../views/Test3.vue'
+import Test4 from '../views/Test4.vue'
 import Speech from '../views/SpeechDetectionStarted.vue'
 
 Vue.use(VueRouter)
@@ -51,6 +52,11 @@ const routes = [
     path: '/test3',
     name: 'Test3',
     component: Test3
+  },
+  {
+    path: '/test4',
+    name: 'Test4',
+    component: Test4
   },
 ]
 
