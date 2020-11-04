@@ -61,7 +61,7 @@
         </v-card-actions>
       </v-dialog>
       <div style="height: 45vh; position: relative">
-        <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity>
+        <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance" :hideFooter="true"></unity>
         <router-link to="/changecharacter">
           <button class="changeBtn">캐릭터 바꾸기</button>
         </router-link>
@@ -73,13 +73,14 @@
             <v-icon style="color: yellow; font-size: 3vw;">mdi-star</v-icon>
           </div> -->
           <div style="width: 100%">
-            <div style="float: left; width: 10%; text-align: center;">
-              <v-icon style="font-size: 35px; color: yellow;">mdi-star</v-icon>
+            <div style="float: left; width: 10%; text-align: center;" class="bar">
+              <i class="fas fa-star"></i>
+              <!-- <v-icon style="font-size: 35px; color: yellow;"><i class="fas fa-star"></i></v-icon> -->
             </div>
             <div class="starbar">
               <div class="mystar"></div>
               <div class="startotal"></div>
-              <div class="starnum"><span>{{startCount}} / 90</span></div>
+              <div class="starnum"><span>{{starCount}} / 90</span></div>
             </div>
             <!-- <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
@@ -204,7 +205,7 @@ export default {
       attendDay: [],
       noattendDay: [],
       totalAttendDay: '',
-      startCount:'',
+      starCount: store.state.kakaoUserInfo.star,
       today: 5,
       nMonth:11,
       isAttend: false
@@ -228,7 +229,7 @@ export default {
     //   this.starpercent.push(number.toFixed(2)*100)
     // }
     // 별의 갯수에 따라 width 설정
-    const starratio = (this.star / 90) * 100
+    const starratio = (this.starCount / 90) * 100
     $(".mystar").css("width", `${starratio}%`)
     $(".startotal").css("width", `${100 - starratio}%`)
   },
@@ -298,7 +299,19 @@ export default {
     },
     moveGame(){
       this.$router.push('/gamemap');
-    }
+    },
+    loadMyCharacter(){
+      // 캐릭터 정보 불러오기
+      console.log("캐릭터 정보 불러오기");
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      .then(res => {
+        console.log(res);
+        setTimeout(() => {
+          this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+        }, 2500);
+        
+      })
+    },
   },
   created(){
     if(this.$cookies.isKey("access_token")){
@@ -312,8 +325,9 @@ export default {
                 console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.name = store.state.kakaoUserInfo.nickname;
-                this.startCount = store.state.kakaoUserInfo.star;
+                this.starCount = store.state.kakaoUserInfo.star;
                 this.loadAttend();
+                this.loadMyCharacter();
               })
           },
       })
@@ -590,5 +604,14 @@ td {
   font-size: 25px;
   font-family: 'BMJUA';
   bottom: 25px;
+}
+.bar .fa-star {
+  /* position: absolute; */
+  font-size: 35px;
+  color: rgb(243, 243, 0);
+  text-shadow: -1.5px 0 #000,
+                0 1.5px #000,
+                1.5px 0 #000,
+                0 -1.5px #000;
 }
 </style>

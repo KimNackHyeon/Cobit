@@ -8,6 +8,7 @@ import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
 import Test3 from '../views/Test3.vue'
 import Speech from '../views/SpeechDetectionStarted.vue'
+import VRTest from '../views/vrtest.vue'
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,11 @@ const routes = [
     name: 'Test3',
     component: Test3
   },
+  {
+    path: '/vrtest',
+    name: 'VRTest',
+    component: VRTest
+  }
 ]
 
 const router = new VueRouter({
