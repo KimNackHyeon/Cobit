@@ -11,7 +11,7 @@
         </div>
       </div>
       <div style="height: 6%"></div>
-      <div class="box" style="height: 47%; position: relative; cursor: pointer;">
+      <div class="box" style="height: 47%; position: relative; cursor: pointer;" @click="moveGame">
         <div style="width: 100%; height: 100%;">
           <img class="practiceImg" src="../assets/images/practice.png" alt="모험하기">
         </div>
@@ -246,7 +246,7 @@ export default {
         this.renamemodal = false
       }
 
-      axios.put(`http://k3b102.p.ssafy.io:9999/cobit/user`,{
+      axios.put(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
         email : store.state.kakaoUserInfo.email,
         nickname : this.name
       }).then(res => {
@@ -261,7 +261,7 @@ export default {
     attendCheck(){
       if(!this.isAttend){
         this.isAttend = true;
-        axios.post(`http://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
           email : store.state.kakaoUserInfo.email,
           day : this.today,
           month : this.nMonth,
@@ -278,7 +278,7 @@ export default {
     loadAttend(){
       // 출석 정보 가져오기
       var date = new Date();
-      axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
         params : {
           email : store.state.kakaoUserInfo.email,
           month : date.getMonth()+1
@@ -295,6 +295,9 @@ export default {
         this.today = date.getDate();
         this.nMonth = date.getMonth() +1;
       })
+    },
+    moveGame(){
+      this.$router.push('/gamemap');
     }
   },
   created(){
@@ -304,7 +307,7 @@ export default {
           url:'/v2/user/me',
           success : res => {
               const kakao_account = res.kakao_account;
-              axios.get(`http://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
@@ -314,8 +317,6 @@ export default {
               })
           },
       })
-    }else{
-      this.$router.push('/');
     }
   }
 
