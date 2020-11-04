@@ -10,7 +10,7 @@
           <div class="mycharacterbox">
             <span class="itemtitle">내가 가진 캐릭터</span>
             <div class="mycharacters">
-              <img v-for="i in 10" :key=i src="../assets/images/penguin2.png" alt="character1">
+              <img src="../assets/images/penguin.png" alt="character1">
             </div>
           </div>
           <div class="itembox">
@@ -29,7 +29,7 @@
           <div class="itembox">
             <span class="itemtitle">눈</span>
             <div class="eyebox">
-              <img src="../assets/images/eye3.png" alt="eye3">
+              <img v-for="i in 2" :key="i" @click="onChangeEye(`eye${i}`)" :src="require(`../assets/images/eye${i}.png`)" :alt="`eye${i}`">
             </div>
           </div>
           <div class="itembox">
@@ -113,6 +113,9 @@ export default {
     onChangeEyebrow(eyebrow) {
       console.log(eyebrow)
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
+    },
+    onChangeEye(eye) {
+      this.$refs.myInstance.message('stand', 'ChangeEye', eye)
     }
   },
   created(){
@@ -210,8 +213,9 @@ export default {
   padding: 0 20px;
 }
 .mycharacters img {
-  width: 60px;
+  width: 20%;
   margin-right: 1vw;
+  cursor: pointer;
 }
 .itembox {
   height: 10vh;
