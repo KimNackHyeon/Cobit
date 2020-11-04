@@ -290,7 +290,7 @@ export default {
         }
 
         var content = window.document.getElementsByClassName("overMe");
-        if(content.length!=0){
+        if(content.length!=0 && !this.isAdded){
           console.log(content[0])
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '45px';
@@ -406,6 +406,8 @@ export default {
   /* background-color: brown; */
   border: 1px solid #a4d4ff;
   /* position: relative; */
+  /* background-image: url('../assets/images/tile.png');
+      background-repeat: repeat; */
 }
 
 .block-menu-bar {
@@ -499,9 +501,10 @@ export default {
     height: 80%;
     bottom: 10%;
     right: 10%;
-    background: white;
     z-index: 2;
-    box-shadow: 3px 3px 9px #00000078;
-    border-radius: 16px;
+    background-image: url('../assets/images/history.png');
+    background-color: transparent;
+    background-size: 100% 100%;
+    padding: 107px 50px;
 }
 </style>
