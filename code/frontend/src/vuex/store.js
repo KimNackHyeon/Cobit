@@ -7,6 +7,7 @@ import mutations from './mutations'
 const state = {
   StageDetail: {},
   StageNum: 0,
+  StageType: 0,
   InStageNum: '',
   InStageStar: '',
 }
