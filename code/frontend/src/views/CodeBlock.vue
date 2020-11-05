@@ -21,19 +21,23 @@
         </div>
         <div id="play-box" class="play-box">
           <div v-show="isMove" class="block-list">
-            <div style="display: flex; justify-content: center;">
+            <div style="display:flex; justify-content:center;">
               <div id="play" @click="clickPlayBtn" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
             </div>
-            <div id="underplay" style="display: flex; justify-content: center;">
-            <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
+            <div style="display:flex; justify-content:center;">
+                <div id="underplay" >
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
+                    </div>
+                  </div>
               </div>
-              </div>
-            <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
-              <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
-              </div>  
-              <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
-              </div>
+              <div id="block-board">
+                <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
+                  <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
+                  </div>  
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
+                  </div>
+                </div>
             </div>
             <v-btn id="historyBtn" @mouseover="openHistory" @mouseout="closeHistory">
               <v-icon>mdi-history</v-icon>
@@ -75,7 +79,7 @@ export default {
         {
           num:0,
           move:'Up',
-          move_kor:'앞으로 가기'
+          move_kor:'위로 가기'
         },
         {
           num:1,
@@ -90,7 +94,7 @@ export default {
         {
           num:3,
           move:'Down',
-          move_kor:'뒤로 가기'
+          move_kor:'밑으로 가기'
         },
         {
           num:4,
@@ -119,7 +123,7 @@ export default {
       targetdiv:'',
       resultmoves:[],
       playClass:{background:'#1dc360',show:'none'},
-      playson:0,
+      playson:-1,
       alreadyOverPlay:false,
       history:[],
       showhistory:'none'
@@ -145,8 +149,19 @@ export default {
   methods: {
      ...mapMutations(['setInStageNum', 'setInStageStar']),
     clickPlayBtn(){
+      console.log("클릭!");
+      console.log(this.resultmoves);
+      var tempson = this.playson;
+          while(tempson != -1){
+              console.log(tempson);
+              this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
+              tempson = this.resultStep[tempson].son;
+            }
+                  console.log("-----------resultmoves"+this.resultmoves.length+"-------------");
+            console.log(this.resultmoves);
+      console.log("-----------------------------------");
       this.resultmoves.forEach( step => {
-      this.$refs.myInstance.message('JavascriptHook',step.move);
+        this.$refs.myInstance.message('JavascriptHook',step.move);
      });
      for(var i=0; i<this.resultmoves.length;i++){
        this.history.push(this.resultmoves[i]);
@@ -156,6 +171,7 @@ export default {
      this.resultStep = [];
      this.playClass.background='#1dc360';
      this.$refs.myInstance.message('JavascriptHook',"Go");
+      this.playson = -1;
     },
     openHistory(){
       this.showhistory = 'block';
@@ -181,13 +197,24 @@ export default {
      this.resultStep.forEach( step => {
       var stepx = step.x;
       var stepy = step.y;
-       if(step.index!=this.targetdivNum&&(x<stepx+30&&x>stepx-30&&y<stepy+30&&y>stepy-30)){
-         step.class = 'overMe';
-         step.overMe = 'block';
-       }else{
-         step.class = '';
-         step.overMe = 'none';
-       }
+       if(this.resultmoves.includes(step)){
+          if(step.index!=this.targetdivNum&&(x<stepx+20&&x>stepx-20&&y<stepy+65&&y>stepy+30)){
+            step.class = 'overMe';
+            step.overMe = 'block';
+          }else{
+            step.class = '';
+            step.overMe = 'none';
+          }
+        }
+        else{
+          if(step.index!=this.targetdivNum&&(x<stepx+20&&x>stepx-20&&y<stepy+25&&y>stepy-10)){
+            step.class = 'overMe';
+            step.overMe = 'block';
+          }else{
+            step.class = '';
+            step.overMe = 'none';
+          }
+        }
      });
  
     },
@@ -212,6 +239,8 @@ export default {
       let posX = event.pageX;
       let posY = event.pageY;
       // console.log(event.target);
+      event.dataTransfer.effectAllowed = 'copyMove';
+      event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
@@ -264,7 +293,11 @@ export default {
         if(!this.isAdded){
         var selectedNum = this.selectnum;
         selectedNum = selectedNum.split("block")[2].split(' ')[0]
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1});
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false});
+        // const tempTarget = document.getElementById('block-board');
+        // this.targetdiv = tempTarget.querySelector(':last-child');
+        // console.log(tempTarget.childNodes.findIndex(0));
+        this.targetdivNum = this.resultStep.length-1;
         this.updateLink();
         }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
@@ -275,35 +308,36 @@ export default {
         }
         // console.log(event);
         if(this.playClass.show=='block'){
+          var originalPlayson = this.playson;
+          this.resultStep[this.targetdivNum].son = originalPlayson;
           this.playson = this.targetdivNum;
-          var tempson = this.playson;
-          while(tempson != -1){
-              this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
-              tempson = this.resultStep[tempson].son;
-              this.alreadyOverPlay = true;
-            }
+          console.log("playson; "+this.playson);
+          console.log(this.resultStep[1].son);
+          console.log(this.resultStep);
+          console.log("-------------------")
           document.getElementById('underplay').appendChild(this.targetdiv);
           this.resultStep[this.targetdivNum].position = 'unset';
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
-          console.log(this.resultStep);
         }
 
         var content = window.document.getElementsByClassName("overMe");
-        if(content.length!=0 && !this.isAdded){
+        if(content.length!=0){
           console.log(content[0])
           this.resultStep[this.targetdivNum].marginleft = '0px';
-          this.resultStep[this.targetdivNum].marginTop = '45px';
+          this.resultStep[this.targetdivNum].marginTop = '0px';
           this.resultStep[this.targetdivNum].position = 'unset';
           // this.resultStep[this.targetdivNum].x = content[0].getBoundingClientRect().left+this.distX+50;
           // this.resultStep[this.targetdivNum].y = content[0].getBoundingClientRect().top+45;
-          console.log(this.resultStep);
-
-          content[0].nextSibling.after(this.targetdiv);
+          // console.log(this.resultStep);
+          if(this.isAdded){
+            content[0].nextSibling.after(this.targetdiv);
+          }
         }
+        // var original_son = -1;
         this.resultStep.forEach( step => {
           if(step.overMe=='block'){
-            console.log();
+            // original_son = this.resultStep[step.index].son;
             this.resultStep[step.index].son = this.targetdivNum;
             var parent = step.index;
             var son = this.targetdivNum;
@@ -317,8 +351,10 @@ export default {
             step.overMe = 'none'
           }
      });
+    //  this.resultStep[this.targetdivNum].son = original_son;
      this.playClass.show='none';
       }
+
     },
     LevelLoad() {
       this.commandList = []

@@ -81,8 +81,6 @@ export default {
     return {
       // colors: ["black", "red", "yellow", "green", "blue", "purple"],
       colors: [],
-      eyes: [],
-      mouses: [],
       myItems: {
         userId:store.state.kakaoUserInfo.id,
         color:null,
@@ -116,6 +114,15 @@ export default {
           this.onChangeColor(this.myItems.color);
           this.onChangeEyebrow(this.myItems.eyebrow);
           this.onChangeEye(this.myItems.eye);
+          if(this.myItems.crown){
+            this.onChangeItem(this.myItems.crown)
+          }
+          if(this.myItems.shield){
+            this.onChangeItem(this.myItems.shield)
+          }
+          if(this.myItems.shord){
+            this.onChangeItem(this.myItems.shord)
+          }
         }
       })
     },
@@ -127,16 +134,35 @@ export default {
     },
     onChangeEyebrow(eyebrow) {
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
-      console.log(eyebrow);
       this.myItems.eyebrow = eyebrow
+      console.log(this.myItems)
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
-      console.log(eye)
       this.myItems.eye = eye
     },
     onChangeItem(item) {
       this.$refs.myInstance.message('stand', 'ChangeItem', item)
+      if(item == "item1"){
+        if(this.myItems.crown==null){
+          this.myItems.crown = item
+        }else{
+          this.myItems.crown = null
+        }
+      }else if(item == "item2"){
+        if(this.myItems.shield==null){
+          this.myItems.shield = item
+        }else{
+          this.myItems.shield = null
+        }
+      }else{
+        if(this.myItems.shord==null){
+          this.myItems.shord = item
+        }else{
+          this.myItems.shord = null
+        }
+      }
+      console.log(this.myItems)
     }
   },
   created(){

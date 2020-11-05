@@ -222,16 +222,16 @@ export default {
   mounted() {
     console.log(this.name);
     // 별의 갯수에 따라 width 설정
-    if(this.startCount == 0) {
+    if(this.starCount == 0) {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
     }
-    else if(this.startCount == 90){
+    else if(this.starCount == 90){
       $(".mystar").css("border-radius", "15px")
       $(".mystar").css("width", "100%")
     }
     else {
-      const starratio = (this.startCount / 90) * 100
+      const starratio = (this.starCount / 90) * 100
       $(".mystar").css("width", `${starratio}%`)
       $(".startotal").css("width", `${100 - starratio}%`)
     }
@@ -319,8 +319,18 @@ export default {
         console.log(res);
         setTimeout(() => {
           this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+          this.$refs.myInstance.message('stand', 'ChangeEyebrow', res.data.eyebrow)
+          this.$refs.myInstance.message('stand', 'ChangeEye', res.data.eye)
+          if(res.data.crown){
+            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.crown)
+          }
+          if(res.data.shield){
+            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shield)
+          }
+          if(res.data.shord){
+            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shord)
+          }
         }, 2500);
-        
       })
     },
   },
