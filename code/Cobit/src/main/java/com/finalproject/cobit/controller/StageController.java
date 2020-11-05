@@ -1,6 +1,7 @@
 package com.finalproject.cobit.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,13 @@ public class StageController {
 	@ApiOperation(value = "나의 스테이지 정보 기록하기")
 	@PostMapping("/user")
 	public ResponseEntity<Boolean> saveMyStage(@RequestBody StageProgress sp) {
+		Long type = (long) ((sp.getStageId()+"").charAt(0) - '0');
+		Long map = (long) ((sp.getStageId()+"").charAt(1) - '0');
+		
+		System.out.println(type + " " + map);
+		
+		Optional<Stage> stageOpt = stageRepo.getStageByTypeAndMap(type, map);
+		sp.setStageId(stageOpt.get().getId());
 		spRepo.save(sp);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
