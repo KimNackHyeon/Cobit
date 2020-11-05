@@ -81,9 +81,15 @@ export default {
     return {
       // colors: ["black", "red", "yellow", "green", "blue", "purple"],
       colors: [],
-      eyes: [],
-      mouses: [],
-      myItems: [],
+      myItems: {
+        userId:store.state.kakaoUserInfo.id,
+        color:null,
+        eye:null,
+        eyebrow:null,
+        crown:null,
+        shield:null,
+        shord:null
+      },
       // myColor:[]
       items: [],
       cameramodal: false,
@@ -102,9 +108,22 @@ export default {
       console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        this.myItems = res.data;
-        // console.log(this.myItems);
-        this.onChangeColor(this.myItems.color);
+        if(res.data){
+          this.myItems = res.data;
+          console.log(this.myItems);
+          this.onChangeColor(this.myItems.color);
+          this.onChangeEyebrow(this.myItems.eyebrow);
+          this.onChangeEye(this.myItems.eye);
+          if(this.myItems.crown){
+            this.onChangeItem(this.myItems.crown)
+          }
+          if(this.myItems.shield){
+            this.onChangeItem(this.myItems.shield)
+          }
+          if(this.myItems.shord){
+            this.onChangeItem(this.myItems.shord)
+          }
+        }
       })
     },
     saveItem(){
@@ -115,14 +134,35 @@ export default {
     },
     onChangeEyebrow(eyebrow) {
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
+      this.myItems.eyebrow = eyebrow
+      console.log(this.myItems)
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
-      console.log(eye)
-      // this.myItems.eye = eye
+      this.myItems.eye = eye
     },
     onChangeItem(item) {
       this.$refs.myInstance.message('stand', 'ChangeItem', item)
+      if(item == "item1"){
+        if(this.myItems.crown==null){
+          this.myItems.crown = item
+        }else{
+          this.myItems.crown = null
+        }
+      }else if(item == "item2"){
+        if(this.myItems.shield==null){
+          this.myItems.shield = item
+        }else{
+          this.myItems.shield = null
+        }
+      }else{
+        if(this.myItems.shord==null){
+          this.myItems.shord = item
+        }else{
+          this.myItems.shord = null
+        }
+      }
+      console.log(this.myItems)
     }
   },
   created(){
