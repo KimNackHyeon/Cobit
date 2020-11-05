@@ -122,7 +122,7 @@ export default {
     saveItem(){
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
-        // this.$router.push('/mypage');
+        this.$router.push('/mypage');
       });
     },
     onChangeEyebrow(eyebrow) {
