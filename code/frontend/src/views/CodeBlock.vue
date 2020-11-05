@@ -265,6 +265,7 @@ export default {
         var selectedNum = this.selectnum;
         selectedNum = selectedNum.split("block")[2].split(' ')[0]
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1});
+        this.targetdiv = target.querySelector(':last-child');
         this.updateLink();
         }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
@@ -290,7 +291,7 @@ export default {
         }
 
         var content = window.document.getElementsByClassName("overMe");
-        if(content.length!=0 && !this.isAdded){
+        if(content.length!=0){
           console.log(content[0])
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '45px';
