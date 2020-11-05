@@ -162,8 +162,8 @@
                           </div>
                           <div style="height: 75%; display: flex; justify-content: center;">
                             <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 50px; color: red">mdi-check-circle-outline</v-icon>
-                            <!-- <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
                             <v-icon v-else-if="today == ((i-1)*7 + j)" style="font-size: 50px;" @click="attendCheck">mdi-check-circle-outline</v-icon>
+                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon>
                             <!-- <v-icon v-else style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
                           </div>
                         </td>
@@ -217,21 +217,20 @@ export default {
 
   mounted() {
     console.log(this.name);
-    // 별 총합 계산
-    // var totalstar = 0;
-    // for(var i=0; i<this.star.length; i++){
-    //   totalstar += this.star[i]
-    // }
-    // 별 비율 계산
-    // for(var j=0; j<this.star.length; j++){
-    //   var star = this.star[j]
-    //   var number = star / totalstar
-    //   this.starpercent.push(number.toFixed(2)*100)
-    // }
     // 별의 갯수에 따라 width 설정
-    const starratio = (this.starCount / 90) * 100
-    $(".mystar").css("width", `${starratio}%`)
-    $(".startotal").css("width", `${100 - starratio}%`)
+    if(this.startCount == 0) {
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+    }
+    else if(this.startCount == 90){
+      $(".mystar").css("border-radius", "15px")
+      $(".mystar").css("width", "100%")
+    }
+    else {
+      const starratio = (this.startCount / 90) * 100
+      $(".mystar").css("width", `${starratio}%`)
+      $(".startotal").css("width", `${100 - starratio}%`)
+    }
   },
   methods: {
     onRename(){
@@ -295,6 +294,13 @@ export default {
         var date = new Date();
         this.today = date.getDate();
         this.nMonth = date.getMonth() +1;
+        // 출석 실패한 날짜
+        for(var i=1; i<29; i++){
+          if(!this.attendDay.includes(i) && i<this.today){
+            this.noattendDay.push(i)
+          }
+        }
+        console.log(this.noattendDay)
       })
     },
     moveGame(){

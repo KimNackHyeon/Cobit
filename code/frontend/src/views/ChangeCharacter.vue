@@ -10,7 +10,7 @@
           <div class="mycharacterbox">
             <span class="itemtitle">내가 가진 캐릭터</span>
             <div class="mycharacters">
-              <img v-for="i in 10" :key=i src="../assets/images/penguin2.png" alt="character1">
+              <img src="../assets/images/penguin.png" alt="character1">
             </div>
           </div>
           <div class="itembox">
@@ -21,15 +21,22 @@
           </div>
           <div class="itembox">
             <span class="itemtitle">눈썹</span>
-            <div>
-              <!-- <img src="" alt=""> -->
+            <div class="eyebrowbox">
+              <div class="noEyebrow" @click="onChangeEyebrow('eyebrow0')">없음</div>
+              <img v-for="i in 3" :key="i" :src="require(`../assets/images/eyebrow${i}.png`)" :alt="`eyebrow${i}`" @click="onChangeEyebrow(`eyebrow${i}`)">
             </div>
           </div>
           <div class="itembox">
             <span class="itemtitle">눈</span>
+            <div class="eyebox">
+              <img v-for="i in 4" :key="i" @click="onChangeEye(`eye${i}`)" :src="require(`../assets/images/eye${i}.png`)" :alt="`eye${i}`">
+            </div>
           </div>
-          <div class="itembox">
+          <div class="itembox" style="height: 16vh">
             <span class="itemtitle">아이템</span>
+            <div class="items">
+              <img v-for="i in 3" :key="i" @click="onChangeItem(`item${i}`)" :src="require(`../assets/images/item${i}.png`)" :alt="`item${i}`">
+            </div>
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
@@ -61,8 +68,6 @@
 <script>
 import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
-// import SendMessage from 'vue-unity-webgl';
-// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
 import axios from 'axios';
 import store from '../vuex/store';
 import Apitest from '../views/Apitest.vue'
@@ -89,12 +94,7 @@ export default {
       this.$router.push('/mypage')
     },
     onChangeColor(color) {
-      console.log(color)
-      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
-      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
-
       this.$refs.myInstance.message('body', 'ChangeColor', color);
-
       this.myItems.color = color;
     },
     loadMyCharacter(){
@@ -112,6 +112,17 @@ export default {
       .then(()=>{
         this.$router.push('/mypage');
       });
+    },
+    onChangeEyebrow(eyebrow) {
+      this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
+    },
+    onChangeEye(eye) {
+      this.$refs.myInstance.message('stand', 'ChangeEye', eye)
+      console.log(eye)
+      // this.myItems.eye = eye
+    },
+    onChangeItem(item) {
+      this.$refs.myInstance.message('stand', 'ChangeItem', item)
     }
   },
   created(){
@@ -209,8 +220,9 @@ export default {
   padding: 0 20px;
 }
 .mycharacters img {
-  width: 60px;
+  width: 16%;
   margin-right: 1vw;
+  cursor: pointer;
 }
 .itembox {
   height: 10vh;
@@ -243,7 +255,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: auto;
+  margin: auto;
   cursor: pointer;
 }
 /* .color:hover {
@@ -304,5 +316,44 @@ export default {
 }
 .myfacebtn {
   color: white;
+}
+.eyebrowbox {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.eyebrowbox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.noEyebrow {
+  margin: auto;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'BMJUA';
+}
+.eyebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.eyebox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.items img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
 }
 </style>
