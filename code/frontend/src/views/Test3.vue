@@ -37,6 +37,8 @@ import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
 import { mapMutations } from 'vuex';
+import axios from 'axios';
+import store from '../vuex/store'
 
 export default {
   name: 'Test3',
@@ -49,6 +51,7 @@ export default {
       isFail: false,
       stageNum: 1,
       starNum: 1,
+      stageType: 1,
     }
   },
   components: {
@@ -62,6 +65,9 @@ export default {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
+    this.stageNum = this.$cookies.get('stageInfo').stageNum;
+    this.stageType = this.$cookies.get('stageInfo').stageType;
+
   },
   mounted() {
     this.onMove();
@@ -167,6 +173,13 @@ export default {
       } if(this.stageNum == 5) {
         if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
       }
+
+      // axios
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
+        userId : store.state.kakaoUserInfo.id,
+        stageId : this.stageType + "" + this.stageNum,
+        star : this.starNum 
+      })
     }
   },
   beforeDestroy () {
