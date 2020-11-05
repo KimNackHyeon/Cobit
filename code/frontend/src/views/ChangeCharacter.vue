@@ -54,7 +54,7 @@
         <!-- 캐릭터 보여주는 곳 -->
         <div class="rightbox">
           <div class="character">
-            <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance"></unity>
+            <unity src="../unity2/Build/unity2.json" unityLoader="../unity2/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
           </div>
           <div class="savebox">
             <div class="save-btn" @click="saveItem">저장하기</div> 
@@ -129,7 +129,7 @@ export default {
     saveItem(){
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
-        this.$router.push('/mypage');
+        // this.$router.push('/mypage');
       });
     },
     onChangeEyebrow(eyebrow) {
@@ -197,7 +197,7 @@ export default {
     setTimeout(() => {
       // console.log(this.items);
       this.loadMyCharacter();
-    }, 2000);
+    }, 3000);
   }
 }
 </script>

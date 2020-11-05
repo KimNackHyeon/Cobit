@@ -61,7 +61,7 @@
         </v-card-actions>
       </v-dialog>
       <div style="height: 45vh; position: relative">
-        <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance"></unity>
+        <unity src="../unity2/Build/unity2.json" unityLoader="#"></unity>
         <router-link to="/changecharacter">
           <button class="changeBtn">캐릭터 바꾸기</button>
         </router-link>
@@ -81,6 +81,18 @@
               <div class="startotal"></div>
               <div class="starnum"><span>{{startCount}} / 90</span></div>
             </div>
+            <!-- <div class="star onestar">
+              <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
+              {{starpercent[0]}}%
+            </div>
+            <div class="star twostar">
+              <v-icon v-for="i in 2" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
+              {{starpercent[1]}}%
+            </div>
+            <div class="star threestar">
+              <v-icon v-for="i in 3" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
+              {{starpercent[2]}}%
+            </div> -->
           </div>
         </div>
         <div style="height: 4%"></div>
@@ -195,16 +207,7 @@ export default {
       startCount:'',
       today: 5,
       nMonth:11,
-      isAttend: false,
-      myItems: {
-        userId:store.state.kakaoUserInfo.id,
-        color:null,
-        eye:null,
-        eyebrow:null,
-        crown:null,
-        shield:null,
-        shord:null
-      },
+      isAttend: false
     }
   },
   components: {
@@ -212,10 +215,6 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
-      // console.log(this.items);
-      this.loadMyCharacter();
-    }, 2000);
     console.log(this.name);
     // 별의 갯수에 따라 width 설정
     if(this.startCount == 0) {
@@ -224,7 +223,7 @@ export default {
     }
     else if(this.startCount == 90){
       $(".mystar").css("border-radius", "15px")
-      $(".mystar").css("width", "100%")
+      $(".startotal").css("width", "100%")
     }
     else {
       const starratio = (this.startCount / 90) * 100
@@ -233,65 +232,6 @@ export default {
     }
   },
   methods: {
-    loadMyCharacter(){
-      // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
-      .then(res => {
-        if(res.data){
-          this.myItems = res.data;
-          console.log(this.myItems);
-          this.onChangeColor(this.myItems.color);
-          this.onChangeEyebrow(this.myItems.eyebrow);
-          this.onChangeEye(this.myItems.eye);
-          if(this.myItems.crown){
-            this.onChangeItem(this.myItems.crown)
-          }
-          if(this.myItems.shield){
-            this.onChangeItem(this.myItems.shield)
-          }
-          if(this.myItems.shord){
-            this.onChangeItem(this.myItems.shord)
-          }
-        }
-      })
-    },
-    onChangeColor(color) {
-      this.$refs.myInstance.message('body', 'ChangeColor', color);
-      this.myItems.color = color;
-    },
-    onChangeEyebrow(eyebrow) {
-      this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
-      this.myItems.eyebrow = eyebrow
-      console.log(this.myItems)
-    },
-    onChangeEye(eye) {
-      this.$refs.myInstance.message('stand', 'ChangeEye', eye)
-      this.myItems.eye = eye
-    },
-    onChangeItem(item) {
-      this.$refs.myInstance.message('stand', 'ChangeItem', item)
-      if(item == "item1"){
-        if(this.myItems.crown==null){
-          this.myItems.crown = item
-        }else{
-          this.myItems.crown = null
-        }
-      }else if(item == "item2"){
-        if(this.myItems.shield==null){
-          this.myItems.shield = item
-        }else{
-          this.myItems.shield = null
-        }
-      }else{
-        if(this.myItems.shord==null){
-          this.myItems.shord = item
-        }else{
-          this.myItems.shord = null
-        }
-      }
-      console.log(this.myItems)
-    },
     onRename(){
       this.renamemodal = !this.renamemodal
     },
