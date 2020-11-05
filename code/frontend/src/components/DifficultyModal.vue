@@ -3,7 +3,7 @@
     <div class="diff-modal-mask">
       <i class="fas fa-times" @click.self="$emit('close')"></i>
       <div class="diff-modal-wrap">
-        <div class="diff-modal-content diff-modal-on-stage">
+        <div class="diff-modal-content diff-modal-on-stage" @click="moveStage(1)">
           <img src="@/assets/images/stage1.png" alt="초급">
           <div class="diff-modal-name">초 급</div>
         </div>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   name: 'DifficultyModal',
   data() {
@@ -46,6 +47,12 @@ export default {
   mounted() {
   },
   methods: {
+    ...mapMutations(['setStageType']),
+    moveStage(type){
+      // this.setStageType(type);
+      this.$cookies.set('stageType',type);
+      this.$router.push('/gamemap');
+    }
   }
 }
 </script>

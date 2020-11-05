@@ -90,7 +90,7 @@ export default {
         eyebrow:null,
         crown:null,
         shield:null,
-        shord:null
+        sword:null
       },
       // myColor:[]
       items: [],

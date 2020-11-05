@@ -69,7 +69,8 @@ export default {
   },
   created() {
     // window.addEventListener('scroll', this.handleScroll)
-    this.type = 1;
+    this.type = this.$cookies.get('stageType');
+    console.log(this.type);
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
       window.Kakao.API.request({
