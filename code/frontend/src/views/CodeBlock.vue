@@ -29,11 +29,13 @@
             <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
               </div>
               </div>
-            <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
-              <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
-              </div>  
-              <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
-              </div>
+              <div id="block-board">
+                <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
+                  <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
+                  </div>  
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
+                  </div>
+                </div>
             </div>
             <v-btn id="historyBtn" @mouseover="openHistory" @mouseout="closeHistory">
               <v-icon>mdi-history</v-icon>
@@ -75,7 +77,7 @@ export default {
         {
           num:0,
           move:'Up',
-          move_kor:'앞으로 가기'
+          move_kor:'위로 가기'
         },
         {
           num:1,
@@ -265,6 +267,10 @@ export default {
         var selectedNum = this.selectnum;
         selectedNum = selectedNum.split("block")[2].split(' ')[0]
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1});
+        // const tempTarget = document.getElementById('block-board');
+        // this.targetdiv = tempTarget.querySelector(':last-child');
+        // console.log(tempTarget.childNodes.findIndex(0));
+        this.targetdivNum = this.resultStep.length-1;
         this.updateLink();
         }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
@@ -276,6 +282,7 @@ export default {
         // console.log(event);
         if(this.playClass.show=='block'){
           this.playson = this.targetdivNum;
+          console.log(this.targetdivNum);
           var tempson = this.playson;
           while(tempson != -1){
               this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
@@ -290,7 +297,7 @@ export default {
         }
 
         var content = window.document.getElementsByClassName("overMe");
-        if(content.length!=0 && !this.isAdded){
+        if(content.length!=0){
           console.log(content[0])
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '45px';
@@ -298,8 +305,9 @@ export default {
           // this.resultStep[this.targetdivNum].x = content[0].getBoundingClientRect().left+this.distX+50;
           // this.resultStep[this.targetdivNum].y = content[0].getBoundingClientRect().top+45;
           console.log(this.resultStep);
-
-          content[0].nextSibling.after(this.targetdiv);
+          if(this.isAdded){
+            content[0].nextSibling.after(this.targetdiv);
+          }
         }
         this.resultStep.forEach( step => {
           if(step.overMe=='block'){
