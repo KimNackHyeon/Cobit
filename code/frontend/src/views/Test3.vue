@@ -65,6 +65,9 @@ export default {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
+    this.stageNum = this.$cookies.get('stageInfo').stageNum;
+    this.stageType = this.$cookies.get('stageInfo').stageType;
+
   },
   mounted() {
     this.onMove();

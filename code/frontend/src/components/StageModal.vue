@@ -50,6 +50,7 @@ export default {
   methods: {
     startGame(){
       this.$cookies.set('stageInfo', {stageNum : this.StageNum, stageType : this.StageType});
+      this.$router.push('/test3')
     }
   }
 }
