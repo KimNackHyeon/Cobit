@@ -29,11 +29,14 @@
           <div class="itembox">
             <span class="itemtitle">눈</span>
             <div class="eyebox">
-              <img v-for="i in 2" :key="i" @click="onChangeEye(`eye${i}`)" :src="require(`../assets/images/eye${i}.png`)" :alt="`eye${i}`">
+              <img v-for="i in 4" :key="i" @click="onChangeEye(`eye${i}`)" :src="require(`../assets/images/eye${i}.png`)" :alt="`eye${i}`">
             </div>
           </div>
-          <div class="itembox">
+          <div class="itembox" style="height: 16vh">
             <span class="itemtitle">아이템</span>
+            <div class="items">
+              <img v-for="i in 3" :key="i" @click="onChangeItem(`item${i}`)" :src="require(`../assets/images/item${i}.png`)" :alt="`item${i}`">
+            </div>
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
@@ -111,11 +114,15 @@ export default {
       });
     },
     onChangeEyebrow(eyebrow) {
-      console.log(eyebrow)
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
+      console.log(eye)
+      // this.myItems.eye = eye
+    },
+    onChangeItem(item) {
+      this.$refs.myInstance.message('stand', 'ChangeItem', item)
     }
   },
   created(){
@@ -213,7 +220,7 @@ export default {
   padding: 0 20px;
 }
 .mycharacters img {
-  width: 20%;
+  width: 16%;
   margin-right: 1vw;
   cursor: pointer;
 }
@@ -324,6 +331,8 @@ export default {
 .noEyebrow {
   margin: auto;
   cursor: pointer;
+  font-size: 20px;
+  font-family: 'BMJUA';
 }
 .eyebox {
   display: flex;
@@ -332,6 +341,17 @@ export default {
   height: 100%;
 }
 .eyebox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.items img {
   width: 20%;
   margin: auto;
   cursor: pointer;
