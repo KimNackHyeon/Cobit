@@ -10,7 +10,7 @@
           <div class="mycharacterbox">
             <span class="itemtitle">내가 가진 캐릭터</span>
             <div class="mycharacters">
-              <img v-for="i in 10" :key=i src="../assets/images/penguin2.png" alt="character1">
+              <img src="../assets/images/penguin.png" alt="character1">
             </div>
           </div>
           <div class="itembox">
@@ -21,15 +21,22 @@
           </div>
           <div class="itembox">
             <span class="itemtitle">눈썹</span>
-            <div>
-              <!-- <img src="" alt=""> -->
+            <div class="eyebrowbox">
+              <div class="noEyebrow" @click="onChangeEyebrow('eyebrow0')">없음</div>
+              <img v-for="i in 3" :key="i" :src="require(`../assets/images/eyebrow${i}.png`)" :alt="`eyebrow${i}`" @click="onChangeEyebrow(`eyebrow${i}`)">
             </div>
           </div>
           <div class="itembox">
             <span class="itemtitle">눈</span>
+            <div class="eyebox">
+              <img v-for="i in 4" :key="i" @click="onChangeEye(`eye${i}`)" :src="require(`../assets/images/eye${i}.png`)" :alt="`eye${i}`">
+            </div>
           </div>
-          <div class="itembox">
+          <div class="itembox" style="height: 16vh">
             <span class="itemtitle">아이템</span>
+            <div class="items">
+              <img v-for="i in 3" :key="i" @click="onChangeItem(`item${i}`)" :src="require(`../assets/images/item${i}.png`)" :alt="`item${i}`">
+            </div>
           </div>
           <div class="camera">
               <v-icon class="cameraimg">mdi-camera</v-icon>
@@ -47,7 +54,7 @@
         <!-- 캐릭터 보여주는 곳 -->
         <div class="rightbox">
           <div class="character">
-            <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance"></unity>
+            <unity src="../unity2/Build/unity2.json" unityLoader="../unity2/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
           </div>
           <div class="savebox">
             <div class="save-btn" @click="saveItem">저장하기</div> 
@@ -61,8 +68,6 @@
 <script>
 import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
-// import SendMessage from 'vue-unity-webgl';
-// import UnityLoader from '../../public/unity2/Build/UnityLoader.js';
 import axios from 'axios';
 import store from '../vuex/store';
 import Apitest from '../views/Apitest.vue'
@@ -76,9 +81,15 @@ export default {
     return {
       // colors: ["black", "red", "yellow", "green", "blue", "purple"],
       colors: [],
-      eyes: [],
-      mouses: [],
-      myItems: [],
+      myItems: {
+        userId:store.state.kakaoUserInfo.id,
+        color:null,
+        eye:null,
+        eyebrow:null,
+        crown:null,
+        shield:null,
+        shord:null
+      },
       // myColor:[]
       items: [],
       cameramodal: false,
@@ -89,12 +100,7 @@ export default {
       this.$router.push('/mypage')
     },
     onChangeColor(color) {
-      console.log(color)
-      // var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unity2.json");
-      // SendMessage('pen_before_jump/body', 'ChangeColor', color);
-
       this.$refs.myInstance.message('body', 'ChangeColor', color);
-
       this.myItems.color = color;
     },
     loadMyCharacter(){
@@ -102,16 +108,61 @@ export default {
       console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        this.myItems = res.data;
-        // console.log(this.myItems);
-        this.onChangeColor(this.myItems.color);
+        if(res.data){
+          this.myItems = res.data;
+          console.log(this.myItems);
+          this.onChangeColor(this.myItems.color);
+          this.onChangeEyebrow(this.myItems.eyebrow);
+          this.onChangeEye(this.myItems.eye);
+          if(this.myItems.crown){
+            this.onChangeItem(this.myItems.crown)
+          }
+          if(this.myItems.shield){
+            this.onChangeItem(this.myItems.shield)
+          }
+          if(this.myItems.shord){
+            this.onChangeItem(this.myItems.shord)
+          }
+        }
       })
     },
     saveItem(){
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
-        this.$router.push('/mypage');
+        // this.$router.push('/mypage');
       });
+    },
+    onChangeEyebrow(eyebrow) {
+      this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
+      this.myItems.eyebrow = eyebrow
+      console.log(this.myItems)
+    },
+    onChangeEye(eye) {
+      this.$refs.myInstance.message('stand', 'ChangeEye', eye)
+      this.myItems.eye = eye
+    },
+    onChangeItem(item) {
+      this.$refs.myInstance.message('stand', 'ChangeItem', item)
+      if(item == "item1"){
+        if(this.myItems.crown==null){
+          this.myItems.crown = item
+        }else{
+          this.myItems.crown = null
+        }
+      }else if(item == "item2"){
+        if(this.myItems.shield==null){
+          this.myItems.shield = item
+        }else{
+          this.myItems.shield = null
+        }
+      }else{
+        if(this.myItems.shord==null){
+          this.myItems.shord = item
+        }else{
+          this.myItems.shord = null
+        }
+      }
+      console.log(this.myItems)
     }
   },
   created(){
@@ -146,7 +197,7 @@ export default {
     setTimeout(() => {
       // console.log(this.items);
       this.loadMyCharacter();
-    }, 2000);
+    }, 3000);
   }
 }
 </script>
@@ -209,8 +260,9 @@ export default {
   padding: 0 20px;
 }
 .mycharacters img {
-  width: 60px;
+  width: 16%;
   margin-right: 1vw;
+  cursor: pointer;
 }
 .itembox {
   height: 10vh;
@@ -243,7 +295,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: auto;
+  margin: auto;
   cursor: pointer;
 }
 /* .color:hover {
@@ -304,5 +356,44 @@ export default {
 }
 .myfacebtn {
   color: white;
+}
+.eyebrowbox {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.eyebrowbox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.noEyebrow {
+  margin: auto;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'BMJUA';
+}
+.eyebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.eyebox img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
+}
+.items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.items img {
+  width: 20%;
+  margin: auto;
+  cursor: pointer;
 }
 </style>

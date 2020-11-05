@@ -6,8 +6,8 @@
       </div>
       <div class="map-body">
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
-          <div class="stage-num">{{ index }}</div>
-          <div v-if="inform.open" class="stage-area" @click="onModal(inform, index)"></div>
+          <div class="stage-num">{{ index+1 }}</div>
+          <div v-if="inform.open" class="stage-area" @click="onModal(inform, index+1)"></div>
           <div v-if="inform.open" class="stage-star">
             <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
             <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
@@ -17,7 +17,7 @@
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <div class="map-road-box"></div>
-          <div v-if="inform.user" class="map-character" @click="onModal(inform, index)">
+          <div v-if="inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
         </div>
@@ -56,7 +56,8 @@ export default {
         first: 33.3,
         second: 33.3,
         third: 0,
-      }
+      },
+      type: null,
 
     }
   },
@@ -68,6 +69,7 @@ export default {
   },
   created() {
     // window.addEventListener('scroll', this.handleScroll)
+    this.type = 1;
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
       window.Kakao.API.request({
@@ -89,7 +91,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setStageDetail', 'setStageNum']),
+    ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
     getStarRatio() {
       this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       const FIRST = document.querySelector('.map-1star-gauge');
@@ -103,6 +105,7 @@ export default {
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
+      this.setStageType(this.type);
       this.showModal = true;
     },
     onModal2() {
@@ -135,7 +138,7 @@ export default {
       })
     },
     loadStage(){
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage?type=${1}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage?type=${this.type}`)
       .then(res => {
         res.data.forEach(map =>{
           this.mapInform.push( {
@@ -146,7 +149,6 @@ export default {
               content : map.content,
             });
         });
-        
       })
     },
   },
