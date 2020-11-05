@@ -67,7 +67,8 @@ public class UserController {
 		}else {
 			user.setStar(0L);
 			userRepo.save(user);
-			return user;
+			Optional<User> userOpt2 = userRepo.getUserByEmail(user.getEmail());
+			return userOpt2.get();
 		}
 	}
 

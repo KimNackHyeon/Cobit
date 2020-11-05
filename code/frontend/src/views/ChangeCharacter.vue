@@ -83,7 +83,15 @@ export default {
       colors: [],
       eyes: [],
       mouses: [],
-      myItems: [],
+      myItems: {
+        userId:store.state.kakaoUserInfo.id,
+        color:null,
+        eye:null,
+        eyebrow:null,
+        crown:null,
+        shield:null,
+        shord:null
+      },
       // myColor:[]
       items: [],
       cameramodal: false,
@@ -102,24 +110,30 @@ export default {
       console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        this.myItems = res.data;
-        // console.log(this.myItems);
-        this.onChangeColor(this.myItems.color);
+        if(res.data){
+          this.myItems = res.data;
+          console.log(this.myItems);
+          this.onChangeColor(this.myItems.color);
+          this.onChangeEyebrow(this.myItems.eyebrow);
+          this.onChangeEye(this.myItems.eye);
+        }
       })
     },
     saveItem(){
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
-        this.$router.push('/mypage');
+        // this.$router.push('/mypage');
       });
     },
     onChangeEyebrow(eyebrow) {
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
+      console.log(eyebrow);
+      this.myItems.eyebrow = eyebrow
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
       console.log(eye)
-      // this.myItems.eye = eye
+      this.myItems.eye = eye
     },
     onChangeItem(item) {
       this.$refs.myInstance.message('stand', 'ChangeItem', item)
@@ -157,7 +171,7 @@ export default {
     setTimeout(() => {
       // console.log(this.items);
       this.loadMyCharacter();
-    }, 2500);
+    }, 3000);
   }
 }
 </script>

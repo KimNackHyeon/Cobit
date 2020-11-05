@@ -30,5 +30,17 @@ public class Purchase {
 	
 	@Column
 	private String eye;
+	
+	@Column
+	private String eyebrow;
+	
+	@Column
+	private String crown;
+	
+	@Column
+	private String shield;
+	
+	@Column
+	private String shord;
 
 }
