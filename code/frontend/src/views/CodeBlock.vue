@@ -11,7 +11,7 @@
           </div>
         <div class="block-box">
            <div v-show="isMove" class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index">
               {{m.move_kor}}
             </div>
           </div>
@@ -21,11 +21,11 @@
         </div>
         <div id="play-box" class="play-box">
           <div v-show="isMove" class="block-list">
-            <div style="display:flex; justify-content:center;">
+            <div style="display:flex; justify-content:center; margin-left: 30%;">
               <div id="play" @click="clickPlayBtn" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
             </div>
-            <div style="display:flex; justify-content:center;">
+            <div style="display:flex; justify-content:center;margin-left: 30%;">
                 <div id="underplay" >
                   <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:playClass.show}">
                     </div>
@@ -39,15 +39,25 @@
                   </div>
                 </div>
             </div>
-            <v-btn id="historyBtn" @mouseover="openHistory" @mouseout="closeHistory">
+            <v-btn id="hintBtn" @click="clickHint" @mouseover="openHint" @mouseout="closeHint">
+              <v-icon>mdi-lightbulb-on</v-icon>
+              <h3>힌트</h3>
+            </v-btn>
+            <div id="hint" :style="{display:this.showhint}">
+                <div>{{hint}}</div>
+                <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div>
+            </div>
+            <v-btn id="historyBtn" @click="clickHistory" @mouseover="openHistory" @mouseout="closeHistory">
               <v-icon>mdi-history</v-icon>
               <h3>히스토리</h3>
             </v-btn>
             <div id="history" :style="{display:this.showhistory}">
-              <div v-for="(step,index) in history" :key="index" >
-                {{step.move_kor}}
+              <div style="width:100%; height:100%; overflow-y:auto;">
+                <div v-for="(step,index) in history" :key="index" >
+                  {{step.move_kor}}
+                </div>
+                <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
               </div>
-              <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
             </div>
           </div>
         </div>
@@ -110,9 +120,81 @@ export default {
           num:6,
           move:'Jump',
           move_kor:'점프 하기'
-        }
+        },
+      ],
+      defaultStep:[
+        {
+          num:0,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
+          index:0,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:1,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
+          index:1,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:2,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
+          index:2,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:3,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
+          index:3,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:4,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
+          index:4,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:5,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
+          index:5,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:6,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
+          index:6,x:0,y:0,son:-1,onPlayBtn:false
+        },
       ],
       resultStep:[
+        {
+          num:0,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
+          index:0,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:1,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
+          index:1,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:2,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
+          index:2,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:3,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
+          index:3,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:4,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
+          index:4,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:5,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
+          index:5,x:0,y:0,son:-1,onPlayBtn:false
+        },
+        {
+          num:6,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
+          index:6,x:0,y:0,son:-1,onPlayBtn:false
+        },
       ],
       selectnum:0,
       isAdded: false,
@@ -126,7 +208,13 @@ export default {
       playson:-1,
       alreadyOverPlay:false,
       history:[],
-      showhistory:'none'
+      showhistory:'none',
+      clickhistory:false,
+      showhint:'none',
+      clickhint:false,
+      hint:"스테이지의 힌트",
+      targetnum:0,
+      targetindex:7
     }
   },
   components: {
@@ -149,17 +237,14 @@ export default {
   methods: {
      ...mapMutations(['setInStageNum', 'setInStageStar']),
     clickPlayBtn(){
-      console.log("클릭!");
-      console.log(this.resultmoves);
       var tempson = this.playson;
-          while(tempson != -1){
-              console.log(tempson);
-              this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
-              tempson = this.resultStep[tempson].son;
-            }
-                  console.log("-----------resultmoves"+this.resultmoves.length+"-------------");
-            console.log(this.resultmoves);
-      console.log("-----------------------------------");
+      var delNode = [];
+      while(tempson != -1){
+        this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
+        delNode.push(this.resultStep[tempson].index);
+        tempson = this.resultStep[tempson].son;
+      }
+      // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         this.$refs.myInstance.message('JavascriptHook',step.move);
      });
@@ -169,15 +254,54 @@ export default {
 
      this.resultmoves = [];
      this.resultStep = [];
+     for(var t=0; t<7; t++){
+       this.resultStep.push(this.defaultStep[t]);
+     }
      this.playClass.background='#1dc360';
      this.$refs.myInstance.message('JavascriptHook',"Go");
+    //  console.log(delNode)
+    //  for(var j=0; j<delNode.length;j++){
+    //    this.resultStep.pop(j);
+    //  }
       this.playson = -1;
+      this.alreadyOverPlay = false;
+    },
+    clickHint(){
+      if(this.clickhint){
+        this.showhint = 'none';
+        this.clickhint = false;
+      }else{
+        this.showhint = 'block';
+        this.clickhint = true;
+      }
+    },
+    openHint(){
+        this.showhint = 'block';
+    },
+    closeHint(){
+      this.showhint = 'none';
+      this.clickhint = false;
+    },
+    clickHistory(){
+      if(this.clickhistory){
+        this.showhistory = 'none';
+        this.clickhistory = false;
+      }else{
+        this.showhistory = 'block';
+        this.clickhistory = true;
+      }
     },
     openHistory(){
       this.showhistory = 'block';
     },
     closeHistory(){
+      if(!this.clickhistory){
+        this.showhistory = 'none';
+      }
+    },
+    closeclickHistory(){
       this.showhistory = 'none';
+      this.clickhistory = false;
     },
     getNeighbor(event){
       var x = this.distX+event.pageX;
@@ -193,7 +317,14 @@ export default {
       }else{
         this.playClass={background:'#1dc360',show:'none'};
       }
-
+      var checkchilds = [];
+       if(this.resultStep[this.targetdivNum].son!=-1){
+         var checkson = this.resultStep[this.targetdivNum].son;
+         while(checkson!=-1){
+           checkchilds.push(checkson);
+           checkson = this.resultStep[checkson].son;
+         }
+       }
      this.resultStep.forEach( step => {
       var stepx = step.x;
       var stepy = step.y;
@@ -207,7 +338,7 @@ export default {
           }
         }
         else{
-          if(step.index!=this.targetdivNum&&(x<stepx+20&&x>stepx-20&&y<stepy+25&&y>stepy-10)){
+          if(step.index!=this.targetdivNum&&!checkchilds.includes(step.index)&&(x<stepx+20&&x>stepx-20&&y<stepy+25&&y>stepy-10)){
             step.class = 'overMe';
             step.overMe = 'block';
           }else{
@@ -247,9 +378,14 @@ export default {
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
+      // var selectedNum = this.selectnum;
+      // selectedNum = selectedNum.split("block")[2].split(' ')[0]
+      // this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false});
+      // this.alterDragObject();
     },
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
+      // this.targetnum = this.resultStep[mynum].num;
       // console.log(event.target);
       this.targetdiv = event.target;
       // event.target.style.position = 'absolute';
@@ -265,12 +401,12 @@ export default {
       event.preventDefault();
       //마우스가 움직이면서 계속 마우스 위치를 가져온다.
       this.getNeighbor(event);
+
       },
     updateLink(){
       var parent = this.targetdivNum;
         var son = this.resultStep[parent].son;
         while(son != -1){
-          console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
           this.resultStep[son].x = Number(this.resultStep[parent].x);
           this.resultStep[son].y = Number(this.resultStep[parent].y)+47;
           parent = son;
@@ -282,77 +418,77 @@ export default {
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
       const relativeLeft = clientRect.left;
       const relativeRight = clientRect.right;
-      
 
       event.stopPropagation();
       event.preventDefault();
       let posX = event.pageX;
       let posY = event.pageY;
       this.onMove = false ; //블록움직임이 끝났다.
-      if (posX >= relativeLeft && posX <= relativeRight) {
-        if(!this.isAdded){
-        var selectedNum = this.selectnum;
-        selectedNum = selectedNum.split("block")[2].split(' ')[0]
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false});
-        // const tempTarget = document.getElementById('block-board');
-        // this.targetdiv = tempTarget.querySelector(':last-child');
-        // console.log(tempTarget.childNodes.findIndex(0));
-        this.targetdivNum = this.resultStep.length-1;
-        this.updateLink();
-        }else{
+      if (posX >= relativeLeft && posX <= relativeRight) {        
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
           this.resultStep[this.targetdivNum].marginTop = posY + this.distY + 'px';
           this.resultStep[this.targetdivNum].x = posX + this.distX;
           this.resultStep[this.targetdivNum].y = posY + this.distY;
           this.updateLink();
-        }
         // console.log(event);
         if(this.playClass.show=='block'){
-          var originalPlayson = this.playson;
-          this.resultStep[this.targetdivNum].son = originalPlayson;
-          this.playson = this.targetdivNum;
-          console.log("playson; "+this.playson);
-          console.log(this.resultStep[1].son);
-          console.log(this.resultStep);
-          console.log("-------------------")
-          document.getElementById('underplay').appendChild(this.targetdiv);
+          if(!this.alreadyOverPlay){
+            this.playson = this.targetdivNum;
+            document.getElementById('underplay').appendChild(this.targetdiv);
+          }else{
+            var originalPlayson = this.playson;
+            this.resultStep[this.targetdivNum].son = originalPlayson;
+            this.playson = this.targetdivNum;
+            document.getElementById('underplay').prepend(this.targetdiv);
+          }
           this.resultStep[this.targetdivNum].position = 'unset';
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
+          if(!this.alreadyOverPlay){
+              this.alreadyOverPlay = true;
+            }
         }
 
         var content = window.document.getElementsByClassName("overMe");
         if(content.length!=0){
-          console.log(content[0])
+          if(this.isAdded){
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
           this.resultStep[this.targetdivNum].position = 'unset';
           // this.resultStep[this.targetdivNum].x = content[0].getBoundingClientRect().left+this.distX+50;
           // this.resultStep[this.targetdivNum].y = content[0].getBoundingClientRect().top+45;
           // console.log(this.resultStep);
-          if(this.isAdded){
             content[0].nextSibling.after(this.targetdiv);
           }
         }
         // var original_son = -1;
-        this.resultStep.forEach( step => {
-          if(step.overMe=='block'){
-            // original_son = this.resultStep[step.index].son;
+        this.resultStep.some( step => {
+          if(step.overMe=='block' || step.class=='overMe'){
+            var os = this.resultStep[step.index].son;
             this.resultStep[step.index].son = this.targetdivNum;
+            // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
+            this.resultStep[this.targetdivNum].son = os;
+            // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             var parent = step.index;
             var son = this.targetdivNum;
             while(son != -1){
-              console.log(son+"의 x를 "+this.resultStep[parent].x+"로 바꿈");
               this.resultStep[son].x = Number(this.resultStep[parent].x);
               this.resultStep[son].y = this.resultStep[parent].y+47;
               parent = son;
               son = this.resultStep[son].son;
             }
-            step.overMe = 'none'
+            step.overMe = 'none';
           }
+          if(step.overMe=='block' || step.class=='overMe')return;
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
+    // console.log(this.resultStep);
+    console.log(this.targetnum);
      this.playClass.show='none';
+     this.resultStep.push(this.defaultStep[this.targetnum]);
+     this.resultStep[this.targetindex].index = this.targetindex;
+     this.targetindex+=1;
+     console.log(this.resultStep);
       }
 
     },
@@ -430,6 +566,7 @@ export default {
 }
 
 .code-box .block-box {
+  position:absolute;
   width: 30%;
   /* background-color: blue; */
   display: flex;
@@ -437,7 +574,7 @@ export default {
 }
 
 .code-box .play-box {
-  width: 70%;
+  width: 100%;
   height:100%;
   /* background-color: brown; */
   border: 1px solid #a4d4ff;
@@ -531,6 +668,13 @@ export default {
   margin:5px;
 }
 
+#hintBtn{
+  position:absolute;
+  bottom:50px;
+  right:0;
+  margin:5px;
+}
+
 #history{
     position: absolute;
     width: 80%;
@@ -542,5 +686,17 @@ export default {
     background-color: transparent;
     background-size: 100% 100%;
     padding: 107px 50px;
+}
+
+#hint{
+  position: absolute;
+    width: 60%;
+    height: 30%;
+    bottom: 10%;
+    right: 20%;
+    z-index: 2;
+    background-color: white;
+    padding: 107px 50px;
+    
 }
 </style>
