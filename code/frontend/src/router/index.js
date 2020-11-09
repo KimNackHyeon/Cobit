@@ -11,6 +11,7 @@ import Test4 from '../views/Test4.vue'
 import Speech from '../views/SpeechDetectionStarted.vue'
 import VRTest from '../views/vrtest.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [

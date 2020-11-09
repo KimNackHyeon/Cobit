@@ -35,7 +35,7 @@ public class SpeechController {
 	@PostMapping("/analyze1")
 	public List<String> analyzeText1(@RequestBody List<String> textList) {
 		List<String> texts = new ArrayList<String>();
-		speechService.analyzeText1(textList);
+		texts = speechService.analyzeText1(textList);
 		return texts;
 	}
 }
