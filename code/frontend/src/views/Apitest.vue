@@ -6,7 +6,8 @@
     </div>
     <!-- <button class="snap" v-on:click="capture()">SNAP</button> -->
     <div class="picturebtnbox">
-      <button class="snap picturebtn" v-on:click="capture">사진찍기</button>
+      <!--  -->
+      <button class="snap picturebtn" v-on:click="capture" @click.self="$emit('close')">사진찍기</button>
     </div>
     <div class="canvasbox">
       <canvas ref="canvas" class="canvas" id="canvas" width="500px" height="400px"></canvas>
@@ -18,6 +19,7 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -105,8 +107,53 @@ export default {
           // image_url: 'https://k3b102.p.ssafy.io/img/1/profile/image.png'
           // image_url: 'https://k3b102.p.ssafy.io/img/1/profile/image3.png'
           },
-          success: function (msg) {
+          success: (msg) => {
             console.log(msg.result);
+            // 눈, 눈썹 unity 연결
+            console.log(msg.result.faces)
+            if(msg.result.faces==undefined){
+              Swal.fire(
+                '얼굴 인식이 되지 않았습니다.',
+                '다시 촬영해주세요.',
+                'warning'
+              )
+            }
+            else if(msg.result.faces.length > 1){
+              Swal.fire(
+                '한 사람만 사진찍을 수 있습니다',
+                '',
+                'warning'
+              )
+            }
+            else{
+              var facial_points = msg.result.faces[0].facial_points
+              // 눈 변경
+              var leftEyeDif = (facial_points.left_eye[5][1] - facial_points.left_eye[1][1])*2000
+              var rightEyeDif = (facial_points.right_eye[5][1] - facial_points.right_eye[1][1])*2000
+              console.log('왼쪽눈' + leftEyeDif)
+              console.log('오른쪽눈' + rightEyeDif)
+              if((0<=leftEyeDif && leftEyeDif<10) || (0<=rightEyeDif && rightEyeDif<10)){
+                console.log('실행')
+                this.$emit('onChangeEye', 'eye4')
+              }else if(leftEyeDif<30 || rightEyeDif<30){
+                this.$emit('onChangeEye', 'eye3')
+              }else{
+                this.$emit('onChangeEye', 'eye2')
+              }
+              // 눈썹 변경
+              var leftEyebrowDif = (facial_points.left_eyebrow[0][1] - facial_points.left_eyebrow[4][1])*2000
+              var rightEyebrowDif = (facial_points.right_eyebrow[0][1] - facial_points.right_eyebrow[4][1])*2000
+              console.log('왼쪽눈썹' + leftEyebrowDif)
+              console.log('오른쪽눈썹' + rightEyebrowDif)
+              if((-2<=leftEyebrowDif && leftEyebrowDif<=2) || (-2<=rightEyebrowDif && rightEyebrowDif<=2)){
+                this.$emit('onChangeEyebrow', 'eyebrow1')
+              }else if(leftEyebrowDif>2 || rightEyebrowDif>2){
+                this.$emit('onChangeEyebrow', 'eyebrow2')
+              }else{
+                this.$emit('onChangeEyebrow', 'eyebrow3')
+              }
+
+            }
             var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext("2d");
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
@@ -146,6 +193,11 @@ export default {
           },
           fail: function(msg){
             console.log(msg);
+            Swal.fire(
+              '얼굴이 인식되지 않았습니다.',
+              '다시 촬영해주세요.',
+              'warning'
+            )
           }
           });
     }
