@@ -39,16 +39,17 @@
             </div>
           </div>
           <div class="camera">
-              <v-icon class="cameraimg">mdi-camera</v-icon>
-              <!-- <router-link to="/apitest"> -->
-               <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
-              <!-- </router-link> -->
-              <v-app class="vapp"></v-app>
-              <v-dialog max-width="70%" min-height="50%" v-model="cameramodal">
-                <v-card flat tile>
-                  <apitest />
-                </v-card>
-              </v-dialog>
+            <v-icon class="cameraimg">mdi-camera</v-icon>
+            <!-- <router-link to="/apitest"> -->
+              <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
+            <!-- </router-link> -->
+            <v-app class="vapp"></v-app>
+            <v-dialog max-width="70%" min-height="50%" v-model="cameramodal">
+              <v-card flat tile>
+                <!--   -->
+                <apitest @onChangeEye="onChangeEye" @onChangeEyebrow="onChangeEyebrow" @close="cameramodal= false" />
+              </v-card>
+            </v-dialog>
           </div>
         </div>
         <!-- 캐릭터 보여주는 곳 -->
@@ -70,7 +71,8 @@ import '../css/changecharacter.scss';
 import Unity from 'vue-unity-webgl';
 import axios from 'axios';
 import store from '../vuex/store';
-import Apitest from '../views/Apitest.vue'
+import Apitest from '../views/Apitest.vue';
+import Swal from 'sweetalert2'
 
 export default {
   components: {
@@ -106,22 +108,26 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         if(res.data){
+          console.log(res.data);
           this.myItems = res.data;
           console.log(this.myItems);
           this.onChangeColor(this.myItems.color);
           this.onChangeEyebrow(this.myItems.eyebrow);
           this.onChangeEye(this.myItems.eye);
           if(this.myItems.crown){
-            this.onChangeItem(this.myItems.crown)
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.crown)
+            // this.onChangeItem(this.myItems.crown)
           }
           if(this.myItems.shield){
-            this.onChangeItem(this.myItems.shield)
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.shield)
+            // this.onChangeItem(this.myItems.shield)
           }
-          if(this.myItems.shord){
-            this.onChangeItem(this.myItems.shord)
+          if(this.myItems.sword){
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.sword)
+            // this.onChangeItem(this.myItems.sword)
           }
         }
       })
@@ -129,13 +135,17 @@ export default {
     saveItem(){
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
+        Swal.fire(
+          '저장되었습니다.',
+          '',
+          'success'
+        )
         this.$router.push('/mypage');
       });
     },
     onChangeEyebrow(eyebrow) {
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
       this.myItems.eyebrow = eyebrow
-      console.log(this.myItems)
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
@@ -156,16 +166,23 @@ export default {
           this.myItems.shield = null
         }
       }else{
-        if(this.myItems.shord==null){
-          this.myItems.shord = item
+        if(this.myItems.sword==null){
+          this.myItems.sword = item
         }else{
-          this.myItems.shord = null
+          this.myItems.sword = null
         }
       }
       console.log(this.myItems)
+    },
+    handleStart() {
+      console.log(event)
+      setTimeout(() => {
+      this.loadMyCharacter();
+    }, 10);
     }
   },
   created(){
+    window.addEventListener('start', this.handleStart);
     if(this.$cookies.isKey("access_token")){
       window.Kakao.API.request({
           url:'/v2/user/me',
@@ -194,10 +211,9 @@ export default {
     }
   },
   mounted(){
-    setTimeout(() => {
-      // console.log(this.items);
-      this.loadMyCharacter();
-    }, 3000);
+  },
+  beforeDestroy() {
+    window.removeEventListener('start', this.handleStart)
   }
 }
 </script>

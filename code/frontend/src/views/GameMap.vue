@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="map-container">
       <div class="map-header">
-        <div class="back-btn" @click="onModal2"><i class="fas fa-chevron-left"></i>돌아가기</div>
+        <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
         <div id="stage1story" @click="clickStory" :style="{display:openStory}">
@@ -41,11 +41,16 @@
       </div>
       <div class="map-footer">
         <i class="fas fa-star"></i>
-        <div class="map-gauge">
+        <div class="starbar">
+          <div class="mystar"></div>
+          <div class="startotal"></div>
+          <div class="starnum"><span>{{starCount}} / 15</span></div>
+        </div>
+        <!-- <div class="map-gauge">
           <div class="map-1star-gauge">★ {{ mapStar.first }}%</div>
           <div class="map-2star-gauge">★★ {{ mapStar.second }}%</div>
           <div class="map-3star-gauge">★★★ {{ mapStar.third }}%</div>
-        </div>
+        </div> -->
       </div>
       
     </div>
@@ -61,6 +66,7 @@ import DifficultyModal from '../components/DifficultyModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
+import $ from 'jquery';
 
 export default {
   name: 'GameMap',
@@ -78,6 +84,7 @@ export default {
       },
       type: null,
       openStory:'flex'
+      starCount : 0,
     }
   },
   components: {
@@ -106,12 +113,28 @@ export default {
     }
   },
   mounted() {
-    this.getStarRatio();
+    // this.getStarRatio();
+    // 별의 갯수에 따라 width 설정
+    if(this.starCount == 0) {
+      console.log('실행')
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+    }
+    else if(this.starCount == 90){
+      $(".mystar").css("border-radius", "15px")
+      $(".mystar").css("width", "100%")
+    }
+    else {
+      const starratio = (this.starCount / 90) * 100
+      $(".mystar").css("width", `${starratio}%`)
+      $(".startotal").css("width", `${100 - starratio}%`)
+    }
   },
   watch: {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
+<<<<<<< code/frontend/src/views/GameMap.vue
     clickStory(){
       this.openStory = 'none';
     },
@@ -125,6 +148,18 @@ export default {
       SECOND.style.width = this.mapStar.second + '%';
       THIRD.style.width = this.mapStar.third + '%';
     },
+=======
+    // getStarRatio() {
+      // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      // const FIRST = document.querySelector('.map-1star-gauge');
+      // const SECOND = document.querySelector('.map-2star-gauge');
+      // const THIRD = document.querySelector('.map-3star-gauge');
+
+      // FIRST.style.width = this.mapStar.first + '%';
+      // SECOND.style.width = this.mapStar.second + '%';
+      // THIRD.style.width = this.mapStar.third + '%';
+    // },
+>>>>>>> code/frontend/src/views/GameMap.vue
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
@@ -133,6 +168,9 @@ export default {
     },
     onModal2() {
       this.showModal2 = true;
+    },
+    goMypage(){
+      this.$router.push('/mypage');
     },
     loadMyStage(){
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
@@ -147,6 +185,7 @@ export default {
             user: false,
             content : this.mapInform[d.stageId-1].content,
           }
+          this.starCount += d.star;
           this.$set(this.mapInform, d.stageId-1, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
@@ -183,10 +222,48 @@ export default {
 </script>
 
 <style scoped>
+.starbar {
+  display: inline-block;
+  width: 88%;
+  /* background: white; */
+  border-radius: 15px;
+  /* text-align: center; */
+  font-size: 25px;
+  font-weight: 600;
+  /* margin: 1%; */
+  /* padding: 1%; */
+  color: black;
+  position: relative;
+}
+.mystar {
+  height: 5vh;
+  display: inline-block;
+  background: #a4d4ff;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+.startotal {
+  height: 5vh;
+  display: inline-block;
+  background-color: white;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.starnum {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  left: 45%;
+}
+/* ///////////////////////////////// */
+.wrap {
+  height: 100%;
+}
 .map-container {
   margin-top: 50px;
   width: 100%;
-  height: calc(100vh - 100px);
+  height: 70%;
+  /* height: calc(100vh - 100px); */
   /* background-color: bisque; */
 }
 
@@ -423,7 +500,7 @@ export default {
 }
 
 @media(max-width: 1280px) {
-  .map-header .back-btn {
+  /* .map-header .back-btn {
     width: 26vw;
     height: 8.5vw;
     font-size: 4vw;
@@ -485,7 +562,7 @@ export default {
   }
   .map-gauge .map-1star-gauge {
     margin-left: 2vw;
-  }
+  } */
 }
 #stage1story{
       background-color: #000000a1;

@@ -85,7 +85,7 @@ export default {
 }
 
 .stage-modal-wrap {
-  max-width: 400px;
+  max-width: 30vw;
   width: 100%;
   padding: 10px;
   transition: 0.3s ease;
@@ -239,7 +239,7 @@ export default {
               inset -3px -3px 4px -1px #ffffff !important;
 }
 
-@media (max-width: 1280px) {
+/* @media (max-width: 1280px) {
   .stage-modal-wrap {
     max-width: 60vw;
   }
@@ -278,5 +278,5 @@ export default {
     height: 7vw;
     font-size: 4vw;
   }
-}
+} */
 </style>
