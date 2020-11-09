@@ -14,6 +14,7 @@
            <div v-show="isMove" class="block-list">
             <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
               {{m.move_kor}}
+              <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{m.icon}}</v-icon>
             </div>
           </div>
           <div v-show="isObstacle" class="block-list">
@@ -34,7 +35,9 @@
               </div>
               <div id="block-board">
                 <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
-                  <div class="block" :class="'block'+m.num+' '+m.class" v-text="moves[m.num].move_kor" style="margin-bottom:0px;">
+                  <div class="block" :class="'block'+m.num+' '+m.class" style="margin-bottom:0px;">
+                    {{moves[m.num].move_kor}}
+                    <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon>
                   </div>  
                   <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
                   </div>
@@ -92,37 +95,44 @@ export default {
         {
           num:0,
           move:'Up',
-          move_kor:'위로 가기'
+          move_kor:'위',
+          icon:'mdi-arrow-up-bold-circle',
         },
         {
           num:1,
           move:'Right',
-          move_kor:'오른쪽으로 가기'
+          move_kor:'오른쪽',
+          icon:'mdi-arrow-right-bold-circle',
         },
         {
           num:2,
           move:'Left',
-          move_kor:'왼쪽으로 가기'
+          move_kor:'왼쪽',
+          icon:'mdi-arrow-left-bold-circle',
         },
         {
           num:3,
           move:'Down',
-          move_kor:'밑으로 가기'
+          move_kor:'아래',
+          icon:'mdi-arrow-down-bold-circle',
         },
         {
           num:4,
           move:'TurnRight',
-          move_kor:'오른쪽으로 90˚ 회전'
+          move_kor:'오른쪽 90˚ 회전',
+          // icon:'mdi-rotate-right-variant',
         },
         {
           num:5,
           move:'TurnLeft',
-          move_kor:'왼쪽으로 90˚ 회전'
+          move_kor:'왼쪽 90˚ 회전',
+          // icon:'mdi-rotate-left-variant',
         },
         {
           num:6,
           move:'Jump',
-          move_kor:'점프 하기'
+          move_kor:'점프',
+          icon:'mdi-trending-up',
         },
       ],
       defaultStep:[
