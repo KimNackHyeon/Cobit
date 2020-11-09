@@ -245,6 +245,7 @@ export default {
     clickPlayBtn(){
       var tempson = this.playson;
       var delNode = [];
+      this.resultmoves = [];
       while(tempson != -1){
         this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
         delNode.push(this.resultStep[tempson].index);
@@ -258,7 +259,7 @@ export default {
        this.history.push(this.resultmoves[i]);
      }
 
-     this.resultmoves = [];
+     
      this.resultStep = [];
      this.playClass.background='#1dc360';
      this.$refs.myInstance.message('JavascriptHook',"Go");
@@ -552,12 +553,25 @@ export default {
     },
     onModal() {
       this.isClear = true;
+      this.makeCode();
       this.setInStageNum(this.stageNum);
       this.setInStageStar(3);
     },
     onModal2() {
       this.isFail = true;
     },
+    makeCode(){
+      console.log(this.resultmoves);
+      var code = [];
+      var code_kor = [];
+      this.resultmoves.forEach(move => {
+        code.push(move.move + "();");
+        code_kor.push(move.move_kor + "();");
+      });
+      console.log(code);
+      console.log(code_kor);
+
+    }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
