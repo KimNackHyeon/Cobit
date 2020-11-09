@@ -74,6 +74,7 @@ public class ProductController {
 
 		// 회원 구매 목록 가져오기
 		Purchase p = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
+		System.out.println(p);
 		return p;
 	}
 

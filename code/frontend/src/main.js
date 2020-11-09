@@ -4,8 +4,10 @@ import router from './router'
 import store from './vuex/store';
 import vuetify from './plugins/vuetify';
 import VueCookies from "vue-cookies";
+import VueSpeech from 'vue-speech'
 
 Vue.config.productionTip = false
+Vue.use(VueSpeech)
 Vue.use(VueCookies);
 
 // window.Kakao.init("a90caea0345c3be6cd63ed25b9c44977");

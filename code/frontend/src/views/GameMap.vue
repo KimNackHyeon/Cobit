@@ -2,9 +2,26 @@
   <div class="wrap">
     <div class="map-container">
       <div class="map-header">
-        <div class="back-btn" @click="onModal2"><i class="fas fa-chevron-left"></i>돌아가기</div>
+        <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
+        <div id="stage1story" @click="clickStory" :style="{display:openStory}">
+          <div>
+          <div class="story story" >
+            <div style="width:30vh; height:100%;float:left;">
+              <img src="../assets/images/stage1_no_text.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
+            </div>
+            <div style="width: auto; height: 100%; float: left; padding: 10vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
+            </div>
+          </div>
+          <div style="width:100%;  display: flex; justify-content: center;">
+            <div class="goal_title" style="margin: 6vh; background-color: #ffcf00; box-shadow: 1px 1px 7px #00000057;"><div class="goal_title" style="box-shadow: 1px 1px 4px #00000075 inset; width: 180px; height: 63px; font-size: x-large; font-weight: bold;">학습목표</div></div>
+          </div>
+          
+          <div class="story goal" v-html="goal">
+          </div>
+          </div>
+        </div>
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
           <div class="stage-num">{{ index+1 }}</div>
           <div v-if="inform.open" class="stage-area" @click="onModal(inform, index+1)"></div>
@@ -55,6 +72,8 @@ export default {
   name: 'GameMap',
   data() {
     return {
+      story:"Cobit 마을의 컴퓨터에 원인 모를 문제가 생겼다! <br> 문제가 바이러스라고? <br> 지피지기면 백전백승! 바이러스에 대해 알아보는 모험을 떠나보자!",
+      goal:"<ul><li>블록 명령어를 순서대로 사용하여 미션을 해결할 수 있다.</li> <br><li>프로그래밍의 원리인 순차에 따라 명령을 수행할 수 있다.</li><br><li>조심해야할 컴퓨터 바이러스에 대해 알 수 있다.</li></ul>",
       showModal: false,
       showModal2: false,
       mapInform: [],
@@ -64,7 +83,8 @@ export default {
         third: 0,
       },
       type: null,
-      starCount : store.state.kakaoUserInfo.star,
+      openStory:'flex'
+      starCount : 0,
     }
   },
   components: {
@@ -115,6 +135,21 @@ export default {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
+<<<<<<< code/frontend/src/views/GameMap.vue
+    clickStory(){
+      this.openStory = 'none';
+    },
+    getStarRatio() {
+      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      const FIRST = document.querySelector('.map-1star-gauge');
+      const SECOND = document.querySelector('.map-2star-gauge');
+      const THIRD = document.querySelector('.map-3star-gauge');
+
+      FIRST.style.width = this.mapStar.first + '%';
+      SECOND.style.width = this.mapStar.second + '%';
+      THIRD.style.width = this.mapStar.third + '%';
+    },
+=======
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       // const FIRST = document.querySelector('.map-1star-gauge');
@@ -125,6 +160,7 @@ export default {
       // SECOND.style.width = this.mapStar.second + '%';
       // THIRD.style.width = this.mapStar.third + '%';
     // },
+>>>>>>> code/frontend/src/views/GameMap.vue
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
@@ -133,6 +169,9 @@ export default {
     },
     onModal2() {
       this.showModal2 = true;
+    },
+    goMypage(){
+      this.$router.push('/mypage');
     },
     loadMyStage(){
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
@@ -147,6 +186,7 @@ export default {
             user: false,
             content : this.mapInform[d.stageId-1].content,
           }
+          this.starCount += d.star;
           this.$set(this.mapInform, d.stageId-1, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
@@ -528,5 +568,44 @@ export default {
   .map-gauge .map-1star-gauge {
     margin-left: 2vw;
   } */
+}
+#stage1story{
+      background-color: #000000a1;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    right: 0;
+    top: 0;
+    z-index: 3;
+         display:flex; justify-content:center;
+      padding-top: 10vh;
+}
+.story{
+  background-color:white; width:80vw; height:30vh; border-radius: 30px;
+    box-shadow: 0px 0px 15px #424141b0 inset;
+}
+.goal_title{
+    width: 200px;
+    height: 80px;
+    position: absolute;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 40px;
+}
+
+.goal{
+    width: 50vw;
+    height: 40vh;
+    margin: 10vh 15vw;
+    background-color: #fafff7;
+    padding: 5vh 5vw;
+    font-size: 2.2vh;
+    font-weight: bold;
+     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
