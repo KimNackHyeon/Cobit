@@ -330,33 +330,32 @@ export default {
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
-        setTimeout(() => {
-          this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
-          this.$refs.myInstance.message('stand', 'ChangeEyebrow', res.data.eyebrow)
-          this.$refs.myInstance.message('stand', 'ChangeEye', res.data.eye)
-          if(res.data.crown){
-            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.crown)
-          }
-          if(res.data.shield){
-            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shield)
-          }
-          if(res.data.sword){
-            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.sword)
-          }
-        }, 2500);
+        this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+        this.$refs.myInstance.message('stand', 'ChangeEyebrow', res.data.eyebrow)
+        this.$refs.myInstance.message('stand', 'ChangeEye', res.data.eye)
+        if(res.data.crown){
+          this.$refs.myInstance.message('stand', 'ChangeItem', res.data.crown)
+        }
+        if(res.data.shield){
+          this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shield)
+        }
+        if(res.data.sword){
+          this.$refs.myInstance.message('stand', 'ChangeItem', res.data.sword)
+        }
       })
     },
     goChantecharacter(){
       this.$router.push("/changecharacter")
     },
     handleStart(){
-      setTimeout(() => {
       this.loadMyCharacter();
-    }, 10);
+    //   setTimeout(() => {
+    //   this.loadMyCharacter();
+    // }, 10);
     }
   },
   created(){
-    
+    window.addEventListener('start', this.handleStart);
     if(this.$cookies.isKey("access_token")){
       console.log("로그인")
       window.Kakao.API.request({
@@ -371,12 +370,15 @@ export default {
                 this.userEmail = store.state.kakaoUserInfo.email;
                 this.starCount = store.state.kakaoUserInfo.star;
                 this.loadAttend();
-                // window.addEventListener('start', this.handleStart);
-                this.loadMyCharacter();
+                
+                // this.loadMyCharacter();
               })
           },
       })
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('start', this.handleStart)
   }
 
 }
