@@ -10,7 +10,6 @@ import Vue from 'vue'
 import VueSpeech from 'vue-speech'
 import axios from 'axios'
 // import $ from 'jquery';
-
 Vue.use(VueSpeech)
 export default {
   props: {
@@ -25,9 +24,12 @@ export default {
       buttonText:"버튼을 누르고 말을 해보세요",
       commands : [],
       transcription: [],
-      runtimeTranscription: []
+      runtimeTranscription: [],
     }
   },
+  mounted(){
+            this.checkApi()
+          },
     methods:{
       checkApi () {
       window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -56,13 +58,12 @@ export default {
           })
         }
         this.runtimeTranscription = ''
-        recognition.start()
+        // recognition.start()
       })
       recognition.start()
     },
         onEnd({lastSentence}){
             this.commands.push(lastSentence)
-            console.log(this.commands)
         },
         toggle(){
           this.isClick = !this.isClick;
@@ -74,21 +75,19 @@ export default {
           )
           .then(function (response) {
             console.log(response);
-            
             window.location.reload();
           })
           .catch(function (error) {
             console.log(error);
           });
-          this.commands.splice(0);
-            this.transcription.splice(0);
-            this.runtimeTranscription.splice(0);
+          this.commands = [];
+            this.transcription = [];
+            this.runtimeTranscription = [];
           }
-
+          
         },
-        mounted(){
-          this.checkApi()
-        }
+         
+          
     }
 }
 </script>

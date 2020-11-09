@@ -12,6 +12,7 @@ import Speech from '../views/SpeechDetectionStarted.vue'
 import VRTest from '../views/vrtest.vue'
 import PracticeMode from '../views/PracticeMode.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [

@@ -11,10 +11,10 @@
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
           </div>
           <div v-show="isMove" class="block-list">
-            <div class="block block0" @click="goUp">위쪽으로</div>
-            <div class="block block1" @click="goRight">오른쪽으로</div>
-            <div class="block block2" @click="goLeft">왼쪽으로</div>
-            <div class="block block3" @click="goDown">아래쪽으로</div>
+            <div class="block block0" @click="goUp">앞으로</div>
+            <div class="block block1" @click="goRight">오른쪽으로 돌기</div>
+            <div class="block block2" @click="goLeft">왼쪽으로 돌기</div>
+            <div class="block block3" @click="goDown">뒤로</div>
             <div class="block block3" @click="goJump">점프</div>
             <div class="block block3" @click="goFor">반복문</div>
             <div class="block block3" @click="goFor2">반복문2</div>
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-
+    <VueSpeech></VueSpeech>
     <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
     <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
   </div>
@@ -39,7 +39,9 @@ import FailModal from '../components/FailModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store'
-
+import VueSpeech from '../views/SpeechDetectionStarted.vue'
+import Vue from 'vue'
+Vue.use(VueSpeech)
 export default {
   name: 'Test3',
   data() {
@@ -58,6 +60,7 @@ export default {
     Unity,
     ClearModal,
     FailModal,
+    VueSpeech,
   },
   computed: {
   },
@@ -180,7 +183,7 @@ export default {
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
       })
-    }
+    },
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)

@@ -30,10 +30,14 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			targetPosCollection.add("MM");
 			List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
 			System.out.println(string+" "+list.toString());
-			commands = makeCommand(list);
+			if(commands == null) {
+				
+				commands = makeCommand(list);
+			}else {
+				commands.addAll(makeCommand(list));
+			}
 		}
-		System.out.println(commands);
-		return null;
+		return commands;
 	}
 
 	private List<String> makeCommand(List<String> list) {
@@ -159,6 +163,49 @@ public class SpeechServiceImpl implements SpeechSerivce {
 				result.add("turnLeft");
 			}else if(command.contains("오른쪽")) {
 				result.add("turnRight");
+			}else if(command.contains("한")) {
+				result.add("forward");
+				i++;
+			}else if(command.contains("두")) {
+				for(int j = 0 ; j < 2; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("세")) {
+				for(int j = 0 ; j < 3; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("네") || command.contains("내")) {
+				for(int j = 0 ; j < 4; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("다섯")) {
+				for(int j = 0 ; j < 5; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("여섯")) {
+				for(int j = 0 ; j < 6; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("일곱")) {
+				for(int j = 0 ; j < 7; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("여덜") || command.contains("여덟")) {
+				for(int j = 0 ; j < 8; j++) {
+					result.add("forward");
+				}
+				i++;
+			}else if(command.contains("아홉")) {
+				for(int j = 0 ; j < 9; j++) {
+					result.add("forward");
+				}
+				i++;
 			}
 		}
 		return result;
