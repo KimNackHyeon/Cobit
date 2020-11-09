@@ -41,6 +41,6 @@ public class Purchase {
 	private String shield;
 	
 	@Column
-	private String shord;
+	private String sword;
 
 }
