@@ -64,7 +64,7 @@ export default {
         third: 0,
       },
       type: null,
-      starCount : store.state.kakaoUserInfo.star,
+      starCount : 0,
     }
   },
   components: {
@@ -149,6 +149,7 @@ export default {
             user: false,
             content : this.mapInform[d.stageId-1].content,
           }
+          this.starCount += d.star;
           this.$set(this.mapInform, d.stageId-1, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
