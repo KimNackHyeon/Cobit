@@ -25,5 +25,8 @@ export default {
   },
   setInStageStar(state, data) {
     state.InStageStar = data
+  },
+  setIsLastStage(state, data) {
+    state.IsLastStage = data
   }
 }

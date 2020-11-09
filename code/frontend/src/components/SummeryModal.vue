@@ -1,23 +1,23 @@
 <template>
   <transition name="modal">
-    <div class="clear-modal-mask">
-      <div class="clear-modal-wrap">
-        <div class="clear-modal-content">
-          <div class='clear-modal-header'>
+    <div class="summery-modal-mask">
+      <div class="summery-modal-wrap">
+        <div class="summery-modal-content">
+          <div class='summery-modal-header'>
             <img src="@/assets/images/blue-ribbon2.png" alt="img">
-            <div class="clear-modal-stage">Stage {{ InStageNum }}</div>
+            <div class="summery-modal-stage">Stage {{ InStageNum }}</div>
           </div>
-          <div class='clear-modal-body'>
-            <div class="clear-modal-name">CLEAR!</div>
-            <div class="clear-modal-star-area">
+          <div class='summery-modal-body'>
+            <div class="summery-modal-name">summery!</div>
+            <div class="summery-modal-star-area">
               <i v-for="(star,idx) in InStageStar" :key="`m-star+${idx}`" class="fas fa-star star"></i>
               <i v-for="(unstar,idx) in (3-InStageStar)" :key="`m-unstar+${idx}`" class="fas fa-star unstar"></i>
             </div>
           </div>
-          <div class="clear-modal-footer">
-            <div v-if="!IsLastStage" class="clear-modal-btn" @click="nextLevel">다음 단계로</div>
-            <div v-if="IsLastStage" class="clear-modal-btn" @click="onModal">완료하기</div>
-            <div class="clear-modal-btn" @click="reStart">다시하기</div>
+          <div class="summery-modal-footer">
+            <div v-if="!IsLastStage" class="summery-modal-btn" @click="nextLevel">다음 단계로</div>
+            <div v-if="IsLastStage" class="summery-modal-btn" @click="onModal">완료하기</div>
+            <div class="summery-modal-btn" @click="reStart">다시하기</div>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ClearModal',
+  name: 'summeryModal',
   data() {
     return {
     }
@@ -71,7 +71,7 @@ export default {
   opacity: 0;
 }
 
-.clear-modal-mask {
+.summery-modal-mask {
   position: fixed;
   z-index: 99999;
   top: 0;
@@ -85,7 +85,7 @@ export default {
   transition: opacity .3s ease;
 }
 
-.clear-modal-wrap {
+.summery-modal-wrap {
   max-width: 400px;
   width: 100%;
   padding: 10px;
@@ -102,13 +102,13 @@ export default {
   opacity: 0;
 }
 
-.modal-enter .clear-modal-wrap,
-.modal-leave-active .clear-modal-wrap {
+.modal-enter .summery-modal-wrap,
+.modal-leave-active .summery-modal-wrap {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.clear-modal-content {
+.summery-modal-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,7 +117,7 @@ export default {
   position: relative;
 }
 
-.clear-modal-content .clear-modal-header {
+.summery-modal-content .summery-modal-header {
   font-size: 30px;
   font-family: 'BMJUA';
   position: absolute;
@@ -127,7 +127,7 @@ export default {
   width: 100%;
 }
 
-.clear-modal-content .clear-modal-body {
+.summery-modal-content .summery-modal-body {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -136,7 +136,7 @@ export default {
   margin: 20px 0;
 }
 
-.clear-modal-content .clear-modal-footer {
+.summery-modal-content .summery-modal-footer {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -144,12 +144,12 @@ export default {
   flex-direction: column;
 }
 
-.clear-modal-header > img {
+.summery-modal-header > img {
   width: 100%;
   height: 100px;
 }
 
-.clear-modal-header .clear-modal-stage {
+.summery-modal-header .summery-modal-stage {
   position: absolute;
   top: 25%;
   left: 50%;
@@ -157,14 +157,14 @@ export default {
   color: #fff;
 }
 
-.clear-modal-body .clear-modal-name {
+.summery-modal-body .summery-modal-name {
   font-size: 50px;
   font-weight: 700;
   font-family: 'BMJUA';
   margin-bottom: 10px;
 }
 
-.clear-modal-body .clear-modal-star-area {
+.summery-modal-body .summery-modal-star-area {
   font-size: 40px;
   background-color: rgb(246, 246, 252);
   width: 80%;
@@ -179,7 +179,7 @@ export default {
               inset -3px -3px 4px -1px #ffffff !important;
 }
 
-.clear-modal-body .clear-modal-star-area i {
+.summery-modal-body .summery-modal-star-area i {
   text-shadow: -1.5px 0 #000,
                 0 1.5px #000,
                 1.5px 0 #000,
@@ -187,15 +187,15 @@ export default {
   margin: 0 10px;
 }
 
-.clear-modal-body .clear-modal-star-area .star {
+.summery-modal-body .summery-modal-star-area .star {
   color: rgb(243, 243, 0);
 }
 
-.clear-modal-body .clear-modal-star-area .unstar {
+.summery-modal-body .summery-modal-star-area .unstar {
   color: #fff;
 }
 
-.clear-modal-footer .clear-modal-btn {
+.summery-modal-footer .summery-modal-btn {
   width: 80%;
   height: 50px;
   border-radius: 30px;
@@ -212,12 +212,12 @@ export default {
               -6px -6px 10px -1px #ffffff;
 }
 
-.clear-modal-footer .clear-modal-btn:nth-child(2) {
+.summery-modal-footer .summery-modal-btn:nth-child(2) {
   background-color: rgba(0,0,0,0.5);
   color: rgba(255,255,255,0.7);
 }
 
-.clear-modal-footer .clear-modal-btn:hover {
+.summery-modal-footer .summery-modal-btn:hover {
   box-shadow: 0 0 0 0 rgba(0,0,0,0),
               0 0 0 0 rgba(0,0,0,0),
               inset 4px 4px 6px -1px rgba(0,0,0,0.2),

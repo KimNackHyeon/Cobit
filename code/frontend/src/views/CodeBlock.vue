@@ -241,7 +241,7 @@ export default {
   watch: {
   },
   methods: {
-     ...mapMutations(['setInStageNum', 'setInStageStar']),
+     ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage']),
     clickPlayBtn(){
       var tempson = this.playson;
       var delNode = [];
@@ -553,7 +553,10 @@ export default {
     onModal() {
       this.isClear = true;
       this.setInStageNum(this.stageNum);
-      this.setInStageStar(3);
+      this.setInStageStar(this.starNum);
+      if(this.starNum == 5) {
+        this.setIsLastStage(true)
+      }
     },
     onModal2() {
       this.isFail = true;
