@@ -86,6 +86,7 @@ export default {
               axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
+                this.starCount = store.state.kakaoUserInfo.star;
                 this.loadMyStage();
               })
           },
@@ -183,6 +184,7 @@ export default {
 
 <style scoped>
 .starbar {
+  margin-left: 5%;
   display: inline-block;
   width: 88%;
   /* background: white; */
@@ -424,6 +426,7 @@ export default {
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+  z-index: 99;
 }
 
 .map-footer .map-gauge {
