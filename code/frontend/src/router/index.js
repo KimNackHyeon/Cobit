@@ -11,6 +11,7 @@ import Test4 from '../views/Test4.vue'
 import Speech from '../views/SpeechDetectionStarted.vue'
 import VRTest from '../views/vrtest.vue'
 import PracticeMode from '../views/PracticeMode.vue'
+import Main from '../views/Main.vue'
 
 
 Vue.use(VueRouter)
@@ -20,6 +21,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/main',
+    name: 'Main',
+    component: Main
   },
   {
     path: '/mypage',
