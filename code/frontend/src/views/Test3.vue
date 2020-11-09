@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="test-container">
       <div class="unity-box">
-        <unity class="unity" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">

@@ -2,7 +2,7 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
-        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
           <div class="block-menu-bar">

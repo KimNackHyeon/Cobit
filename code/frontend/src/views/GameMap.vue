@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="map-container">
       <div class="map-header">
-        <div class="back-btn" @click="onModal2"><i class="fas fa-chevron-left"></i>돌아가기</div>
+        <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
@@ -132,6 +132,9 @@ export default {
     },
     onModal2() {
       this.showModal2 = true;
+    },
+    goMypage(){
+      this.$router.push('/mypage');
     },
     loadMyStage(){
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
