@@ -2,7 +2,7 @@
   <div class="mypage">
     <!-- 연습하기, 모험하기 -->
     <div class="leftbox">
-      <div class="box" style=" height: 47%; position: relative; cursor: pointer;">
+      <div class="box" style=" height: 47%; position: relative; cursor: pointer;" @click="movePractice">
         <div style="width: 100%; height: 100%;">
           <img class="practiceImg" src="../assets/images/practice.png" alt="연습하기">
         </div>
@@ -352,6 +352,9 @@ export default {
     //   setTimeout(() => {
     //   this.loadMyCharacter();
     // }, 10);
+    },
+    movePractice(){
+      this.$router.push('/practice')
     }
   },
   created(){

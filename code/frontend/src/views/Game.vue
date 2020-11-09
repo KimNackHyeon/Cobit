@@ -8,7 +8,7 @@
       </div>
     </div> -->
     <div>
-      <unity src="Build/unity.json" width="1000" height="600" unityLoader="Build/UnityLoader.js" ref="myInstance"></unity>
+      <unity src="Build/unity.json" width="1000" height="600" unityLoader="Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       <button @click="onClick">버튼</button>
     </div>
 </template>
