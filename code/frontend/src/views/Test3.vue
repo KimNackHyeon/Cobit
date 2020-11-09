@@ -258,7 +258,7 @@ export default {
 }
 
 .block-box .block-list .block {
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 20px;
   background-color: #0F4C81;
   margin-bottom: 10px;
@@ -267,6 +267,33 @@ export default {
   font-size: 14px;
   float: left;
   clear: both;
+  position: relative;
+}
+
+.block-box .block-list .block::before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: -20%;
+  transform: translate(50%, 0);
+  width: 15px;
+  height: 15px;
+  background-color: #0F4C81;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.block-box .block-list .block::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  bottom: -20%;
+  transform: translate(50%, 0);
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }
 
 .play-box .play {

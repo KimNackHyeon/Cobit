@@ -10,6 +10,7 @@ import Test3 from '../views/Test3.vue'
 import Test4 from '../views/Test4.vue'
 import Speech from '../views/SpeechDetectionStarted.vue'
 import VRTest from '../views/vrtest.vue'
+import PracticeMode from '../views/PracticeMode.vue'
 
 Vue.use(VueRouter)
 
@@ -63,6 +64,11 @@ const routes = [
     path: '/test4',
     name: 'Test4',
     component: Test4
+  },
+  {
+    path: '/practice',
+    name: 'PracticeMode',
+    component: PracticeMode
   },
 ]
 
