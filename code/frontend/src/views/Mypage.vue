@@ -192,6 +192,7 @@
         </div>
       </div>
     </div>
+    <DifficultyModal v-if="showModal2" @close="showModal2= false"/>
   </div>
 </template>
 
@@ -202,6 +203,7 @@ import $ from 'jquery';
 import store from '../vuex/store'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import DifficultyModal from '../components/DifficultyModal.vue';
 
 export default {
   data() {
@@ -221,10 +223,12 @@ export default {
       today: 5,
       nMonth:11,
       isAttend: false,
+      showModal2: false,
     }
   },
   components: {
-    Unity
+    Unity,
+    DifficultyModal,
   },
 
   mounted() {
@@ -317,7 +321,8 @@ export default {
       })
     },
     moveGame(){
-      this.$router.push('/gamemap');
+      // this.$router.push('/gamemap');
+      this.showModal2 = true;
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
@@ -335,8 +340,8 @@ export default {
           if(res.data.shield){
             this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shield)
           }
-          if(res.data.shord){
-            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shord)
+          if(res.data.sword){
+            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.sword)
           }
         }, 2500);
       })

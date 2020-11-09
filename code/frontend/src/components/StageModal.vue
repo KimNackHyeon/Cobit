@@ -20,7 +20,7 @@
               <div>{{StageDetail.content}}</div>
             </div>
           </div>
-          <div class="stage-modal-footer">
+          <div class="stage-modal-footer" @click="startGame">
             <div class="stage-modal-btn">start</div>
           </div>
         </div>
@@ -41,13 +41,17 @@ export default {
   watch: {
   },
   computed: {
-    ...mapState(['StageDetail', 'StageNum']),
+    ...mapState(['StageDetail', 'StageNum','StageType']),
   },
   created() {
   },
   mounted() {
   },
   methods: {
+    startGame(){
+      this.$cookies.set('stageInfo', {stageNum : this.StageNum, stageType : this.StageType});
+      this.$router.push('/test3')
+    }
   }
 }
 </script>

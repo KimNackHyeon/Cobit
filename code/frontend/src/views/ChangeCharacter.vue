@@ -90,7 +90,7 @@ export default {
         eyebrow:null,
         crown:null,
         shield:null,
-        shord:null
+        sword:null
       },
       // myColor:[]
       items: [],
@@ -136,7 +136,7 @@ export default {
           '',
           'success'
         )
-        // this.$router.push('/mypage');
+        this.$router.push('/mypage');
       });
     },
     onChangeEyebrow(eyebrow) {

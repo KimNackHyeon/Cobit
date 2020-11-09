@@ -23,7 +23,7 @@ public class Stage {
 	private Long id;
 
 	@Column
-	private String map;
+	private Long map;
 
 	@Column
 	private String answer;

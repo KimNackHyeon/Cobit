@@ -5,6 +5,9 @@ export default {
   setStageNum(state, data) {
     state.StageNum = data
   },
+  setStageType(state, data) {
+    state.StageType = data
+  },
   setKakaoUserInfo(state,kakaoLoginResult) {
     state.kakaoUserInfo.id = kakaoLoginResult.id;
     state.kakaoUserInfo.email = kakaoLoginResult.email;
