@@ -327,8 +327,8 @@ export default {
           if(res.data.shield){
             this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shield)
           }
-          if(res.data.shord){
-            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.shord)
+          if(res.data.sword){
+            this.$refs.myInstance.message('stand', 'ChangeItem', res.data.sword)
           }
         }, 2500);
       })

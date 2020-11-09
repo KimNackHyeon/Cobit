@@ -70,7 +70,7 @@ export default {
             this.buttonText="말을 마쳤다면 버튼을 눌러주세요."
           }else{
             this.buttonText="버튼을 누르고 말을 해보세요"
-            axios.post('http://localhost:9999/cobit/speech/analyze1', this.commands
+            axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.commands
           )
           .then(function (response) {
             console.log(response);
