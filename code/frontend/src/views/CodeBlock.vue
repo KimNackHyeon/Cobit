@@ -2,13 +2,14 @@
   <div class='wrap'>
     <div class="code-block-container">
       <div class="unity-box">
+        <router-link to="/gamemap"><v-btn style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</v-btn></router-link>
         <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
-          <div class="block-menu-bar">
+          <!-- <div class="block-menu-bar">
             <div class="menu move-menu" @click="onMove">이동</div>
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
-          </div>
+          </div> -->
         <div class="block-box">
            <div v-show="isMove" class="block-list">
             <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
@@ -51,7 +52,7 @@
               <v-icon>mdi-history</v-icon>
               <h3>히스토리</h3>
             </v-btn>
-            <div id="history" :style="{display:this.showhistory}">
+            <div id="history" :style="{display:this.showhistory}" transition="scale-transition">
               <div style="width:100%; height:100%; overflow-y:auto;">
                 <div v-for="(step,index) in history" :key="index" >
                   {{step.move_kor}}
@@ -73,6 +74,8 @@ import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
 import { mapMutations } from 'vuex';
+import axios from 'axios';
+import store from '../vuex/store'
 
 export default {
   name: 'CodeBlock',
@@ -212,7 +215,9 @@ export default {
       clickhistory:false,
       showhint:'none',
       clickhint:false,
-      hint:"스테이지의 힌트"
+      hint:"스테이지의 힌트",
+      starNum: 1,
+      stageType: 1,
     }
   },
   components: {
@@ -226,6 +231,9 @@ export default {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
+    this.stageNum = this.$cookies.get('stageInfo').stageNum;
+    this.stageType = this.$cookies.get('stageInfo').stageType;
+
   },
   mounted() {
     this.onMove();
@@ -407,6 +415,27 @@ export default {
           son = this.resultStep[son].son;
         }
     },
+    getStar() {
+      const LENG = this.commandList.length
+      if(this.stageNum == 1) {
+        if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
+      } if(this.stageNum == 2) {
+        if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
+      } if(this.stageNum == 3) {
+        if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
+      } if(this.stageNum == 4) {
+        if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
+      } if(this.stageNum == 5) {
+        if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+      }
+
+      // axios
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+        userId : store.state.kakaoUserInfo.id,
+        stageId : this.stageType + "" + this.stageNum,
+        star : this.starNum 
+      })
+    },
     drop(event) {
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
@@ -513,6 +542,7 @@ export default {
       }, 10);
     },
     handleClear() {
+      this.getStar();
       this.onModal();
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
     },
@@ -533,11 +563,6 @@ export default {
     window.removeEventListener('start', this.handleStart)
     window.removeEventListener('clear', this.handleClear)
     window.removeEventListener('fail', this.handleFail)
-    if(!this.isAdded){
-      var temp = document.getElementById('block-board').childNodes;
-      console.log(temp[temp.length-1])
-      
-    }
   },
 }
 </script>
@@ -581,11 +606,11 @@ export default {
 .code-box .play-box {
   width: 100%;
   height:100%;
-  /* background-color: brown; */
-  border: 1px solid #a4d4ff;
+  background-color: #f7f7f76e;
+  border: 1px solid #dcdcdc94;
   /* position: relative; */
-  /* background-image: url('../assets/images/tile.png');
-      background-repeat: repeat; */
+  background-image: url('../assets/images/tile.png');
+  background-repeat: repeat;
 }
 
 .block-menu-bar {
@@ -596,9 +621,10 @@ export default {
 .block-box .block-list {
   width: 100%;
   padding: 10px;
-  /* background-color: #0F4C81; */
-  border: 1px solid #a4d4ff;
-  overflow-y: scroll;
+  background-color: #f5f5f5;
+  border: 1px solid #dcdcdc94;
+  overflow-y: auto;
+  box-shadow:1px 0px 13px #0000000f;
 }
 
 .block-menu-bar .on-menu-bar {
@@ -615,7 +641,7 @@ export default {
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   /* background-color: chocolate; */
-  border: 1px solid #a4d4ff;
+  border: 1px solid #dcdcdc94;
   margin-bottom: 5px;
   cursor: pointer;
   transition: background-color .5s ease;
@@ -627,13 +653,41 @@ export default {
   text-align: center;
   padding: 5px;
   border-radius: 20px;
-  background-color: #0F4C81;
+  background-color: rgb(76, 151, 255);
+  /* border:1px solid rgb(51, 115, 204); */
   margin-bottom: 10px;
   cursor: pointer;
   color: #fff;
   font-size: 14px;
   float: left;
   clear: both;
+  text-shadow: 1px rgb(51, 115, 204);
+}
+
+.block::before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: -20%;
+  transform: translate(50%, 0);
+  width: 15px;
+  height: 15px;
+  background-color: rgb(76, 151, 255);
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.block::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  bottom: -20%;
+  transform: translate(50%, 0);
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }
 
 .play-box .play {
@@ -651,7 +705,7 @@ export default {
 }
 
 .overMe{
-  background-color: red;
+  background-color: rgb(20 121 165);
 }
 
 #play{

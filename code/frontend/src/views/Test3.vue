@@ -277,7 +277,7 @@ export default {
   content: "";
   position: absolute;
   right: 50%;
-  top: -20%;
+  top: -14px;
   transform: translate(50%, 0);
   width: 15px;
   height: 15px;
@@ -290,7 +290,7 @@ export default {
   content: "";
   position: absolute;
   right: 50%;
-  bottom: -20%;
+  bottom: -14px;
   transform: translate(50%, 0);
   width: 15px;
   height: 15px;
