@@ -13,7 +13,7 @@
       <div style="height: 6%"></div>
       <div class="box" style="height: 47%; position: relative; cursor: pointer;" @click="moveGame">
         <div style="width: 100%; height: 100%;">
-          <img class="practiceImg" src="../assets/images/practice.png" alt="모험하기">
+          <img class="practiceImg" src="../assets/images/adventure.png" alt="모험하기">
         </div>
         <div class="practiceTitle">
           모험하기
