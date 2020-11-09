@@ -198,16 +198,17 @@ export default {
   position: relative;
 }
 .mystar {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
   background: #a4d4ff;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
 .startotal {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
-  background-color: white;
+  /* background-color: white; */
+  background-color: #eee;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -217,7 +218,6 @@ export default {
   top: 5px;
   left: 45%;
 }
-/* ///////////////////////////////// */
 .wrap {
   height: 100%;
 }
@@ -427,6 +427,8 @@ export default {
                 1.5px 0 #000,
                 0 -1.5px #000;
   z-index: 99;
+    top: 15px;
+    left: 15px;
 }
 
 .map-footer .map-gauge {
