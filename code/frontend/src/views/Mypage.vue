@@ -24,10 +24,13 @@
     <div class="rightbox box">
       <!-- 캐릭터 이름 -->
       <div class="name" style="color:white;">
-        <div>
+        <div v-if="name">
           {{name}}
         </div>
-        <v-btn icon @click="onRename"><v-icon class="pencilicon" style="color: white; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
+        <div v-else>
+          손님
+        </div>
+        <v-btn v-if="userEmail!=null" icon @click="onRename"><v-icon class="pencilicon" style="color: white; margin-left: 1%;">mdi-pencil</v-icon></v-btn>
       </div>
       <!-- 캐릭터 이름 수정 -->
       <v-app class="vapp"></v-app>
@@ -62,11 +65,20 @@
       </v-dialog>
       <div style="height: 45vh; position: relative">
         <unity src="../unity2/Build/unity2.json" unityLoader="#" ref="myInstance" :hideFooter="true"></unity>
-        <router-link to="/changecharacter">
-          <button class="changeBtn">캐릭터 바꾸기</button>
-        </router-link>
+        <!-- <router-link to="/changecharacter"> -->
+        <button @click="goChantecharacter" :disabled="userEmail==null" class="changeBtn">캐릭터 바꾸기</button>
+        <div v-if="userEmail==null" class="nouserbtn">
+          <i class="fas fa-lock nouserbtnicon"></i>
+        </div>
+        <!-- </router-link> -->
       </div>
-      <div style="padding: 4%; height: 40%;">
+      <div class="nouser" v-if="userEmail==null" style="padding: 4%; height: 38.8%;">
+        <div>
+          <i class="fas fa-lock lockicon"></i>
+        </div>
+        <div class="locktitle">로그인이 필요한 서비스입니다.</div>
+      </div>
+      <div v-else style="padding: 4%; height: 40%;">
         <!-- 별 모음 -->
         <div style="height: 28%; display: flex; align-items: center">
           <!-- <div>
@@ -194,7 +206,7 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
-      // star: [1, 3, 6],
+      userEmail: store.state.kakaoUserInfo.email,
       star: 10,
       starpercent: [],
       name: null,
@@ -216,6 +228,7 @@ export default {
   },
 
   mounted() {
+    // console.log(this.userEmail)
     console.log(this.name);
     // 별의 갯수에 따라 width 설정
     if(this.starCount == 0) {
@@ -328,8 +341,17 @@ export default {
         }, 2500);
       })
     },
+    goChantecharacter(){
+      this.$router.push("/changecharacter")
+    },
+    handleStart(){
+      setTimeout(() => {
+      this.loadMyCharacter();
+    }, 10);
+    }
   },
   created(){
+    
     if(this.$cookies.isKey("access_token")){
       console.log("로그인")
       window.Kakao.API.request({
@@ -341,8 +363,10 @@ export default {
                 console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.name = store.state.kakaoUserInfo.nickname;
+                this.userEmail = store.state.kakaoUserInfo.email;
                 this.starCount = store.state.kakaoUserInfo.star;
                 this.loadAttend();
+                // window.addEventListener('start', this.handleStart);
                 this.loadMyCharacter();
               })
           },
@@ -629,5 +653,40 @@ td {
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+}
+.nouser {
+  padding: 4%;
+  height: 38.8%;
+  background-color: rgba(128, 128, 128, 0.9);
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.lockicon {
+  font-size: 55px;
+  color: white;
+}
+.locktitle {
+  margin-top: 15px;
+  font-size: 23px;
+}
+.nouserbtn {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  background-color: rgba(128, 128, 128, 0.8);
+  border-radius: 10px;
+  width: 138.5px;
+  height: 58.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nouserbtnicon {
+  color: white;
+  font-size: 30px;
 }
 </style>
