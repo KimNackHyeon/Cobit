@@ -22,6 +22,7 @@ export default new Vuex.Store({
       email:null,
       nickname:null,
       star:null,
+      hint:null,
       // profile_image_url:null
     },
   },
