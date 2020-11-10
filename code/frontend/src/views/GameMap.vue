@@ -5,7 +5,7 @@
         <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
-        <div id="stage1story" @click="clickStory" :style="{display:openStory}">
+        <!-- <div id="stage1story" @click="clickStory" :style="{display:openStory}">
           <div>
           <div class="story story" >
             <div style="width:30vh; height:100%;float:left;">
@@ -21,7 +21,7 @@
           <div class="story goal" v-html="goal">
           </div>
           </div>
-        </div>
+        </div> -->
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
           <div class="stage-num">{{ index+1 }}</div>
           <div v-if="inform.open" class="stage-area" @click="onModal(inform, index+1)"></div>
@@ -83,7 +83,7 @@ export default {
         third: 0,
       },
       type: null,
-      openStory:'flex'
+      openStory:'flex',
       starCount : 0,
     }
   },
@@ -134,21 +134,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
-<<<<<<< code/frontend/src/views/GameMap.vue
-    clickStory(){
-      this.openStory = 'none';
-    },
-    getStarRatio() {
-      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      const FIRST = document.querySelector('.map-1star-gauge');
-      const SECOND = document.querySelector('.map-2star-gauge');
-      const THIRD = document.querySelector('.map-3star-gauge');
-
-      FIRST.style.width = this.mapStar.first + '%';
-      SECOND.style.width = this.mapStar.second + '%';
-      THIRD.style.width = this.mapStar.third + '%';
-    },
-=======
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       // const FIRST = document.querySelector('.map-1star-gauge');
@@ -159,7 +144,6 @@ export default {
       // SECOND.style.width = this.mapStar.second + '%';
       // THIRD.style.width = this.mapStar.third + '%';
     // },
->>>>>>> code/frontend/src/views/GameMap.vue
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finalproject.cobit.model.Stage;
 import com.finalproject.cobit.model.StageProgress;
+import com.finalproject.cobit.model.User;
 import com.finalproject.cobit.repo.StageProgressRepo;
 import com.finalproject.cobit.repo.StageRepo;
+import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,9 +43,12 @@ public class StageController {
 
 	@Autowired
 	StageRepo stageRepo;
-	
+
 	@Autowired
 	StageProgressRepo spRepo;
+
+	@Autowired
+	UserRepo userRepo;
 
 	@ApiOperation(value = "난이도에 따른 스테이지 정보 가져오기")
 	@GetMapping("")
@@ -51,25 +56,42 @@ public class StageController {
 		List<Stage> list = stageRepo.getStageByType(type);
 		return list;
 	}
-	
+
 	@ApiOperation(value = "나의 스테이지 정보 가져오기")
 	@GetMapping("/user")
 	public List<StageProgress> getMyStage(@RequestParam Long id) {
 		List<StageProgress> list = spRepo.getStageProgressByUserId(id);
 		return list;
 	}
-	
+
 	@ApiOperation(value = "나의 스테이지 정보 기록하기")
 	@PostMapping("/user")
 	public ResponseEntity<Boolean> saveMyStage(@RequestBody StageProgress sp) {
-		Long type = (long) ((sp.getStageId()+"").charAt(0) - '0');
-		Long map = (long) ((sp.getStageId()+"").charAt(1) - '0');
-		
-		System.out.println(type + " " + map);
-		
+		Long type = (long) ((sp.getStageId() + "").charAt(0) - '0');
+		Long map = (long) ((sp.getStageId() + "").charAt(1) - '0');
+
+//		System.out.println(type + " " + map);
+		System.out.println(sp);
+
 		Optional<Stage> stageOpt = stageRepo.getStageByTypeAndMap(type, map);
-		sp.setStageId(stageOpt.get().getId());
-		spRepo.save(sp);
+		Long stageId = stageOpt.get().getId();
+		sp.setStageId(stageId);
+
+		Optional<StageProgress> spOpt = spRepo.getStageProgressByUserIdAndStageId(sp.getUserId(), stageId);
+
+		Optional<User> userOpt = userRepo.findById(sp.getUserId());
+
+		if (spOpt.isPresent()) {
+			System.out.println("sp : " + spOpt.get());
+			userOpt.get().setStar(userOpt.get().getStar() + sp.getStar() - spOpt.get().getStar());
+			System.out.println("user : " + userOpt.get());
+			spOpt.get().setStar(sp.getStar());
+			spRepo.save(spOpt.get());
+		} else {
+			spRepo.save(sp);
+			userOpt.get().setStar(userOpt.get().getStar() + sp.getStar());
+			userRepo.save(userOpt.get());
+		}
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
