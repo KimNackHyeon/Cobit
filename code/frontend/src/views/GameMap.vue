@@ -50,7 +50,13 @@
           <div v-if="!inform.open&&!inform.user" class="stage-star lock-stage-star">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
-          <div class="map-road-box"></div>
+          <div v-if="isLast">
+            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last"></div>
+          </div>
+          <div v-if="!isLast">
+            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last map-road-last-un"></div>
+          </div>
+          <div v-if="index != mapInform.length - 1" class="map-road-box"></div>
           <div v-if="!inform.open&&inform.user" class="stage-area lock-stage-area"></div>
           <div v-if="!inform.open&&inform.user" class="stage-star">
             <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
@@ -59,14 +65,8 @@
           <div v-if="!inform.open&&inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
-          <div v-if="index != mapInform.length - 1" class="map-road-box"></div>
-          <div v-if="isLast">
-            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last"></div>
-          </div>
-          <div v-if="!isLast">
-            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last map-road-last-un"></div>
-          </div>
         </div>
+
         <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
           <div class="stage-area"></div>
         </div>
@@ -216,7 +216,7 @@ export default {
       this.$router.push('/mypage');
     },
     loadMyStage(){
-      axios.get(`http://localhost:9999/cobit/stage/user`,{
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         params:{
           id : store.state.kakaoUserInfo.id,
           type : this.type
@@ -233,20 +233,24 @@ export default {
             star: d.star,
             unstar: 3 - d.star,
             user: false,
-            content : this.mapInform[d.stageId-1].content,
+            content : this.mapInform[index].content,
           }
           this.starCount += d.star;
-          this.$set(this.mapInform, d.stageId-1, map)
+          this.$set(this.mapInform, index, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
         });
-        this.$set(this.mapInform, index, {
-          open : false,
-          star : 0,
-          unstar : 3,
-          user : true,
-          content : this.mapInform[index].content,
-        })
+        if(index < this.totalCount/3 ){
+          this.$set(this.mapInform, index, {
+            open : false,
+            star : 0,
+            unstar : 3,
+            user : true,
+            content : this.mapInform[index].content,
+          })
+        } else{
+          this.isLast = true;
+        }
       })
     },
     loadStage(){
@@ -261,6 +265,7 @@ export default {
               content : map.content,
             });
         });
+        console.log(this.mapInform);
         this.totalCount = this.mapInform.length*3;
       })
     },
