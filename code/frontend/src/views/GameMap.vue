@@ -29,12 +29,17 @@
             <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
             <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
           </div>
-          <div v-if="!inform.open" class="stage-area lock-stage-area"></div>
-          <div v-if="!inform.open" class="stage-star lock-stage-star">
+          <div v-if="!inform.open&&!inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&!inform.user" class="stage-star lock-stage-star">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <div class="map-road-box"></div>
-          <div v-if="inform.user" class="map-character" @click="onModal(inform, index+1)">
+          <div v-if="!inform.open&&inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&inform.user" class="stage-star">
+            <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
+            <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
+          </div>
+          <div v-if="!inform.open&&inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
         </div>
@@ -93,44 +98,45 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     // window.addEventListener('scroll', this.handleScroll)
     this.type = this.$cookies.get('stageType');
     console.log(this.type);
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
-      window.Kakao.API.request({
+      let kakao_account;
+      await window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
-              const kakao_account = res.kakao_account;
-              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
-                this.loadMyStage();
-              })
-          },
-      })
+                
+              });
+      await this.loadMyStage();
     }
   },
   mounted() {
-    // this.getStarRatio();
-    // 별의 갯수에 따라 width 설정
-    if(this.starCount == 0) {
-      console.log('실행')
-      $(".startotal").css("border-radius", "15px")
-      $(".startotal").css("width", "100%")
-    }
-    else if(this.starCount == 90){
-      $(".mystar").css("border-radius", "15px")
-      $(".mystar").css("width", "100%")
-    }
-    else {
-      const starratio = (this.starCount / 90) * 100
-      $(".mystar").css("width", `${starratio}%`)
-      $(".startotal").css("width", `${100 - starratio}%`)
-    }
   },
   watch: {
+     starCount(){
+      if(this.starCount == 0) {
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+      }
+      else if(this.starCount == 15){
+        $(".mystar").css("border-radius", "15px")
+        $(".mystar").css("width", "100%")
+      }
+      else {
+        const starratio = (this.starCount / 15) * 100
+        $(".mystar").css("width", `${starratio}%`)
+        $(".startotal").css("width", `${100 - starratio}%`)
+      }
+    }
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
@@ -210,6 +216,7 @@ export default {
 
 <style scoped>
 .starbar {
+  margin-left: 5%;
   display: inline-block;
   width: 88%;
   /* background: white; */
@@ -223,16 +230,17 @@ export default {
   position: relative;
 }
 .mystar {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
   background: #a4d4ff;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
 .startotal {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
-  background-color: white;
+  /* background-color: white; */
+  background-color: #eee;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -242,7 +250,6 @@ export default {
   top: 5px;
   left: 45%;
 }
-/* ///////////////////////////////// */
 .wrap {
   height: 100%;
 }
@@ -451,6 +458,9 @@ export default {
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+  z-index: 99;
+    top: 15px;
+    left: 15px;
 }
 
 .map-footer .map-gauge {

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.finalproject.cobit.model.Attend;
+import com.finalproject.cobit.model.Stage;
 import com.finalproject.cobit.model.User;
 import com.finalproject.cobit.repo.AttendRepo;
 import com.finalproject.cobit.repo.UserRepo;
@@ -46,7 +47,7 @@ public class UserController {
 
 	@Autowired
 	UserRepo userRepo;
-	
+
 	@Autowired
 	AttendRepo attendRepo;
 
@@ -60,12 +61,13 @@ public class UserController {
 	@ApiOperation(value = "회원가입")
 	@PostMapping("")
 	public User signUp(@RequestBody User user) {
-		
+
 		Optional<User> userOpt = userRepo.getUserByEmail(user.getEmail());
-		if(userOpt.isPresent()) {
+		if (userOpt.isPresent()) {
 			return userOpt.get();
-		}else {
+		} else {
 			user.setStar(0L);
+			user.setHint(0L);
 			userRepo.save(user);
 			Optional<User> userOpt2 = userRepo.getUserByEmail(user.getEmail());
 			return userOpt2.get();
@@ -87,7 +89,7 @@ public class UserController {
 		userRepo.deleteById(id);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/upload")
 	@ApiOperation(value = "사진 업로드")
 	public Object upload(@RequestParam MultipartFile image, @RequestParam String email)
@@ -118,19 +120,36 @@ public class UserController {
 		String result = "/img/" + user.getId() + "/profile/" + filename;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "출석현황 가져오기")
 	@GetMapping("/attend")
-	public List<Attend> getAttend(@RequestParam String email, @RequestParam Long month ) {
+	public List<Attend> getAttend(@RequestParam String email, @RequestParam Long month) {
 		List<Attend> list = attendRepo.getUserByEmailAndMonth(email, month);
 		return list;
 	}
-	
+
 	@ApiOperation(value = "출석체크")
 	@PostMapping("/attend")
-	public ResponseEntity<Boolean> saveAttend(@RequestBody Attend attend ) {
+	public ResponseEntity<Boolean> saveAttend(@RequestBody Attend attend) {
 		attendRepo.save(attend);
+		Optional<User> userOpt = userRepo.getUserByEmail(attend.getEmail());
+		userOpt.get().setHint(userOpt.get().getHint() + 1);
+		userRepo.save(userOpt.get());
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "힌트 구매")
+	@PostMapping("/hint")
+	public ResponseEntity<Boolean> buyHint(@RequestBody User user) {
+		System.out.println(user);
+		if(user.getHint() >= 1) {
+			user.setHint(user.getHint() - 1);
+			userRepo.save(user);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+		}
+
 	}
 
 }
