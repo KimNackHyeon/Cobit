@@ -83,7 +83,7 @@ export default {
         third: 0,
       },
       type: null,
-      openStory:'flex'
+      openStory:'flex',
       starCount : 0,
     }
   },
@@ -134,21 +134,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
-<<<<<<< code/frontend/src/views/GameMap.vue
-    clickStory(){
-      this.openStory = 'none';
-    },
-    getStarRatio() {
-      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      const FIRST = document.querySelector('.map-1star-gauge');
-      const SECOND = document.querySelector('.map-2star-gauge');
-      const THIRD = document.querySelector('.map-3star-gauge');
-
-      FIRST.style.width = this.mapStar.first + '%';
-      SECOND.style.width = this.mapStar.second + '%';
-      THIRD.style.width = this.mapStar.third + '%';
-    },
-=======
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       // const FIRST = document.querySelector('.map-1star-gauge');
@@ -159,7 +144,6 @@ export default {
       // SECOND.style.width = this.mapStar.second + '%';
       // THIRD.style.width = this.mapStar.third + '%';
     // },
->>>>>>> code/frontend/src/views/GameMap.vue
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
