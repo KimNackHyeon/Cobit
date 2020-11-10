@@ -554,7 +554,7 @@ export default {
       this.isClear = true;
       this.setInStageNum(this.stageNum);
       this.setInStageStar(this.starNum);
-      if(this.starNum == 5) {
+      if(this.stageNum == 5) {
         this.setIsLastStage(true)
       }
     },

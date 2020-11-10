@@ -21,18 +21,25 @@
           </div>
         </div>
       </div>
+
+      <SummeryModal v-if="showModal" @close="showModal= false"/>
     </div>
   </transition>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import SummeryModal from '../components/SummeryModal.vue';
 
 export default {
   name: 'ClearModal',
   data() {
     return {
+      showModal: false,
     }
+  },
+  components: {
+    SummeryModal,
   },
   watch: {
   },
@@ -52,6 +59,9 @@ export default {
     reStart() {
       this.$emit('close')
       this.$emit('restart')
+    },
+    onModal() {
+      this.showModal = true
     }
   }
 }

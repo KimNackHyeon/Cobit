@@ -78,7 +78,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar']),
+    ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage']),
     onMove() {
       this.isMove = true; this.isObstacle = false
       const MOVE = document.querySelector('.move-menu');
@@ -159,6 +159,9 @@ export default {
       this.setInStageNum(this.stageNum);
       this.setInStageStar(this.starNum);
       this.isClear = true;
+      if(this.stageNum == 5) {
+        this.setIsLastStage(true)
+      }
     },
     onModal2() {
       this.isFail = true;
