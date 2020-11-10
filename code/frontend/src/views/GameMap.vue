@@ -11,7 +11,7 @@
             <div style="width:30vh; height:100%;float:left;">
               <img src="../assets/images/stage1_no_text.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
             </div>
-            <div style="width: auto; height: 100%; float: left; padding: 10vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
+            <div style="width: auto; height: 100%; float: left; padding: 7vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
             </div>
           </div>
           <div style="width:100%;  display: flex; justify-content: center;">
