@@ -12,7 +12,7 @@
     <div class="code-block-container">
       <div class="unity-box">
         <router-link to="/gamemap"><v-btn style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</v-btn></router-link>
-        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
         <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
@@ -24,7 +24,7 @@
            <div v-show="isMove" class="block-list">
             <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
               {{m.move_kor}}
-              <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{m.icon}}</v-icon>
+              <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
           </div>
           <div v-show="isObstacle" class="block-list">
@@ -47,7 +47,7 @@
                 <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
                   <div class="block" :class="'block'+m.num+' '+m.class" style="margin-bottom:0px;">
                     {{moves[m.num].move_kor}}
-                    <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon>
+                    <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
                   <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
                   </div>
