@@ -5,13 +5,13 @@
         <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
-        <div id="stage1story" @click="clickStory" :style="{display:openStory}">
+        <div id="stage1story" @click="clickStory" v-if="openStory">
           <div>
           <div class="story story" >
-            <div style="width:30vh; height:100%;float:left;">
+            <div style="width:30%; height:100%;float:left;">
               <img src="../assets/images/stage1_no_text.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
             </div>
-            <div style="width: auto; height: 100%; float: left; padding: 7vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
+            <div style="width: 70%; height: 100%; float: left; padding: 0 8vw; font-size: x-large; font-weight: 600;display: flex; align-items: center; justify-content: center;" v-html="story">
             </div>
           </div>
           <div style="width:100%;  display: flex; justify-content: center;">
@@ -88,7 +88,7 @@ export default {
         third: 0,
       },
       type: null,
-      openStory:'flex',
+      openStory:true,
       starCount : 0,
     }
   },
@@ -141,7 +141,7 @@ export default {
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
     clickStory(){
-      this.openStory = 'none';
+      this.openStory = false;
     },
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
@@ -594,7 +594,7 @@ export default {
     margin: 10vh 15vw;
     background-color: #fafff7;
     padding: 5vh 5vw;
-    font-size: 2.2vh;
+    font-size: 3vh;
     font-weight: bold;
      display: flex;
     align-items: center;
