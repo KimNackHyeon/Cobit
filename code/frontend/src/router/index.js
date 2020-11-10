@@ -71,6 +71,11 @@ const routes = [
     name: 'PracticeMode',
     component: PracticeMode
   },
+  {
+    path: '*',
+    redirect: '/'
+  }
+
 ]
 
 const router = new VueRouter({
