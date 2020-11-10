@@ -34,5 +34,8 @@ public class User {
 
 	@Column
 	private Long star;
+	
+	@Column
+	private Long hint;
 
 }

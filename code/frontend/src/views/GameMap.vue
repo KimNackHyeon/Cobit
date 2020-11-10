@@ -98,30 +98,31 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     // window.addEventListener('scroll', this.handleScroll)
     this.type = this.$cookies.get('stageType');
     console.log(this.type);
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
-      window.Kakao.API.request({
+      let kakao_account;
+      await window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
-              const kakao_account = res.kakao_account;
-              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
-                this.loadMyStage();
-              })
-          },
-      })
+                
+              });
+      await this.loadMyStage();
     }
   },
   mounted() {
-    // this.getStarRatio();
-    // 별의 갯수에 따라 width 설정
-    setTimeout(() => {
-      console.log(this.starCount);
+  },
+  watch: {
+     starCount(){
       if(this.starCount == 0) {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
@@ -135,10 +136,7 @@ export default {
         $(".mystar").css("width", `${starratio}%`)
         $(".startotal").css("width", `${100 - starratio}%`)
       }
-    }, 1500);
-    
-  },
-  watch: {
+    }
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),

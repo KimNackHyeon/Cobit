@@ -66,6 +66,7 @@ public class UserController {
 			return userOpt.get();
 		}else {
 			user.setStar(0L);
+			user.setHint(0L);
 			userRepo.save(user);
 			Optional<User> userOpt2 = userRepo.getUserByEmail(user.getEmail());
 			return userOpt2.get();
@@ -130,6 +131,9 @@ public class UserController {
 	@PostMapping("/attend")
 	public ResponseEntity<Boolean> saveAttend(@RequestBody Attend attend ) {
 		attendRepo.save(attend);
+		Optional<User> userOpt = userRepo.getUserByEmail(attend.getEmail());
+		userOpt.get().setHint(userOpt.get().getHint()+1);
+		userRepo.save(userOpt.get());
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 

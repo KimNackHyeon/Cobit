@@ -451,7 +451,7 @@ export default {
       //마우스가 움직이면서 계속 마우스 위치를 가져온다.
       this.getNeighbor(event);
 
-      },
+    },
     updateLink(){
       var parent = this.targetdivNum;
         var son = this.resultStep[parent].son;
