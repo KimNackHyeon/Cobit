@@ -92,7 +92,7 @@
                 <div class="twomaintitle">나만의 캐릭터를 만들어 함께 모험을 떠나볼까요?</div>
                 <img src="../assets/images/mycharacter.png" alt="mycharacter">
                 <div class="gohomebtnbox">
-                  <div class="gohomebtn">모험하기</div>
+                  <div @click="gohome" class="gohomebtn">모험하기</div>
                 </div>
               </div>
           </div>
@@ -105,6 +105,11 @@
 <script>
 import '../css/main.scss'
 export default {
+  methods:{
+    gohome(){
+      this.$router.push('/home')
+    }
+  }
 
 }
 </script>
