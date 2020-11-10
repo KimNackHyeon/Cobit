@@ -83,7 +83,7 @@ export default {
         third: 0,
       },
       type: null,
-      openStory:'flex'
+      openStory:'flex',
       starCount : 0,
     }
   },
@@ -106,7 +106,7 @@ export default {
               axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
-                this.starCount = store.state.kakaoUserInfo.star;
+                // this.starCount = store.state.kakaoUserInfo.star;
                 this.loadMyStage();
               })
           },
@@ -135,21 +135,9 @@ export default {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
-<<<<<<< code/frontend/src/views/GameMap.vue
     clickStory(){
       this.openStory = 'none';
     },
-    getStarRatio() {
-      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      const FIRST = document.querySelector('.map-1star-gauge');
-      const SECOND = document.querySelector('.map-2star-gauge');
-      const THIRD = document.querySelector('.map-3star-gauge');
-
-      FIRST.style.width = this.mapStar.first + '%';
-      SECOND.style.width = this.mapStar.second + '%';
-      THIRD.style.width = this.mapStar.third + '%';
-    },
-=======
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       // const FIRST = document.querySelector('.map-1star-gauge');
@@ -160,7 +148,6 @@ export default {
       // SECOND.style.width = this.mapStar.second + '%';
       // THIRD.style.width = this.mapStar.third + '%';
     // },
->>>>>>> code/frontend/src/views/GameMap.vue
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
