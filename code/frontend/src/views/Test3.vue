@@ -202,6 +202,11 @@ export default {
         axios.post('http://localhost:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
+          for (let index = 0; index < res.data.length; index++) {
+            this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
+            this.$refs.myInstance.message('JavascriptHook', 'Go');
+            
+          }
         })
         .catch(error => {
           console.log(error);
