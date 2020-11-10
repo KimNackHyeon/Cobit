@@ -29,14 +29,12 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			targetPosCollection.add("SN");
 			targetPosCollection.add("MM");
 			List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
-			System.out.println(string+" "+list.toString());
 			if(commands == null) {
 				commands = makeCommand(list);
 			}else {
 				commands.addAll(makeCommand(list));
 			}
 		}
-		System.out.println(commands.toString());
 		return commands;
 	}
 
@@ -52,55 +50,55 @@ public class SpeechServiceImpl implements SpeechSerivce {
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(nextCommand == '한') {
-						result.add("up");
+						result.add("Up");
 						i++;
 					}else if(nextCommand == '두') {
 						for(int j = 0 ; j < 2; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(nextCommand == '세') {
 						for(int j = 0 ; j < 3; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(nextCommand == '네' || nextCommand == '내') {
 						for(int j = 0 ; j < 4; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(next.contains("다섯")) {
 						for(int j = 0 ; j < 5; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(next.contains("여섯")) {
 						for(int j = 0 ; j < 6; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(next.contains("일곱")) {
 						for(int j = 0 ; j < 7; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(next.contains("여덜") || next.contains("여덟")) {
 						for(int j = 0 ; j < 8; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}else if(next.contains("아홉")) {
 						for(int j = 0 ; j < 9; j++) {
-							result.add("up");
+							result.add("Up");
 						}
 						i++;
 					}
 				}else {
-					result.add("up");
+					result.add("Up");
 				}
 			}else if(command.contains("밑") || command.contains("아래")) {
 				if(i != N-1) {
@@ -109,55 +107,55 @@ public class SpeechServiceImpl implements SpeechSerivce {
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(nextCommand == '한') {
-						result.add("down");
+						result.add("Down");
 						i++;
 					}else if(nextCommand == '두') {
 						for(int j = 0 ; j < 2; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(nextCommand == '세') {
 						for(int j = 0 ; j < 3; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(nextCommand == '네' || nextCommand == '내') {
 						for(int j = 0 ; j < 4; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(next.contains("다섯")) {
 						for(int j = 0 ; j < 5; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(next.contains("여섯")) {
 						for(int j = 0 ; j < 6; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(next.contains("일곱")) {
 						for(int j = 0 ; j < 7; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(next.contains("여덜") || next.contains("여덟")) {
 						for(int j = 0 ; j < 8; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}else if(next.contains("아홉")) {
 						for(int j = 0 ; j < 9; j++) {
-							result.add("down");
+							result.add("Down");
 						}
 						i++;
 					}
 				}else {
-					result.add("down");
+					result.add("Down");
 				}
 			}else if(command.contains("오른")) {
 				if(i != N-1) {
@@ -166,55 +164,55 @@ public class SpeechServiceImpl implements SpeechSerivce {
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(nextCommand == '한') {
-						result.add("right");
+						result.add("Right");
 						i++;
 					}else if(nextCommand == '두') {
 						for(int j = 0 ; j < 2; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(nextCommand == '세') {
 						for(int j = 0 ; j < 3; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(nextCommand == '네' || nextCommand == '내') {
 						for(int j = 0 ; j < 4; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(next.contains("다섯")) {
 						for(int j = 0 ; j < 5; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(next.contains("여섯")) {
 						for(int j = 0 ; j < 6; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(next.contains("일곱")) {
 						for(int j = 0 ; j < 7; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(next.contains("여덜") || next.contains("여덟")) {
 						for(int j = 0 ; j < 8; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}else if(next.contains("아홉")) {
 						for(int j = 0 ; j < 9; j++) {
-							result.add("right");
+							result.add("Right");
 						}
 						i++;
 					}
 				}else {
-					result.add("right");
+					result.add("Right");
 				}
 			}else if(command.contains("왼")) {
 				if(i != N-1) {
@@ -223,55 +221,55 @@ public class SpeechServiceImpl implements SpeechSerivce {
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(nextCommand == '한') {
-						result.add("left");
+						result.add("Left");
 						i++;
 					}else if(nextCommand == '두') {
 						for(int j = 0 ; j < 2; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(nextCommand == '세') {
 						for(int j = 0 ; j < 3; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(nextCommand == '네' || nextCommand == '내') {
 						for(int j = 0 ; j < 4; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(next.contains("다섯")) {
 						for(int j = 0 ; j < 5; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(next.contains("여섯")) {
 						for(int j = 0 ; j < 6; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(next.contains("일곱")) {
 						for(int j = 0 ; j < 7; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(next.contains("여덜") || next.contains("여덟")) {
 						for(int j = 0 ; j < 8; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}else if(next.contains("아홉")) {
 						for(int j = 0 ; j < 9; j++) {
-							result.add("left");
+							result.add("Left");
 						}
 						i++;
 					}
 				}else {
-					result.add("left");
+					result.add("Left");
 				}
 			}
 		}
