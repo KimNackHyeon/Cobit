@@ -66,6 +66,7 @@
             <img src="../assets/images/penguin2.png" alt="">
           </div>
         </div>
+
         <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
           <div class="stage-area"></div>
         </div>
@@ -78,7 +79,7 @@
         <div class="starbar">
           <div class="mystar"></div>
           <div class="startotal"></div>
-          <div class="starnum"><span>{{starCount}} / 15</span></div>
+          <div class="starnum"><span>{{starCount}} / {{totalCount}}</span></div>
         </div>
         <!-- <div class="map-gauge">
           <div class="map-1star-gauge">★ {{ mapStar.first }}%</div>
@@ -128,6 +129,7 @@ export default {
       starCount : 0,
       clearLength: 0,
       isLast: false,
+      totalCount : 0,
     }
   },
   components: {
@@ -176,7 +178,7 @@ export default {
         $(".mystar").css("width", "100%")
       }
       else {
-        const starratio = (this.starCount / 15) * 100
+        const starratio = (this.starCount / this.totalCount) * 100
         $(".mystar").css("width", `${starratio}%`)
         $(".startotal").css("width", `${100 - starratio}%`)
       }
@@ -214,7 +216,12 @@ export default {
       this.$router.push('/mypage');
     },
     loadMyStage(){
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+        params:{
+          id : store.state.kakaoUserInfo.id,
+          type : this.type
+        }
+      })
       .then(res => {
         console.log(res)
         this.clearLength = res.data.length
@@ -226,20 +233,24 @@ export default {
             star: d.star,
             unstar: 3 - d.star,
             user: false,
-            content : this.mapInform[d.stageId-1].content,
+            content : this.mapInform[index].content,
           }
           this.starCount += d.star;
-          this.$set(this.mapInform, d.stageId-1, map)
+          this.$set(this.mapInform, index, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
         });
-        this.$set(this.mapInform, index, {
-          open : false,
-          star : 0,
-          unstar : 3,
-          user : true,
-          content : this.mapInform[index].content,
-        })
+        if(index < this.totalCount/3 ){
+          this.$set(this.mapInform, index, {
+            open : false,
+            star : 0,
+            unstar : 3,
+            user : true,
+            content : this.mapInform[index].content,
+          })
+        } else{
+          this.isLast = true;
+        }
       })
     },
     loadStage(){
@@ -254,6 +265,8 @@ export default {
               content : map.content,
             });
         });
+        console.log(this.mapInform);
+        this.totalCount = this.mapInform.length*3;
       })
     },
     setLast() {
