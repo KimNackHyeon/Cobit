@@ -70,7 +70,7 @@
         <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
           <div class="stage-area"></div>
         </div>
-        <div v-if="!isLast" class="map-stage-box map-last-box-un" @click="goNext">
+        <div v-if="!isLast" class="map-stage-box map-last-box-un">
           <div class="stage-area lock-stage-area lock-stage-area-un"></div>
         </div>
       </div>
@@ -633,15 +633,14 @@ export default {
 .map-footer .fa-star {
   position: absolute;
   font-size: 60px;
-  z-index: 2;
   color: rgb(243, 243, 0);
   text-shadow: -1.5px 0 #000,
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
   z-index: 99;
-    top: 15px;
-    left: 15px;
+  top: 15px;
+  left: 10px;
 }
 
 .map-footer .map-gauge {
@@ -777,7 +776,7 @@ export default {
   margin: 10vh 15vw;
   background-color: #fafff7;
   padding: 5vh 5vw;
-  font-size: 2.2vh;
+  font-size: 3vh;
   font-weight: bold;
     display: flex;
   align-items: center;
