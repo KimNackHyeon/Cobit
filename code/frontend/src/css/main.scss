@@ -7,13 +7,14 @@
         right: 0;
         background: unset;
         .v-icon {
-            font-size: 120px !important;
+            font-size: 140px !important;
         }
     }
     .v-window__prev {
+        display: none;
         background: unset;
         .v-icon {
-            font-size: 120px !important;
+            font-size: 140px !important;
         }
     }
 }

@@ -2,13 +2,21 @@
   <div class="main">
     <!-- <div class="navbar">Navbar</div> -->
     <div class="mainbox">
-      <v-carousel hide-delimiters style="height: 100vh">
-        <v-carousel-item>
-          <div class="mainitem">
+      <v-carousel
+        v-model="activeSlide" 
+        hide-delimiters
+        :touch="{
+          left: () => activeSlide++,
+          right: () => activeSlide--
+        }"
+       style="height: 100vh">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
             <div class="onecontent">
               <!-- <div class="title">cobit</div> -->
+              
+              <div class="subtitle">코딩 습관을 길러주는</div>
               <img class="cobit" src="../assets/images/cobit.png" alt="logo">
-              <div class="subtitle">코딩 습관을 길러주는 cobit</div>
               <div class="subtitlecontent">
                 cobit은 학생들이 쉽고 재미있게 코딩을 학습할 수 있게 하여<br> 코딩 습관을 기르는데 도움을 줍니다.<br>
                 학생들은 각 스테이지의 학습목표에 따라 코딩 핵심 개념을 배울 수 있습니다.
@@ -17,8 +25,8 @@
             </div>
           </div>
         </v-carousel-item>
-        <v-carousel-item>
-          <div class="mainitem">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
             <div class="twomainleft">
               <div class="twomaintitle">키보드 방향키로 목적지에 도달하는 게임을 해본적이 있나요??</div>
               <img src="../assets/images/directionkey.png" alt="directionkey">
@@ -28,8 +36,8 @@
             </div>
           </div>
         </v-carousel-item>
-        <v-carousel-item>
-          <div class="mainitem">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
             <div class="twomainleft">
               <div class="twomaintitle">cobit은 블록코딩을 통해<br> 논리적 사고를 기를 수 있습니다.</div>
               <br>
@@ -41,8 +49,8 @@
             </div>
           </div>
         </v-carousel-item>
-        <v-carousel-item>
-          <div class="mainitem">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
             <div class="fourcontent">
               <div class="fourmaintitle">각 스테이지에 있는 학습목표에 따라<br> 코딩개념을 학습할 수 있습니다.</div>
               <div style="margin-bottom: 5%;">
@@ -76,8 +84,8 @@
             </div>
           </div>
         </v-carousel-item>
-        <v-carousel-item>
-          <div class="mainitem">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
             <div class="twomainleft">
               <div class="twomaintitle">바이러스를 물리치는 스토리를<br> 통해 컴퓨터 바이러스 지식을<br> 배울 수 있습니다.</div>
             </div>
@@ -86,8 +94,8 @@
             </div>
           </div>
         </v-carousel-item>
-        <v-carousel-item>
-          <div class="mainitem">
+        <v-carousel-item >
+          <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
               <div class="lastcontent">
                 <div class="twomaintitle">나만의 캐릭터를 만들어 함께 모험을 떠나볼까요?</div>
                 <img src="../assets/images/mycharacter.png" alt="mycharacter">
@@ -104,13 +112,54 @@
 
 <script>
 import '../css/main.scss'
+import $ from "jquery"
 export default {
+  data() {
+    return {
+      activeSlide: 0,
+      prex: 0,
+      nextx: 0,
+    }
+  },
+  watch: {
+    activeSlide() {
+      if(this.activeSlide == 0){
+        $('.v-window__prev').css('display', 'none')
+        $('.v-window__next').css('display', 'block')
+      }else if(this.activeSlide == 5){
+        $('.v-window__next').css('display', 'none')
+      }else if(this.activeSlide != 0){
+        $('.v-window__prev').css('display', 'block')
+        $('.v-window__next').css('display', 'block')
+      }
+    }
+  },
   methods:{
     gohome(){
       this.$router.push('/home')
+    },
+    onmousedown(event) {
+      this.prex = event.pageX
+    },
+    onmouseup(event) {
+      if(this.prex > event.pageX) {
+        console.log('dragged left');
+        if(this.activeSlide >= 5){
+          this.activeSlide = 5
+        }else {
+          this.activeSlide += 1;
+        }
+      }
+      else if(this.prex < event.pageX) {
+        console.log('dragged right');
+        if(this.activeSlide <= 0){
+          this.activeSlide = 0
+        }else{
+          this.activeSlide -= 1;
+        }
+      }
     }
   }
-
 }
 </script>
 
@@ -144,9 +193,9 @@ export default {
   font-size: 100px;
 }
 .subtitle {
-  font-size: 36px;
+  font-size: 35px;
   font-weight: 600;
-  padding-bottom: 3%;
+  padding-top: 3%;
 }
 .subtitlecontent {
   font-size: 17px;
