@@ -108,7 +108,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         if(res.data){
           console.log(res.data);

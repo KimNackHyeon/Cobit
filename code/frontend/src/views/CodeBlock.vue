@@ -53,13 +53,15 @@
                   </div>
                 </div>
             </div>
-            <v-btn id="hintBtn" @click="clickHint" @mouseover="openHint" @mouseout="closeHint">
+            <v-btn id="hintBtn" @click="clickHint" >
               <v-icon>mdi-lightbulb-on</v-icon>
               <h3>힌트</h3>
             </v-btn>
             <div id="hint" :style="{display:this.showhint}">
-                <div>{{hint}}</div>
-                <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div>
+                <button style="color:red;" @click="buyHint">힌트 보기</button>
+                <div>남은 힌트 : {{hintCount}}개</div>
+                <div v-if="buyhint">{{hint}}</div>
+                <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
             </div>
             <v-btn id="historyBtn" @click="clickHistory" @mouseover="openHistory" @mouseout="closeHistory">
               <v-icon>mdi-history</v-icon>
@@ -260,7 +262,9 @@ export default {
       hint:"스테이지의 힌트",
       starNum: 1,
       stageType: 1,
-      openStory:true
+      openStory:true,
+      buyhint: false,
+      hintCount: store.state.kakaoUserInfo.hint,
     }
   },
   components: {
@@ -270,12 +274,27 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    if(this.$cookies.isKey("access_token")){
+      let kakao_account;
+      await window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.hintCount = res.data.hint;
+              });
+      console.log(store.state.kakaoUserInfo);
+    }
 
   },
   mounted() {
@@ -331,6 +350,15 @@ export default {
     closeHint(){
       this.showhint = 'none';
       this.clickhint = false;
+    },
+    buyHint(){
+      axios.post(`https://k3b102.p.ssafy.io:9999/user/hint`,store.state.kakaoUserInfo)
+      .then(()=>{
+        this.buyhint = true;
+      })
+      .catch(() => {
+        alert('힌트 구매 불가!');
+      });
     },
     clickHistory(){
       if(this.clickhistory){
@@ -477,7 +505,7 @@ export default {
       }
 
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
