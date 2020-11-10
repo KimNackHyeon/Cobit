@@ -15,8 +15,8 @@
             <div class="summery-modal-text">SUMMERY</div>
           </div>
           <div class="summery-modal-footer">
-            <div class="summery-modal-btn">{{ nextLevelName }}으로</div>
-            <div class="summery-modal-btn" @click.self="$emit('close')">메인으로</div>
+            <div class="summery-modal-btn" @click="goNext">{{ nextLevelName }}으로</div>
+            <div class="summery-modal-btn" @click="goMain">메인으로</div>
           </div>
         </div>
       </div>
@@ -50,7 +50,22 @@ export default {
       if (this.InStageNum == 5) {
         this.levelName = '초급'
         this.nextLevelName = '중급'
+      } else {
+        this.levelName = '중급'
+        this.nextLevelName = '고급'
       }
+    },
+    goNext() {
+      if (this.levelName == '초급') {
+        this.$cookies.set('stageType', 2);
+        this.$router.push('/gamemap');
+      } else {
+        this.$cookies.set('stageType', 3);
+        this.$router.push('/gamemap');
+      }
+    },
+    goMain() {
+      this.$router.push('/mypage')
     }
   }
 }
