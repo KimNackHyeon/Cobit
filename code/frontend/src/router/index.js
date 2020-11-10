@@ -10,6 +10,7 @@ import Test4 from '../views/Test4.vue'
 import Speech from '../views/Speech.vue'
 import VRTest from '../views/vrtest.vue'
 import PracticeMode from '../views/PracticeMode.vue'
+import Main from '../views/Main.vue'
 
 
 Vue.use(VueRouter)
@@ -17,6 +18,11 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'Main',
+    component: Main
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -65,6 +71,11 @@ const routes = [
     name: 'PracticeMode',
     component: PracticeMode
   },
+  {
+    path: '*',
+    redirect: '/'
+  }
+
 ]
 
 const router = new VueRouter({

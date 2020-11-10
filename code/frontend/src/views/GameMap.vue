@@ -46,8 +46,8 @@
             <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
             <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
           </div>
-          <div v-if="!inform.open" class="stage-area lock-stage-area"></div>
-          <div v-if="!inform.open" class="stage-star lock-stage-star">
+          <div v-if="!inform.open&&!inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&!inform.user" class="stage-star lock-stage-star">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
           <div v-if="isLast">
@@ -57,14 +57,19 @@
             <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last map-road-last-un"></div>
           </div>
           <div v-if="index != mapInform.length - 1" class="map-road-box"></div>
-          <div v-if="inform.user" class="map-character" @click="onModal(inform, index+1)">
+          <div v-if="!inform.open&&inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&inform.user" class="stage-star">
+            <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
+            <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
+          </div>
+          <div v-if="!inform.open&&inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
         </div>
         <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
           <div class="stage-area"></div>
         </div>
-        <div v-if="!isLast" class="map-stage-box map-last-box-un" @click="goNext">
+        <div v-if="!isLast" class="map-stage-box map-last-box-un">
           <div class="stage-area lock-stage-area lock-stage-area-un"></div>
         </div>
       </div>
@@ -131,7 +136,7 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     // window.addEventListener('scroll', this.handleScroll)
     this.type = this.$cookies.get('stageType');
     if (this.type == 1) {
@@ -143,38 +148,39 @@ export default {
     }
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
-      window.Kakao.API.request({
+      let kakao_account;
+      await window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
-              const kakao_account = res.kakao_account;
-              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
-                this.loadMyStage();
-              })
-          },
-      })
+                
+              });
+      await this.loadMyStage();
     }
   },
   mounted() {
-    // this.getStarRatio();
-    // 별의 갯수에 따라 width 설정
-    if(this.starCount == 0) {
-      console.log('실행')
-      $(".startotal").css("border-radius", "15px")
-      $(".startotal").css("width", "100%")
-    }
-    else if(this.starCount == 90){
-      $(".mystar").css("border-radius", "15px")
-      $(".mystar").css("width", "100%")
-    }
-    else {
-      const starratio = (this.starCount / 90) * 100
-      $(".mystar").css("width", `${starratio}%`)
-      $(".startotal").css("width", `${100 - starratio}%`)
-    }
   },
   watch: {
+     starCount(){
+      if(this.starCount == 0) {
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+      }
+      else if(this.starCount == 15){
+        $(".mystar").css("border-radius", "15px")
+        $(".mystar").css("width", "100%")
+      }
+      else {
+        const starratio = (this.starCount / 15) * 100
+        $(".mystar").css("width", `${starratio}%`)
+        $(".startotal").css("width", `${100 - starratio}%`)
+      }
+    }
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
@@ -185,16 +191,16 @@ export default {
         this.openStory2 = 'none'
       }
     },
-    getStarRatio() {
-      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      const FIRST = document.querySelector('.map-1star-gauge');
-      const SECOND = document.querySelector('.map-2star-gauge');
-      const THIRD = document.querySelector('.map-3star-gauge');
+    // getStarRatio() {
+      // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      // const FIRST = document.querySelector('.map-1star-gauge');
+      // const SECOND = document.querySelector('.map-2star-gauge');
+      // const THIRD = document.querySelector('.map-3star-gauge');
 
-      FIRST.style.width = this.mapStar.first + '%';
-      SECOND.style.width = this.mapStar.second + '%';
-      THIRD.style.width = this.mapStar.third + '%';
-    },
+      // FIRST.style.width = this.mapStar.first + '%';
+      // SECOND.style.width = this.mapStar.second + '%';
+      // THIRD.style.width = this.mapStar.third + '%';
+    // },
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
@@ -290,16 +296,17 @@ export default {
   position: relative;
 }
 .mystar {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
   background: #a4d4ff;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
 .startotal {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
-  background-color: white;
+  /* background-color: white; */
+  background-color: #eee;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -310,7 +317,6 @@ export default {
   left: 45%;
   transform: translate(0, -50%);
 }
-/* ///////////////////////////////// */
 .wrap {
   height: 100%;
 }
@@ -619,12 +625,14 @@ export default {
 .map-footer .fa-star {
   position: absolute;
   font-size: 60px;
-  z-index: 2;
   color: rgb(243, 243, 0);
   text-shadow: -1.5px 0 #000,
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+  z-index: 99;
+  top: 15px;
+  left: 10px;
 }
 
 .map-footer .map-gauge {
@@ -760,7 +768,7 @@ export default {
   margin: 10vh 15vw;
   background-color: #fafff7;
   padding: 5vh 5vw;
-  font-size: 2.2vh;
+  font-size: 3vh;
   font-weight: bold;
     display: flex;
   align-items: center;
