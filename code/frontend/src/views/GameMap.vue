@@ -106,6 +106,7 @@ export default {
               axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
+                // this.starCount = store.state.kakaoUserInfo.star;
                 this.loadMyStage();
               })
           },
@@ -137,16 +138,16 @@ export default {
     clickStory(){
       this.openStory = 'none';
     },
-    getStarRatio() {
-      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      const FIRST = document.querySelector('.map-1star-gauge');
-      const SECOND = document.querySelector('.map-2star-gauge');
-      const THIRD = document.querySelector('.map-3star-gauge');
+    // getStarRatio() {
+      // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      // const FIRST = document.querySelector('.map-1star-gauge');
+      // const SECOND = document.querySelector('.map-2star-gauge');
+      // const THIRD = document.querySelector('.map-3star-gauge');
 
-      FIRST.style.width = this.mapStar.first + '%';
-      SECOND.style.width = this.mapStar.second + '%';
-      THIRD.style.width = this.mapStar.third + '%';
-    },
+      // FIRST.style.width = this.mapStar.first + '%';
+      // SECOND.style.width = this.mapStar.second + '%';
+      // THIRD.style.width = this.mapStar.third + '%';
+    // },
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
@@ -210,6 +211,7 @@ export default {
 
 <style scoped>
 .starbar {
+  margin-left: 5%;
   display: inline-block;
   width: 88%;
   /* background: white; */
@@ -223,16 +225,17 @@ export default {
   position: relative;
 }
 .mystar {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
   background: #a4d4ff;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
 .startotal {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
-  background-color: white;
+  /* background-color: white; */
+  background-color: #eee;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -242,7 +245,6 @@ export default {
   top: 5px;
   left: 45%;
 }
-/* ///////////////////////////////// */
 .wrap {
   height: 100%;
 }
@@ -451,6 +453,9 @@ export default {
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+  z-index: 99;
+    top: 15px;
+    left: 15px;
 }
 
 .map-footer .map-gauge {

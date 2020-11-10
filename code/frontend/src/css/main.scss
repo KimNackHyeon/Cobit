@@ -1,0 +1,19 @@
+.main{
+    .v-carousel__item {
+        height: 100vh !important;
+        color: unset !important;
+    }
+    .v-window__next {
+        right: 0;
+        background: unset;
+        .v-icon {
+            font-size: 120px !important;
+        }
+    }
+    .v-window__prev {
+        background: unset;
+        .v-icon {
+            font-size: 120px !important;
+        }
+    }
+}
