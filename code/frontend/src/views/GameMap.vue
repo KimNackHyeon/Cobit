@@ -11,7 +11,7 @@
             <div style="width:30vh; height:100%;float:left;">
               <img src="../assets/images/stage1_no_text.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
             </div>
-            <div style="width: auto; height: 100%; float: left; padding: 10vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
+            <div style="width: auto; height: 100%; float: left; padding: 7vh 10vw; font-size: x-large; font-weight: 600;" v-html="story">
             </div>
           </div>
           <div style="width:100%;  display: flex; justify-content: center;">
@@ -134,16 +134,19 @@ export default {
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
-    // getStarRatio() {
-      // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
-      // const FIRST = document.querySelector('.map-1star-gauge');
-      // const SECOND = document.querySelector('.map-2star-gauge');
-      // const THIRD = document.querySelector('.map-3star-gauge');
+    clickStory(){
+      this.openStory = 'none';
+    },
+    getStarRatio() {
+      this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
+      const FIRST = document.querySelector('.map-1star-gauge');
+      const SECOND = document.querySelector('.map-2star-gauge');
+      const THIRD = document.querySelector('.map-3star-gauge');
 
-      // FIRST.style.width = this.mapStar.first + '%';
-      // SECOND.style.width = this.mapStar.second + '%';
-      // THIRD.style.width = this.mapStar.third + '%';
-    // },
+      FIRST.style.width = this.mapStar.first + '%';
+      SECOND.style.width = this.mapStar.second + '%';
+      THIRD.style.width = this.mapStar.third + '%';
+    },
     onModal(detail, num) {
       this.setStageDetail(detail);
       this.setStageNum(num);
