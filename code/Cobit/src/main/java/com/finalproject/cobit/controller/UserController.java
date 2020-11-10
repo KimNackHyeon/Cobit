@@ -141,7 +141,7 @@ public class UserController {
 	@ApiOperation(value = "힌트 구매")
 	@PostMapping("/hint")
 	public ResponseEntity<Boolean> buyHint(@RequestBody User user) {
-
+		System.out.println(user);
 		if(user.getHint() >= 1) {
 			user.setHint(user.getHint() - 1);
 			userRepo.save(user);

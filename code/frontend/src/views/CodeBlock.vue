@@ -293,7 +293,6 @@ export default {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.hintCount = res.data.hint;
               });
-      console.log(store.state.kakaoUserInfo);
     }
 
   },
@@ -352,8 +351,10 @@ export default {
       this.clickhint = false;
     },
     buyHint(){
-      axios.post(`https://k3b102.p.ssafy.io:9999/user/hint`,store.state.kakaoUserInfo)
+      console.log(store.state.kakaoUserInfo);
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
       .then(()=>{
+        this.hintCount -= 1;
         this.buyhint = true;
       })
       .catch(() => {

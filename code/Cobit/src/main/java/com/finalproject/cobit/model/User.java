@@ -24,13 +24,7 @@ public class User {
 	private String email;
 
 	@Column
-	private String pw;
-
-	@Column
 	private String nickname;
-
-	@Column
-	private String image;
 
 	@Column
 	private Long star;
