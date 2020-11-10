@@ -314,11 +314,8 @@ export default {
       starNum: 1,
       stageType: 1,
       openStory:true,
-<<<<<<< code/frontend/src/views/CodeBlock.vue
-=======
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
->>>>>>> code/frontend/src/views/CodeBlock.vue
     }
   },
   components: {
