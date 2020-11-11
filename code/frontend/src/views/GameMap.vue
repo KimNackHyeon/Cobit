@@ -311,7 +311,7 @@ export default {
 .mystar {
   height: 7vh;
   display: inline-block;
-  background: #a4d4ff;
+  background:linear-gradient(0deg, rgba(254,198,55,1) 0%, rgba(255,242,181,1) 36%, rgba(252,212,26,1) 100%);
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
@@ -332,6 +332,8 @@ export default {
 }
 .wrap {
   height: 100%;
+  background-image: url('../assets/images/gamemap.png');
+      background-size: cover;
 }
 .map-container {
   margin-top: 50px;
@@ -339,6 +341,7 @@ export default {
   height: 70%;
   /* height: calc(100vh - 100px); */
   /* background-color: bisque; */
+
 }
 
 .map-header .back-btn {
