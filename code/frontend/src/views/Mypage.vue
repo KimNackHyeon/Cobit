@@ -135,59 +135,65 @@
             <div style="display: inline-block; margin-left: 3%; font-size: 25px; color: white">출석</div>
           </div>
           <v-dialog max-width="90vw" min-height="90vh" v-model="attendmodal">
-            <v-card flat tile style="height: 80vh;">
-              <div style="height: 3%"></div>
-              <!-- 제목 -->
-              <div class="attendtitle">
-                매일 매일 출석 체크
-              </div>
-              <div style="height: 85%; padding: 2vw 4vw;">
-                <!-- 왼쪽 박스 -->
-                <div class="attendleft">
-                  <!-- 출석일수 -->
-                  <div class="attendnumBox">
-                    <div class="attendtext">
-                      출석일수
+            <v-card  flat tile style="height: 90vh;">
+              <div class="attenddialog">
+                <div style="height: 3%"></div>
+                <!-- 제목 -->
+                <div class="attendtitle">
+                  매일 매일 출석 체크
+                </div>
+                <!-- <div style="text-align: center">
+                  <img style="width: 20%" src="../assets/images/attend.png" alt="출석체크">
+                </div> -->
+                <div style="height: 80%; padding: 2vw 4vw;">
+                  <!-- 왼쪽 박스 -->
+                  <div class="attendleft">
+                    <!-- 출석일수 -->
+                    <div class="attendnumBox">
+                      <div class="attendtext">
+                        출석일수
+                      </div>
+                      <div class="attendnum">
+                        {{totalAttendDay}}일
+                      </div>
                     </div>
-                    <div class="attendnum">
-                      {{totalAttendDay}}일
+                    <div style="height: 5%"></div>
+                    <!-- 보상 아이템 -->
+                    <div class="attenditemBox">
+                      <img class="ribbonimg" src="../assets/images/red-ribbon4.png" alt="">
+                      <div class="itemtitle">보상 아이템</div>
+                      <div class="itemimg">
+                      </div>
+                      <div class="itemname">곰 캐릭터</div>
                     </div>
                   </div>
-                  <div style="height: 5%"></div>
-                  <!-- 보상 아이템 -->
-                  <div class="attenditemBox">
-                    <img class="ribbonimg" src="../assets/images/red-ribbon4.png" alt="">
-                    <div class="itemtitle">보상 아이템</div>
-                    <div class="itemimg">
-                    </div>
-                    <div class="itemname">황금 모자</div>
+                  <!-- 오른쪽 박스 -->
+                  <div class="attendright">
+                    <table style="text-align: center; border-collapse: collapse; height: 100%">
+                      <tbody>
+                        <tr v-for="i in 4" :key="i" style="height: 25%">
+                          <td v-for="j in 7" :key="j" style="width: 10vw">
+                            <div class="attendday">
+                              {{(i-1)*7 + j}}
+                            </div>
+                            <div class="attendstemp">
+                              <!-- <img style="width: 50%; height: 5%" src="../assets/images/hint.png" alt="hintimg"> -->
+                              <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 50px; color: red">mdi-check-circle-outline</v-icon>
+                              <v-icon v-else-if="today == ((i-1)*7 + j)" style="font-size: 50px;" @click="attendCheck">mdi-check-circle-outline</v-icon>
+                              <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon>
+                              <!-- <v-icon v-else style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <!-- 오른쪽 박스 -->
-                <div class="attendright">
-                  <table style="text-align: center; border-collapse: collapse; height: 100%">
-                    <tbody>
-                      <tr v-for="i in 4" :key="i" style="height: 25%">
-                        <td v-for="j in 7" :key="j" style="width: 10vw">
-                          <div style="height: 25%; border-bottom: 1px solid gray">
-                            {{(i-1)*7 + j}}
-                          </div>
-                          <div style="height: 75%; display: flex; justify-content: center;">
-                            <v-icon v-if="attendDay.includes((i-1)*7 + j)" style="font-size: 50px; color: red">mdi-check-circle-outline</v-icon>
-                            <v-icon v-else-if="today == ((i-1)*7 + j)" style="font-size: 50px;" @click="attendCheck">mdi-check-circle-outline</v-icon>
-                            <v-icon v-if="noattendDay.includes((i-1)*7 + j)" style="font-size: 50px;">mdi-check-circle-outline</v-icon>
-                            <!-- <v-icon v-else style="font-size: 50px;">mdi-check-circle-outline</v-icon> -->
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div style="height: 9%; display: flex; justify-content: center;">
+                  <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px">확인</v-btn>
                 </div>
               </div>
             </v-card>
-            <v-card-actions style="background-color: white; justify-content:center; height: 10vh"> 
-              <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px">확인</v-btn>
-            </v-card-actions>
           </v-dialog>
         </div>
       </div>
@@ -283,11 +289,14 @@ export default {
           day : this.today,
           month : this.nMonth,
         }).then(()=>{
-          Swal.fire(
-            '출석완료!',
-            '',
-            'success'
-          )
+          Swal.fire({
+            title: '출석완료!',
+            text: '힌트 아이템을 받았습니다.',
+            imageUrl: require('../assets/images/hint.png'),
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+          })
           this.loadAttend();
         })
       }
@@ -373,7 +382,7 @@ export default {
                 this.userEmail = store.state.kakaoUserInfo.email;
                 this.starCount = store.state.kakaoUserInfo.star;
                 this.loadAttend();
-                
+
                 // this.loadMyCharacter();
               })
           },
@@ -451,8 +460,7 @@ export default {
   background-color: #a4d4ff !important;
   border-radius: 30px;
   transition: box-shadow .3s ease;
-  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
-              -6px -6px 10px -1px #ffffff;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2);
 }
 .confirmbtn:hover {
   box-shadow: 0 0 0 0 rgba(0,0,0,0),
@@ -613,6 +621,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  background-color: #ffffff36;
 }
 td {
   border: 1px solid gray;
@@ -621,14 +630,15 @@ td {
   padding: 3%;
   height: 27%;
   border-bottom: 1px solid gray;
+  background-color: #e6a6308a;
 }
 .attendnum {
-  margin: 3%;
-  height: 70%;
+  height: 73%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 5vh;
+  background-color: #ffffff36;
 }
 .ribbonimg {
   width: 260px;
@@ -636,9 +646,9 @@ td {
   top: -75px;
 }
 .itemimg {
-  width: 65%;
-  height: 40%;
-  background: url("../assets/images/Hat3.png");
+  width: 90%;
+  height: 70%;
+  background: url("../assets/images/attenditem.png");
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -653,7 +663,22 @@ td {
   position: absolute;
   font-size: 25px;
   font-family: 'BMJUA';
-  bottom: 25px;
+  bottom: 15px;
+}
+.attendday {
+  height: 25%; 
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ecb75682;
+}
+.attendstemp {
+  height: 75%; display: flex; 
+  justify-content: center;
+  background-color: #ffffff36;
+  /* background-image: url("../assets/images/hint.png");
+  background-size: cover; */
 }
 .bar .fa-star {
   /* position: absolute; */
@@ -698,5 +723,10 @@ td {
 .nouserbtnicon {
   color: white;
   font-size: 30px;
+}
+.attenddialog {
+  height: 100%;
+  background-image: url("../assets/images/attendback3.jpg");
+  background-size: cover;
 }
 </style>
