@@ -30,5 +30,11 @@ export default {
   },
   setIsLastStage(state, data) {
     state.IsLastStage = data
+  },
+  setCode(state, data) {
+    state.Code = data
+  },
+  setCodeKor(state, data) {
+    state.CodeKor = data
   }
 }

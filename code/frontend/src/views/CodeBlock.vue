@@ -353,7 +353,7 @@ export default {
   watch: {
   },
   methods: {
-     ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage']),
+     ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      selectLoopNum(loopnum){
        this.resultStep[this.targetdivNum].loop = loopnum;
        this.choiceNum = false;
@@ -431,7 +431,9 @@ export default {
       console.log(store.state.kakaoUserInfo);
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
       .then(()=>{
-        this.hintCount -= 1;
+        if(this.hintCount >= 1){
+          this.hintCount -= 1;
+        }
         this.buyhint = true;
       })
       .catch(() => {
@@ -470,7 +472,7 @@ export default {
         underForblocksPositions.push(underForblocks[u].getBoundingClientRect());
       }
 
-      console.log(underForblocksPositions);
+      // console.log(underForblocksPositions);
         // console.log(playRect.left+this.distX+" "+(playRect.right+this.distX));
         // console.log(playRect.top+this.distY+" "+(playRect.bottom+this.distY));
         // console.log(x+" "+y);
@@ -708,6 +710,7 @@ export default {
     handleStart() {
       setTimeout(() => {
         this.LevelLoad();
+        this.loadMyCharacter();
       }, 10);
     },
     handleClear() {
@@ -732,17 +735,39 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      // console.log(this.resultmoves);
+      console.log(this.resultmoves);
       var code = [];
       var code_kor = [];
-      this.resultmoves.forEach(move => {
-        code.push(move.move + "();");
-        code_kor.push(move.move_kor + "();");
+      this.resultmoves.forEach(m => {
+        code.push(m.move.move + "();");
+        code_kor.push(m.move.move_kor + "();");
       });
-      // console.log(code);
-      // console.log(code_kor);
+      this.setCode(code)
+      this.setCodeKor(code_kor)
+      console.log(code, '1');
+      console.log(code_kor, '2');
 
-    }
+    },
+    loadMyCharacter(){
+      // 캐릭터 정보 불러오기
+      console.log("캐릭터 정보 불러오기");
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      .then(res => {
+        console.log(res);
+        this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+        this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
+        this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)
+        if(res.data.crown){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.crown)
+        }
+        if(res.data.shield){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.shield)
+        }
+        if(res.data.sword){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.sword)
+        }
+      })
+    },
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
