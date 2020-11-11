@@ -11,6 +11,8 @@
             <span class="itemtitle">내가 가진 캐릭터</span>
             <div class="mycharacters">
               <img src="../assets/images/penguin.png" alt="character1">
+              <img style="filter: brightness(0.5);" src="../assets/images/bear.png" alt="character2">
+              <v-icon style="position: absolute; left: 24.3%; font-size: 3.5vw; color: white;">mdi-lock</v-icon>
             </div>
           </div>
           <div class="itembox">
@@ -291,12 +293,14 @@ export default {
 .itemtitle {
   position: absolute;
   /* background-color: white; */
-  color: white;
+  color: black;
   top: -10px;
   left: 10px;
   font-size: 18px;
   font-family: 'BMJUA';
   padding: 0 2%;
+  border-radius: 25px;
+  background-color: white;
 }
 .items {
   overflow-x: auto;
@@ -408,7 +412,7 @@ export default {
   height: 100%;
 }
 .items img {
-  width: 20%;
+  height: 100%;
   margin: auto;
   cursor: pointer;
 }
