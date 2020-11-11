@@ -51,7 +51,7 @@ export default {
       commandList: [],
       isClear: false,
       isFail: false,
-      stageNum: 1,
+      stageNum: 4,
       starNum: 1,
       stageType: 1,
     }
@@ -68,7 +68,7 @@ export default {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
-    this.stageNum = this.$cookies.get('stageInfo').stageNum;
+    this.stageNum = 5;
     this.stageType = this.$cookies.get('stageInfo').stageType;
 
   },
@@ -130,7 +130,7 @@ export default {
     },
     LevelLoad() {
       this.commandList = []
-      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      this.$refs.myInstance.message('JavascriptHook', 'Stage', 5)
     },
     reStart() {
       this.commandList = []

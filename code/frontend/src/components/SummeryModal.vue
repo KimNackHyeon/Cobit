@@ -2,17 +2,24 @@
   <transition name="modal">
     <div class="summery-modal-mask">
       <div class="summery-modal-wrap">
+        <img src="../assets/images/cong2.png" alt="">
+        <img src="../assets/images/cong3.png" alt="">
         <i class="fas fa-times" @click.self="$emit('close')"></i>
         <div class="summery-modal-content">
           <div class='summery-modal-header'>
             <p>축하합니다! {{ levelName }}을 완료하셨습니다</p>
           </div>
           <div class='summery-modal-body'>
-            <div class="summery-modal-img">이미지</div>
-            <div class="summery-modal-story">스토리</div>
+            <div class="summery-modal-story">
+              <p class="summery-modal-story-head"><i class="fas fa-desktop"></i> 다시보는 컴퓨터 상식</p>
+              <p v-for="story in storyList" :key="story"><i class="fas fa-angle-right"></i> {{ story }}</p>
+            </div>
           </div>
           <div class='summery-modal-body'>
-            <div class="summery-modal-text">SUMMERY</div>
+            <div class="summery-modal-text">
+              <p class="summery-modal-text-head"><i class="fas fa-code"></i> 무엇을 배웠나요?</p>
+              <p v-for="summery in summeryList" :key="summery"><i class="fas fa-angle-right"></i> {{ summery }}</p>
+            </div>
           </div>
           <div class="summery-modal-footer">
             <div class="summery-modal-btn" @click="goNext">{{ nextLevelName }}으로</div>
@@ -33,6 +40,8 @@ export default {
     return {
       levelName: '중급',
       nextLevelName: '고급',
+      storyList: [],
+      summeryList: [],
     }
   },
   watch: {
@@ -50,6 +59,12 @@ export default {
       if (this.InStageNum == 5) {
         this.levelName = '초급'
         this.nextLevelName = '중급'
+        this.storyList = ['컴퓨터의 두뇌는 CPU', '컴퓨터의 공부 책상은 메모리', 
+                      '크리퍼는 최초의 컴퓨터 바이러스', '웜바이러스는 스스로 복제하는 나쁜 바이러스', 
+                      '트로이 목마는 다른 프로그램으로 위장하는 바이러스']
+        this.summeryList = ['순차 구조를 이해하고 활용할 수 있다.',
+                        '프로그래밍의 원리인 순차, 함수를 활용하여 효율적인 프로그램을 만들 수 있다.',
+                        '바이러스에 대해 알아보았다.']
       } else {
         this.levelName = '중급'
         this.nextLevelName = '고급'
@@ -97,6 +112,7 @@ export default {
   align-items: center;
   background-color: rgba(0, 0, 0, .5);
   transition: opacity .3s ease;
+  
 }
 
 .summery-modal-wrap {
@@ -107,6 +123,22 @@ export default {
   background-color: #fff;
   border-radius: 30px;
   position: relative;
+}
+
+.summery-modal-wrap > img:nth-child(1) {
+  width: 23%;
+  position: absolute;
+  top: 4%;
+  left: -1%;
+  transform: rotate(-40deg);
+}
+
+.summery-modal-wrap > img:nth-child(2) {
+  width: 25%;
+  position: absolute;
+  top: 6%;
+  right: -1%;
+  transform: rotate(40deg);
 }
 
 .summery-modal-wrap .fa-times {
@@ -149,7 +181,7 @@ export default {
 }
 
 .summery-modal-content .summery-modal-header {
-  font-size: 40px;
+  font-size: 45px;
   font-family: 'BMJUA';
   display: flex;
   flex-direction: column;
@@ -157,6 +189,11 @@ export default {
   align-items: center;
   width: 100%;
   margin-bottom: 10px;
+  position: relative;
+    text-shadow: -1px 0 rgb(255, 134, 134),
+                0 1px rgb(255, 134, 134),
+                1px 0 rgb(255, 134, 134),
+                0 -1px rgb(255, 134, 134);
 }
 
 .summery-modal-content .summery-modal-body {
@@ -164,7 +201,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+  margin: 30px 0 10px 0;
 }
 
 .summery-modal-content .summery-modal-footer {
@@ -177,20 +214,41 @@ export default {
 
 .summery-modal-body .summery-modal-img {
   width: 30%;
-  height: 200px;
-  background-color: aqua;
 }
 
 .summery-modal-body .summery-modal-story {
-  width: 60%;
-  height: 200px;
-  background-color: burlywood;
+  width: 80%;
+}
+
+.summery-modal-story > p:nth-child(1),
+.summery-modal-text > p:nth-child(1) {
+  font-size: 30px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  margin-left: 0;
+  color: #0088ff;
+}
+
+.summery-modal-story > p,
+.summery-modal-text > p {
+  font-family: 'BMJUA';
+  font-size: 20px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+}
+
+.summery-modal-story > p > .fa-angle-right,
+.summery-modal-text > p > .fa-angle-right {
+  font-size: 15px;
+}
+
+.summery-modal-story-head > i,
+.summery-modal-text-head > i {
+  font-size: 25px;
 }
 
 .summery-modal-body .summery-modal-text {
-  width: 90%;
-  height: 200px;
-  background-color: cornflowerblue;
+  width: 80%;
 }
 
 .summery-modal-footer .summery-modal-btn {
@@ -217,4 +275,11 @@ export default {
               inset -3px -3px 4px -1px #ffffff !important;
 }
 
+@keyframes snowing {
+
+0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
+
+100% {background-position: 500px 1000px, 400px 400px, 300px 300px;}
+
+}
 </style>
