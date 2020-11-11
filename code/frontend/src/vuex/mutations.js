@@ -13,12 +13,14 @@ export default {
     state.kakaoUserInfo.email = kakaoLoginResult.email;
     state.kakaoUserInfo.nickname = kakaoLoginResult.nickname;
     state.kakaoUserInfo.star = kakaoLoginResult.star;
+    state.kakaoUserInfo.hint = kakaoLoginResult.hint;
   },
   delKakaouserInfo(state) {
     state.kakaoUserInfo.id = null;
     state.kakaoUserInfo.email = null;
     state.kakaoUserInfo.nickname = null;
     state.kakaoUserInfo.star = null;
+    state.kakaoUserInfo.hint = null;
   },
   setInStageNum(state, data) {
     state.InStageNum = data

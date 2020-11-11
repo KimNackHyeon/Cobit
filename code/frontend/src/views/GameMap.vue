@@ -2,9 +2,43 @@
   <div class="wrap">
     <div class="map-container">
       <div class="map-header">
-        <div class="back-btn" @click="onModal2"><i class="fas fa-chevron-left"></i>돌아가기</div>
+        <div class="back-btn" @click="goMypage"><i class="fas fa-chevron-left"></i>돌아가기</div>
       </div>
       <div class="map-body">
+        <div id="stage1story" @click="clickStory(1)" :style="{display:openStory1}">
+          <div>
+          <div class="story story" >
+            <div style="width:20%; height:100%;">
+              <img src="../assets/images/stage1_no_text.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
+            </div>
+            <div style="width:80%; height: 100%; display:flex; justify-content: center; align-items: center; font-size: 1.6vw; font-weight: 600;" v-html="story.first">
+            </div>
+          </div>
+          <div style="width:100%;  display: flex; justify-content: center;">
+            <div class="goal_title" style="margin: 6vh; background-color: #ffcf00; box-shadow: 1px 1px 7px #00000057;"><div class="goal_title" style="box-shadow: 1px 1px 4px #00000075 inset; width: 180px; height: 63px; font-size: x-large; font-weight: bold;">학습목표</div></div>
+          </div>
+          
+          <div class="story goal" v-html="goal.first">
+          </div>
+          </div>
+        </div>
+        <div id="stage1story" @click="clickStory(2)" :style="{display:openStory2}">
+          <div>
+          <div class="story story" >
+            <div style="width:20%; height:100%;">
+              <img src="../assets/images/stage2.png" style="width:100%; height:100%; border-radius: 30px 0px 0px 30px;">
+            </div>
+            <div style="width:80%; height: 100%; display:flex; justify-content: center; align-items: center; font-size: 1.6vw; font-weight: 600;" v-html="story.second">
+            </div>
+          </div>
+          <div style="width:100%;  display: flex; justify-content: center;">
+            <div class="goal_title" style="margin: 6vh; background-color: #ffcf00; box-shadow: 1px 1px 7px #00000057;"><div class="goal_title" style="box-shadow: 1px 1px 4px #00000075 inset; width: 180px; height: 63px; font-size: x-large; font-weight: bold;">학습목표</div></div>
+          </div>
+          
+          <div class="story goal" v-html="goal.second">
+          </div>
+          </div>
+        </div>
         <div class="map-stage-box" v-for="(inform, index) in mapInform" :key="`map+${index}`">
           <div class="stage-num">{{ index+1 }}</div>
           <div v-if="inform.open" class="stage-area" @click="onModal(inform, index+1)"></div>
@@ -12,14 +46,32 @@
             <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
             <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
           </div>
-          <div v-if="!inform.open" class="stage-area lock-stage-area"></div>
-          <div v-if="!inform.open" class="stage-star lock-stage-star">
+          <div v-if="!inform.open&&!inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&!inform.user" class="stage-star lock-stage-star">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
-          <div class="map-road-box"></div>
-          <div v-if="inform.user" class="map-character" @click="onModal(inform, index+1)">
+          <div v-if="isLast">
+            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last"></div>
+          </div>
+          <div v-if="!isLast">
+            <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last map-road-last-un"></div>
+          </div>
+          <div v-if="index != mapInform.length - 1" class="map-road-box"></div>
+          <div v-if="!inform.open&&inform.user" class="stage-area lock-stage-area"></div>
+          <div v-if="!inform.open&&inform.user" class="stage-star">
+            <i v-for="(star,idx) in inform.star" :key="`star+${index}+${idx}`" class="fas fa-star star"></i>
+            <i v-for="(unstar,idx) in inform.unstar" :key="`unstar+${index}+${idx}`" class="fas fa-star unstar"></i>
+          </div>
+          <div v-if="!inform.open&&inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
+        </div>
+
+        <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
+          <div class="stage-area"></div>
+        </div>
+        <div v-if="!isLast" class="map-stage-box map-last-box-un">
+          <div class="stage-area lock-stage-area lock-stage-area-un"></div>
         </div>
       </div>
       <div class="map-footer">
@@ -27,7 +79,7 @@
         <div class="starbar">
           <div class="mystar"></div>
           <div class="startotal"></div>
-          <div class="starnum"><span>{{starCount}} / 15</span></div>
+          <div class="starnum"><span>{{starCount}} / {{totalCount}}</span></div>
         </div>
         <!-- <div class="map-gauge">
           <div class="map-1star-gauge">★ {{ mapStar.first }}%</div>
@@ -55,6 +107,14 @@ export default {
   name: 'GameMap',
   data() {
     return {
+      story: { 
+        first: "Cobit 마을의 컴퓨터에 원인 모를 문제가 생겼다! <br> 문제가 바이러스라고? <br> 지피지기면 백전백승! 바이러스에 대해 알아보는 모험을 떠나보자!",
+        second: "중급 스토리"
+      },
+      goal: {
+        first : "<ul><li>블록 명령어를 순서대로 사용하여 미션을 해결할 수 있다.</li> <br><li>프로그래밍의 원리인 순차에 따라 명령을 수행할 수 있다.</li><br><li>조심해야할 컴퓨터 바이러스에 대해 알 수 있다.</li></ul>",
+        second: "중급 목표"
+      },
       showModal: false,
       showModal2: false,
       mapInform: [],
@@ -64,7 +124,12 @@ export default {
         third: 0,
       },
       type: null,
-      starCount : store.state.kakaoUserInfo.star,
+      openStory1: '',
+      openStory2: '',
+      starCount : 0,
+      clearLength: 0,
+      isLast: false,
+      totalCount : 0,
     }
   },
   components: {
@@ -73,47 +138,61 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     // window.addEventListener('scroll', this.handleScroll)
     this.type = this.$cookies.get('stageType');
-    console.log(this.type);
+    if (this.type == 1) {
+      this.openStory1 = 'flex'
+      this.openStory2 = 'none'
+    } else if (this.type == 2) {
+      this.openStory1 = 'none'
+      this.openStory2 = 'flex'
+    }
     if(this.$cookies.isKey("access_token")){
       this.loadStage();
-      window.Kakao.API.request({
+      let kakao_account;
+      await window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
-              const kakao_account = res.kakao_account;
-              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
-                this.loadMyStage();
-              })
-          },
-      })
+                
+              });
+      await this.loadMyStage();
     }
   },
   mounted() {
-    // this.getStarRatio();
-    // 별의 갯수에 따라 width 설정
-    if(this.starCount == 0) {
-      console.log('실행')
-      $(".startotal").css("border-radius", "15px")
-      $(".startotal").css("width", "100%")
-    }
-    else if(this.starCount == 90){
-      $(".mystar").css("border-radius", "15px")
-      $(".mystar").css("width", "100%")
-    }
-    else {
-      const starratio = (this.starCount / 90) * 100
-      $(".mystar").css("width", `${starratio}%`)
-      $(".startotal").css("width", `${100 - starratio}%`)
-    }
   },
   watch: {
+     starCount(){
+      if(this.starCount == 0) {
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+      }
+      else if(this.starCount == 15){
+        $(".mystar").css("border-radius", "15px")
+        $(".mystar").css("width", "100%")
+      }
+      else {
+        const starratio = (this.starCount / this.totalCount) * 100
+        $(".mystar").css("width", `${starratio}%`)
+        $(".startotal").css("width", `${100 - starratio}%`)
+      }
+    }
   },
   methods: {
     ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
+    clickStory(type){
+      if (type == 1) {
+        this.openStory1 = 'none';
+      } else if (type == 2) {
+        this.openStory2 = 'none'
+      }
+    },
     // getStarRatio() {
       // this.mapStar.third = (100 - this.mapStar.first - this.mapStar.second).toString().substring(0,4);
       // const FIRST = document.querySelector('.map-1star-gauge');
@@ -133,9 +212,19 @@ export default {
     onModal2() {
       this.showModal2 = true;
     },
+    goMypage(){
+      this.$router.push('/mypage');
+    },
     loadMyStage(){
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user?id=${store.state.kakaoUserInfo.id}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+        params:{
+          id : store.state.kakaoUserInfo.id,
+          type : this.type
+        }
+      })
       .then(res => {
+        console.log(res)
+        this.clearLength = res.data.length
         // console.log(res);
         var index = 0;
         res.data.forEach(d => {
@@ -144,19 +233,24 @@ export default {
             star: d.star,
             unstar: 3 - d.star,
             user: false,
-            content : this.mapInform[d.stageId-1].content,
+            content : this.mapInform[index].content,
           }
-          this.$set(this.mapInform, d.stageId-1, map)
+          this.starCount += d.star;
+          this.$set(this.mapInform, index, map)
           // this.mapInform[d.stageId-1] = map;
           index++;
         });
-        this.$set(this.mapInform, index, {
-          open : false,
-          star : 0,
-          unstar : 3,
-          user : true,
-          content : this.mapInform[index].content,
-        })
+        if(index < this.totalCount/3 ){
+          this.$set(this.mapInform, index, {
+            open : false,
+            star : 0,
+            unstar : 3,
+            user : true,
+            content : this.mapInform[index].content,
+          })
+        } else{
+          this.isLast = true;
+        }
       })
     },
     loadStage(){
@@ -171,8 +265,23 @@ export default {
               content : map.content,
             });
         });
+        console.log(this.mapInform);
+        this.totalCount = this.mapInform.length*3;
       })
     },
+    setLast() {
+      if (this.type == 1 && this.clearLength == 5) {
+        this.isLast = true
+      } else if (this.type == 2 && this.clearLength == 3) {
+        this.isLast = true
+      } else {
+        this.isLast = false
+      }
+    },
+    goNext() {
+      this.$cookies.set('stageType', parseInt(this.type)+1);
+      this.$router.go(0);
+    }
   },
   
   beforeDestroy () {
@@ -183,12 +292,16 @@ export default {
 
 <style scoped>
 .starbar {
-  display: inline-block;
-  width: 88%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 95%;
+  margin-left: 2%;
   /* background: white; */
   border-radius: 15px;
   /* text-align: center; */
   font-size: 25px;
+  font-family: 'BMJUA';
   font-weight: 600;
   /* margin: 1%; */
   /* padding: 1%; */
@@ -196,26 +309,27 @@ export default {
   position: relative;
 }
 .mystar {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
   background: #a4d4ff;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
 .startotal {
-  height: 5vh;
+  height: 7vh;
   display: inline-block;
-  background-color: white;
+  /* background-color: white; */
+  background-color: #eee;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
 .starnum {
   display: inline-block;
   position: absolute;
-  top: 5px;
+  top: 50%;
   left: 45%;
+  transform: translate(0, -50%);
 }
-/* ///////////////////////////////// */
 .wrap {
   height: 100%;
 }
@@ -284,7 +398,69 @@ export default {
   font-family: BMJUA;
   font-size: 30px;
   position: relative;
-  padding-right: 100px;
+  padding-right: 150px;
+}
+
+.map-body .map-last-box {
+  padding: 0;
+  margin-left: 60px;
+  position: relative;
+  cursor: pointer;
+}
+.map-body .map-last-box::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: 40%;
+  background-image: url('../assets/images/army.png');
+  background-repeat : no-repeat;
+  background-size : cover;
+  background-size: 100% 100%;
+  filter: hue-rotate(180deg);
+  width: 70px;
+  height: 80px;
+  z-index: 2;
+  transition: .5s ease;
+}
+.map-body .map-last-box::after {
+  content: '다음단계로';
+  width: 150px;
+  font-size: 25px;
+  text-align: center;
+  position: absolute;
+  bottom: -30%;
+  transition: .3s ease;
+}
+
+.map-body .map-last-box:hover::before {
+  animation: moving .5s;
+}
+
+.map-body .map-last-box:hover::after {
+  color: #0088ff;
+}
+
+.map-body .map-last-box-un {
+  padding: 0;
+  margin-left: 60px;
+  position: relative;
+  cursor: pointer;
+}
+
+.map-body .map-last-box-un::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 15%;
+  background-image: url('../assets/images/virus.png');
+  background-repeat : no-repeat;
+  background-size : cover;
+  background-size: 100% 100%;
+  width: 70px;
+  height: 80px;
+  z-index: 2;
+  transition: .5s ease;
+  animation: bounce 3s infinite ease-in-out;
 }
 
 .map-stage-box .stage-area {
@@ -332,6 +508,24 @@ export default {
   color: #000 !important;
   text-shadow: none !important;
 }
+
+.map-body .lock-stage-area-un::before {
+  content: '' !important;
+}
+
+.map-last-box .stage-area::before {
+  content: '' !important;
+}
+
+.map-last-box-un .stage-area {
+  background: linear-gradient(to bottom, rgb(218, 178, 178) 0%,rgb(179, 101, 101) 47%,rgb(173, 43, 43) 100%) !important;
+}
+
+.map-last-box-un .stage-area::before {
+  background: linear-gradient(to bottom, rgb(255, 209, 209) 0%,rgb(219, 124, 124) 47%,rgb(209, 59, 59) 100%) !important;
+}
+
+
 
 .map-stage-box .stage-star {
   height: 20px;
@@ -386,10 +580,35 @@ export default {
   top: 50%;
   right: -10px;
   transform: translate(0, -50%);
-  width: 120px;
+  width: 180px;
   height: 10px;
   flex: 0 0 auto;
   background: linear-gradient(to bottom, rgba(228,245,252,1) 0%,rgba(191,232,249,1) 50%,rgba(159,216,239,1) 51%,rgba(42,176,237,1) 100%);
+  box-sizing: border-box;
+  z-index: -2;
+}
+
+.map-body .map-road-last {
+  width: 250px;
+  right: -70px;
+  background: linear-gradient(to bottom, rgba(228,245,252,1) 0%,rgba(191,232,249,1) 50%,rgba(159,216,239,1) 51%,rgba(42,176,237,1) 100%);
+}
+
+.map-body .map-road-last-un {
+  background: linear-gradient(to right, rgb(211, 211, 211) 0%,rgb(184, 183, 183) 50%,rgb(197, 161, 161) 55%,rgb(197, 53, 53) 100%);
+
+}
+
+.map-body .map-road-last::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 250px;
+  height: 20px;
+  flex: 0 0 auto;
+  background: linear-gradient(90deg, #fff 50%, rgba(0,0,0,0) 0);
+  background-size: 30px 100%;
   box-sizing: border-box;
   z-index: -1;
 }
@@ -424,6 +643,9 @@ export default {
                 0 1.5px #000,
                 1.5px 0 #000,
                 0 -1.5px #000;
+  z-index: 99;
+  top: 15px;
+  left: 10px;
 }
 
 .map-footer .map-gauge {
@@ -524,4 +746,59 @@ export default {
     margin-left: 2vw;
   } */
 }
+#stage1story{
+  background-color: #000000a1;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  display:flex; 
+  justify-content:center;
+  padding-top: 10vh;
+}
+.story{
+  background-color:white; width:80vw; height:30vh; border-radius: 30px;
+  box-shadow: 0px 0px 15px #424141b0 inset;
+  display: flex;
+}
+.goal_title{
+  width: 200px;
+  height: 80px;
+  position: absolute;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 40px;
+}
+
+.goal{
+  width: 50vw;
+  height: 40vh;
+  margin: 10vh 15vw;
+  background-color: #fafff7;
+  padding: 5vh 5vw;
+  font-size: 3vh;
+  font-weight: bold;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes moving {
+  0% { top: -60%; }
+  30% { top: -90%; }
+  40% { top: -90%; }
+  100% { top: -60%; }
+}
+
+@keyframes bounce {
+  0% { top: -50%; }
+  50% { top: -70%; }
+  100% { top: -50%; }
+}
+
 </style>

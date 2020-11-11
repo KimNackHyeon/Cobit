@@ -111,19 +111,23 @@ export default {
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         if(res.data){
+          console.log(res.data);
           this.myItems = res.data;
           console.log(this.myItems);
           this.onChangeColor(this.myItems.color);
           this.onChangeEyebrow(this.myItems.eyebrow);
           this.onChangeEye(this.myItems.eye);
           if(this.myItems.crown){
-            this.onChangeItem(this.myItems.crown)
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.crown)
+            // this.onChangeItem(this.myItems.crown)
           }
           if(this.myItems.shield){
-            this.onChangeItem(this.myItems.shield)
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.shield)
+            // this.onChangeItem(this.myItems.shield)
           }
-          if(this.myItems.shord){
-            this.onChangeItem(this.myItems.shord)
+          if(this.myItems.sword){
+            this.$refs.myInstance.message('stand', 'ChangeItem', this.myItems.sword)
+            // this.onChangeItem(this.myItems.sword)
           }
         }
       })
@@ -142,7 +146,6 @@ export default {
     onChangeEyebrow(eyebrow) {
       this.$refs.myInstance.message('stand', 'ChangeEyebrow', eyebrow)
       this.myItems.eyebrow = eyebrow
-      console.log(this.myItems)
     },
     onChangeEye(eye) {
       this.$refs.myInstance.message('stand', 'ChangeEye', eye)
@@ -163,10 +166,10 @@ export default {
           this.myItems.shield = null
         }
       }else{
-        if(this.myItems.shord==null){
-          this.myItems.shord = item
+        if(this.myItems.sword==null){
+          this.myItems.sword = item
         }else{
-          this.myItems.shord = null
+          this.myItems.sword = null
         }
       }
       console.log(this.myItems)
@@ -204,7 +207,7 @@ export default {
       });
 
     } else{
-      this.$router.push('/');
+      this.$router.push('/home');
     }
   },
   mounted(){

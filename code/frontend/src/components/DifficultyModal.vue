@@ -2,12 +2,12 @@
   <transition name="modal">
     <div class="diff-modal-mask">
       <i class="fas fa-times" @click.self="$emit('close')"></i>
-      <div class="diff-modal-wrap">
+      <div class="diff-modal-wrap" @click.self="$emit('close')">
         <div class="diff-modal-content diff-modal-on-stage" @click="moveStage(1)">
           <img src="@/assets/images/stage1.png" alt="초급">
           <div class="diff-modal-name">초 급</div>
         </div>
-        <div v-if="false" class="diff-modal-content diff-modal-on-stage">
+        <div v-if="false" class="diff-modal-content diff-modal-on-stage" @click="moveStage(2)">
           <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
@@ -16,7 +16,7 @@
           <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
-        <div v-if="false" class="diff-modal-content diff-modal-on-stage">
+        <div v-if="false" class="diff-modal-content diff-modal-on-stage" @click="moveStage(3)">
           <img src="@/assets/images/stage3.png" alt="고급">
           <div class="diff-modal-name">고 급</div>
         </div>

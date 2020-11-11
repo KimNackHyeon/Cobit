@@ -6,11 +6,11 @@ import CodeBlock from '../views/CodeBlock.vue'
 import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
-import Test3 from '../views/Test3.vue'
 import Test4 from '../views/Test4.vue'
-import Speech from '../views/SpeechDetectionStarted.vue'
+import Speech from '../views/Speech.vue'
 import VRTest from '../views/vrtest.vue'
 import PracticeMode from '../views/PracticeMode.vue'
+import Main from '../views/Main.vue'
 
 
 Vue.use(VueRouter)
@@ -18,6 +18,11 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'Main',
+    component: Main
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -52,11 +57,6 @@ const routes = [
     component: Apitest
   },
   {
-    path: '/test3',
-    name: 'Test3',
-    component: Test3
-  },
-  {
     path: '/vrtest',
     name: 'VRTest',
     component: VRTest
@@ -71,6 +71,11 @@ const routes = [
     name: 'PracticeMode',
     component: PracticeMode
   },
+  {
+    path: '*',
+    redirect: '/'
+  }
+
 ]
 
 const router = new VueRouter({

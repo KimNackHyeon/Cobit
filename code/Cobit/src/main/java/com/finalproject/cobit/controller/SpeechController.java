@@ -36,6 +36,7 @@ public class SpeechController {
 	public List<String> analyzeText1(@RequestBody List<String> textList) {
 		List<String> texts = new ArrayList<String>();
 		texts = speechService.analyzeText1(textList);
+		System.out.println(texts.toString());
 		return texts;
 	}
 }

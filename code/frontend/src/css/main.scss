@@ -1,0 +1,20 @@
+.main{
+    .v-carousel__item {
+        height: 100vh !important;
+        color: unset !important;
+    }
+    .v-window__next {
+        right: 0;
+        background: unset;
+        .v-icon {
+            font-size: 140px !important;
+        }
+    }
+    .v-window__prev {
+        display: none;
+        background: unset;
+        .v-icon {
+            font-size: 140px !important;
+        }
+    }
+}

@@ -11,7 +11,7 @@
             <i v-for="(off, index) in (5-heart)" :key="`off-${index}`" class="far fa-heart"></i>
           </div>
         </div>
-        <unity class="unity" src="free/Build/free.json" unityLoader="free/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="free/Build/free.json" unityLoader="free/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="code-box">
         <div class="block-box">
