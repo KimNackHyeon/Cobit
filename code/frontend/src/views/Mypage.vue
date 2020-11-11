@@ -92,7 +92,7 @@
             <div class="starbar">
               <div class="mystar"></div>
               <div class="startotal"></div>
-              <div class="starnum"><span>{{starCount}} / 90</span></div>
+              <div class="starnum"><span>{{starCount}} / 63</span></div>
             </div>
             <!-- <div class="star onestar">
               <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
@@ -208,7 +208,7 @@ import DifficultyModal from '../components/DifficultyModal.vue';
 export default {
   data() {
     return {
-      userEmail: store.state.kakaoUserInfo.email,
+      userEmail: '',
       star: 10,
       starpercent: [],
       name: null,
@@ -219,7 +219,7 @@ export default {
       attendDay: [],
       noattendDay: [],
       totalAttendDay: '',
-      starCount: store.state.kakaoUserInfo.star,
+      starCount: 0,
       today: 5,
       nMonth:11,
       isAttend: false,
@@ -230,24 +230,27 @@ export default {
     Unity,
     DifficultyModal,
   },
-
-  mounted() {
-    // console.log(this.userEmail)
-    console.log(this.name);
-    // 별의 갯수에 따라 width 설정
-    if(this.starCount == 0) {
+  watch: {
+     starCount(){
+      console.log("watch");
+      console.log(this.starCount);
+      if(this.starCount == 0) {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
+      }
+      else if(this.starCount == 63){
+        $(".mystar").css("border-radius", "15px")
+        $(".mystar").css("width", "100%")
+      }
+      else {
+        const starratio = (this.starCount / 63) * 100
+        $(".mystar").css("width", `${starratio}%`)
+        $(".startotal").css("width", `${100 - starratio}%`)
+      }
     }
-    else if(this.starCount == 90){
-      $(".mystar").css("border-radius", "15px")
-      $(".mystar").css("width", "100%")
-    }
-    else {
-      const starratio = (this.starCount / 90) * 100
-      $(".mystar").css("width", `${starratio}%`)
-      $(".startotal").css("width", `${100 - starratio}%`)
-    }
+  },
+
+  mounted() {
   },
   methods: {
     onRename(){
@@ -357,27 +360,28 @@ export default {
       this.$router.push('/practice')
     }
   },
-  created(){
+  async created(){
     window.addEventListener('start', this.handleStart);
     if(this.$cookies.isKey("access_token")){
       console.log("로그인")
-      window.Kakao.API.request({
+      let kakao_account;
+      await window.Kakao.API.request({
           url:'/v2/user/me',
           success : res => {
-              const kakao_account = res.kakao_account;
-              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.name = store.state.kakaoUserInfo.nickname;
                 this.userEmail = store.state.kakaoUserInfo.email;
                 this.starCount = store.state.kakaoUserInfo.star;
-                this.loadAttend();
-                
-                // this.loadMyCharacter();
-              })
-          },
-      })
+              });
+      await this.loadAttend();
+    } else{
+      this.userEmail = null;
     }
   },
   beforeDestroy() {
