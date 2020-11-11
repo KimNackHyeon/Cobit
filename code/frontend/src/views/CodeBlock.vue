@@ -693,6 +693,7 @@ export default {
     handleStart() {
       setTimeout(() => {
         this.LevelLoad();
+        this.loadMyCharacter();
       }, 10);
     },
     handleClear() {
@@ -717,19 +718,40 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      // console.log(this.resultmoves);
+      console.log(this.resultmoves);
       var code = [];
       var code_kor = [];
-      this.resultmoves.forEach(move => {
-        code.push(move.move + "();");
-        code_kor.push(move.move_kor + "();");
+      this.resultmoves.forEach(m => {
+        code.push(m.move.move + "();");
+        code_kor.push(m.move.move_kor + "();");
       });
-      // console.log(code);
-      // console.log(code_kor);
+      console.log(code);
+      console.log(code_kor);
 
     },
     gostage(){
-      this.$router.push('/gamemap')
+        this.$router.push('/gamemap')
+      },
+    loadMyCharacter(){
+      // 캐릭터 정보 불러오기
+      console.log("캐릭터 정보 불러오기");
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      .then(res => {
+        console.log(res);
+        this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+        this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
+        this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)
+        if(res.data.crown){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.crown)
+        }
+        if(res.data.shield){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.shield)
+        }
+        if(res.data.sword){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.sword)
+        }
+      })
+      
     },
   },
   beforeDestroy () {
