@@ -472,7 +472,7 @@ export default {
         underForblocksPositions.push(underForblocks[u].getBoundingClientRect());
       }
 
-      console.log(underForblocksPositions);
+      // console.log(underForblocksPositions);
         // console.log(playRect.left+this.distX+" "+(playRect.right+this.distX));
         // console.log(playRect.top+this.distY+" "+(playRect.bottom+this.distY));
         // console.log(x+" "+y);
@@ -735,15 +735,15 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      // console.log(this.resultmoves);
+      console.log(this.resultmoves);
       var code = [];
       var code_kor = [];
-      this.resultmoves.forEach(move => {
-        code.push(move.move + "();");
-        code_kor.push(move.move_kor + "();");
+      this.resultmoves.forEach(m => {
+        code.push(m.move.move + "();");
+        code_kor.push(m.move.move_kor + "();");
       });
-      // console.log(code);
-      // console.log(code_kor);
+      console.log(code);
+      console.log(code_kor);
 
     },
     loadMyCharacter(){
