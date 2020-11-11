@@ -353,7 +353,7 @@ export default {
   watch: {
   },
   methods: {
-     ...mapMutations(['setInStageNum', 'setInStageStar']),
+     ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage']),
      selectLoopNum(loopnum){
        this.resultStep[this.targetdivNum].loop = loopnum;
        this.choiceNum = false;
@@ -726,7 +726,10 @@ export default {
       this.isClear = true;
       this.makeCode();
       this.setInStageNum(this.stageNum);
-      this.setInStageStar(3);
+      this.setInStageStar(this.starNum);
+      if(this.stageNum == 5) {
+        this.setIsLastStage(true)
+      }
     },
     onModal2() {
       this.isFail = true;

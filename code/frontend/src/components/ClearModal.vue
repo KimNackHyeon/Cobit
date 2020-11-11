@@ -15,28 +15,36 @@
             </div>
           </div>
           <div class="clear-modal-footer">
-            <div class="clear-modal-btn" @click="nextLevel">다음 단계로</div>
+            <div v-if="!IsLastStage" class="clear-modal-btn" @click="nextLevel">다음 단계로</div>
+            <div v-if="IsLastStage" class="clear-modal-btn" @click="onModal">완료하기</div>
             <div class="clear-modal-btn" @click="reStart">다시하기</div>
           </div>
         </div>
       </div>
+
+      <SummeryModal v-if="showModal" @close="showModal= false"/>
     </div>
   </transition>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import SummeryModal from '../components/SummeryModal.vue';
 
 export default {
   name: 'ClearModal',
   data() {
     return {
+      showModal: false,
     }
+  },
+  components: {
+    SummeryModal,
   },
   watch: {
   },
   computed: {
-    ...mapState(['InStageNum', 'InStageStar']),
+    ...mapState(['InStageNum', 'InStageStar', 'IsLastStage']),
   },
   created() {
   },
@@ -51,6 +59,9 @@ export default {
     reStart() {
       this.$emit('close')
       this.$emit('restart')
+    },
+    onModal() {
+      this.showModal = true
     }
   }
 }
