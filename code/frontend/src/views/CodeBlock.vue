@@ -11,9 +11,44 @@
     </div>
     <div class="code-block-container">
       <div class="unity-box">
-        <router-link to="/gamemap"><v-btn style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</v-btn></router-link>
+        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
         <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
+      </div>
+      <div class="btnsbox">
+        <div id="hintBtn" @click="buyHint">
+          <div class="hintBtnbox">
+            <v-icon style="color: black">mdi-lightbulb-on</v-icon>
+            힌트 {{hintCount}}
+          </div>
+        </div>
+        <div id="hint" v-if="showhint">
+          <div  style="height: 100%">
+            <img :src="require(`../assets/images/${story[stageNum-1].hint}`)" alt="hint" style="width:100%; height:100%; border: 3px solid black;">
+          </div>
+          <div style="position: absolute; top: 3px; right: 3px;" @click="showhint=false"><v-icon style="font-size: 30px; color: white; cursor: pointer">mdi-close</v-icon></div>
+            <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
+        </div>
+        <div id="historyBtn" @click="clickHistory" @mouseover="openHistory" @mouseout="closeHistory">
+          <div class="historyBtnbox">
+            <v-icon style="color: black">mdi-history</v-icon>
+            히스토리
+          </div>
+        </div>
+        <div id="history" :style="{display:this.showhistory}" transition="scale-transition">
+          <div style="width:100%; height:100%; overflow-y:auto;">
+            <div v-for="(step,index) in history" :key="index" >
+              {{step.move_kor}}
+            </div>
+            <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
+          </div>
+        </div>
+        <div id="deleteAllBtn">
+          <div class="deleteAllBtnbox">
+            <v-icon style="color: black">mdi-trash-can-outline</v-icon>
+            전체 삭제
+          </div>
+        </div>
       </div>
       <div class="code-box" @drop="drop" @dragover="dragover">
           <!-- <div class="block-menu-bar">
@@ -67,30 +102,6 @@
                   </div>
                 </div>
             </div>
-            <v-btn id="hintBtn" @click="clickHint" >
-              <v-icon>mdi-lightbulb-on</v-icon>
-              <h3>힌트</h3>
-            </v-btn>
-            <div id="hint" :style="{display:this.showhint}">
-                <button style="color:red;" @click="buyHint">힌트 보기</button>
-                <div style="float:right;">남은 힌트 : {{hintCount}}개</div>
-                <div v-if="buyhint">
-                  <img :src="require(`../assets/images/${story[stageNum-1].hint}`)" alt="hint" style="width:100%; height:100%;">
-                </div>
-                <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
-            </div>
-            <v-btn id="historyBtn" @click="clickHistory" @mouseover="openHistory" @mouseout="closeHistory">
-              <v-icon>mdi-history</v-icon>
-              <h3>히스토리</h3>
-            </v-btn>
-            <div id="history" :style="{display:this.showhistory}" transition="scale-transition">
-              <div style="width:100%; height:100%; overflow-y:auto;">
-                <div v-for="(step,index) in history" :key="index" >
-                  {{step.move_kor}}
-                </div>
-                <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -106,7 +117,8 @@ import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
-import store from '../vuex/store'
+import store from '../vuex/store';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'CodeBlock',
@@ -308,7 +320,7 @@ export default {
       history:[],
       showhistory:'none',
       clickhistory:false,
-      showhint:'none',
+      showhint: false,
       clickhint:false,
       hint:"스테이지의 힌트",
       starNum: 1,
@@ -411,32 +423,36 @@ export default {
       this.alreadyOverPlay = false;
       console.log(this.resultmoves);
     },
-    clickHint(){
-      if(this.clickhint){
-        this.showhint = 'none';
-        this.clickhint = false;
-      }else{
-        this.showhint = 'block';
-        this.clickhint = true;
-      }
-    },
-    openHint(){
-        this.showhint = 'block';
-    },
-    closeHint(){
-      this.showhint = 'none';
-      this.clickhint = false;
-    },
+    // clickHint(){
+    //   if(this.clickhint){
+    //     this.showhint = 'none';
+    //     this.clickhint = false;
+    //   }else{
+    //     this.showhint = 'block';
+    //     this.clickhint = true;
+    //   }
+    // },
     buyHint(){
       console.log(store.state.kakaoUserInfo);
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
-      .then(()=>{
-        this.hintCount -= 1;
-        this.buyhint = true;
-      })
-      .catch(() => {
-        alert('힌트 구매 불가!');
-      });
+      if(this.buyhint == false){
+        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+        .then(()=>{
+          this.hintCount -= 1;
+          this.buyhint = true;
+          this.showhint = true;
+        })
+      }else if(this.hintCount <= 0 && this.buyhint == false) {
+        // alert('힌트 구매 불가!');
+        Swal.fire(
+          '힌트 갯수가 부족합니다.',
+          '',
+          'warning'
+        )
+        this.buyhint = false;
+      }else {
+        this.buyhint = true
+        this.showhint = true
+      }
     },
     clickHistory(){
       if(this.clickhistory){
@@ -739,7 +755,10 @@ export default {
       // console.log(code);
       // console.log(code_kor);
 
-    }
+    },
+    gostage(){
+      this.$router.push('/gamemap')
+    },
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -756,13 +775,14 @@ export default {
   height:100%;
 }
 .code-block-container {
-  display: flex;
+  /* display: flex; */
   /* margin-top: 100px; */
   width: 100%;
   height:100%;
 }
 
 .code-block-container .unity-box {
+  float: left;
   width: 60%;
   /* margin-right: 1%; */
   height: 100%;
@@ -771,10 +791,11 @@ export default {
 
 .code-block-container .code-box {
   width: 40%;
-  height: 100%;
+  height: 92%;
   /* background-color: bisque; */
-  display: flex;
+  /* display: flex; */
   position: relative;
+  float: right;
 }
 
 .code-box .block-box {
@@ -906,25 +927,51 @@ export default {
 }
 
 #historyBtn{
-  position:absolute;
-  bottom:0;
-  right:0;
-  margin:5px;
+  display: inline-block;
+  width: 120px;
+  height: 45px;
+  margin: 1% 5% 1% 3%;
 }
-
+.historyBtnbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fdc9c4), to(#f2928d));
+  border-radius: 25px;
+  font-family: 'BMJUA';
+  font-size: 18px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff;
+  color: black;
+  cursor: pointer;
+}
 #hintBtn{
-  position:absolute;
-  bottom:50px;
-  right:0;
-  margin:5px;
-}
+  display: inline-block;
+  width: 120px;
+  height: 45px;
+  margin: 1% 3% 1% 5%;
 
+}
+.hintBtnbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffeba1), to(#ffdf65));
+  border-radius: 25px;
+  font-family: 'BMJUA';
+  font-size: 18px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff;
+  color: black;
+  cursor: pointer;
+}
 #history{
     position: absolute;
-    width: 80%;
-    height: 80%;
-    bottom: 10%;
-    right: 10%;
+    width: 50%;
+    height: 90%;
+    left: 25%;
     z-index: 2;
     background-image: url('../assets/images/history.png');
     background-color: transparent;
@@ -934,14 +981,35 @@ export default {
 
 #hint{
     position: absolute;
-    width: 60%;
+    width: 20%;
     height: 30%;
-    bottom: 10%;
-    right: 20%;
+    top: 0;
+    right: 40%;
     z-index: 2;
     background-color: white;
     /* padding: 107px 50px; */
     
+}
+#deleteAllBtn {
+  display: inline-block;
+  width: 120px;
+  height: 45px;
+  margin: 1% 3% 1% 5%;
+  float: right;
+}
+.deleteAllBtnbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#bcf2ff), to(#60e5ff));
+  border-radius: 25px;
+  font-family: 'BMJUA';
+  font-size: 18px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff;
+  color: black;
+  cursor: pointer;
 }
 .story{
   width:100vw;
@@ -997,4 +1065,32 @@ export default {
 .container::-webkit-scrollbar-track {
     background-color: black;
   }
+.stagebtn {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  background-color: #a4d4ff;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: BMJUA;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px #ffffff;
+}
+.stagebtn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+.btnsbox {
+  height: 8%;
+  width: 40%;
+  float: right;
+}
 </style>
