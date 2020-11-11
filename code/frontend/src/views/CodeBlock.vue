@@ -57,7 +57,7 @@
           </div> -->
         <div class="block-box">
            <div v-show="isMove" class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" draggable="true" @dragstart="dragstartAdd($event)">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)">
               {{m.move_kor}}
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
@@ -86,19 +86,19 @@
                       <div @click="choiceLoopNum(index)" style="background-color:#e58603; width:50%; height:100%;float:left"><v-icon style="color:white">mdi-menu-down</v-icon>
                       </div>
                       <div style="width: 50%; height: 100%; float: right; color: black; text-align: center;">{{m.loop}}</div>
-                      <div v-if="choiceNum" class="choiceNum">
-                        <div v-for="index in (1,10)" :key="index" @click="selectLoopNum(index)" style="color: black; text-align: center; border-bottom: 1px solid #e3e1e1; height: 27px;">
-                          {{index}}
+                      <div v-if="m.choiceNum" class="choiceNum">
+                        <div v-for="i in (1,10)" :key="i" @click="selectLoopNum(i,index)" style="color: black; text-align: center; border-bottom: 1px solid #e3e1e1; height: 27px;">
+                          {{i}}
                         </div>
                       </div>
                     </div>
                     <!-- <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon> -->
+                  <div class="block"  style="background-color:gray;margin-bottom:0px;" v-if="m.num== 7&& underfor[m.forindex].overMe">                  
+                  </div>
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
-                  </div>
                   <div class="block" :class="'underForblock under'+index" v-if="m.num==7" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="underFor[index]">
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
                   </div>
                 </div>
             </div>
@@ -131,8 +131,7 @@ export default {
       isObstacle: false,
       distX: '',
       distY: '',
-      choiceNum:false,
-      underFor:[],
+      underfor:[],
       story:[
         { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
@@ -159,6 +158,53 @@ export default {
           end:"<h3>트로이 전쟁 중 성 안에 몰래 침입한전략에서 비유된 '트로이목마'</h3>바이러스 중 가장 유명한 바이러스이며, 정상적인 프로그램으로 위장해 숨어있다가 실행하면 악성코드를 퍼트리는 바이러스에요.<br>해킹기능이 존재하는 바이러스이니 컴퓨터에 트로이목마가 감염되었다면 내 개인정보가 유출되었다는 의미이니 조심하여야합니다.",
           hint:"basicHint5.png"
           },
+      ],
+        defaultStep:[
+        {
+          num:0,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
+          index:0,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:1,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
+          index:1,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:2,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
+          index:2,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:3,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
+          index:3,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:4,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
+          index:4,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:5,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
+          index:5,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:6,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
+          index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:7,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'395px',
+          index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
+        },
+        {
+          num:8,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'450px',
+          index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
+        }
       ],
       moves:[
         {
@@ -222,89 +268,7 @@ export default {
           isForblock:''
         }
       ],
-      defaultStep:[
-        {
-          num:0,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
-          index:0,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:1,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
-          index:1,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:2,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
-          index:2,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:3,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
-          index:3,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:4,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
-          index:4,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:5,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
-          index:5,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:6,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
-          index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:7,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
-          index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
-        }
-      ],
       resultStep:[
-        {
-          num:0,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
-          index:0,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:1,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
-          index:1,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:2,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
-          index:2,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:3,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
-          index:3,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:4,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
-          index:4,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:5,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
-          index:5,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:6,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
-          index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
-        },
-        {
-          num:7,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'395px',
-          index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false,
-        },
       ],
       selectnum:0,
       isAdded: false,
@@ -366,15 +330,39 @@ export default {
   },
   methods: {
      ...mapMutations(['setInStageNum', 'setInStageStar']),
-     selectLoopNum(loopnum){
+     blockmouseover(m,event){
+       let posX = event.pageX;
+      let posY = event.pageY;
+      // console.log(event.target);
+      // event.dataTransfer.effectAllowed = 'copyMove';
+      // event.dataTransfer.dropEffect = "copy";
+      this.targetdiv = event.target;
+      this.distX = event.srcElement.offsetLeft - posX;
+      this.distY = event.srcElement.offsetTop - posY;
+      this.selectnum = event.target.className;
+      this.isAdded = false;
+      this.isOnMove = true;//움직이고있다.
+      // var selectedNum = this.selectnum;
+      // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
+      var selectedNum = m.num;
+      console.log(selectedNum);
+      if(Number(selectedNum)==7){
+        var fori = 0;
+        this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:fori});
+        fori+=1;
+      }else{
+        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      }
+     },
+     selectLoopNum(loopnum,mynum){
        this.resultStep[this.targetdivNum].loop = loopnum;
-       this.choiceNum = false;
-       console.log(loopnum);
-       console.log(this.resultStep);
+       this.resultStep[this.targetdivNum].choiceNum = false;
+       this.targetdivNum = mynum;
      },
      choiceLoopNum(mynum){
-       this.choiceNum = true;
-        this.targetdivNum = mynum;
+       this.resultStep[this.targetdivNum].choiceNum = true;
+       this.targetdivNum = mynum;
      },
      clickStory(){
        this.openStory = false;
@@ -384,24 +372,24 @@ export default {
       var delNode = [];
       this.resultmoves = [];
       while(tempson != -1){
-        if(this.resultStep[tempson].num!=7){
+        // if(this.resultStep[tempson].num!=7){
           this.resultmoves.push({move:this.moves[this.resultStep[tempson].num],loop:this.resultStep[tempson].loop});
           delNode.push(this.resultStep[tempson].index);
           tempson = this.resultStep[tempson].son;
-        }else{
-          var temploop = [];
-          var ori_tempson = tempson;
-          while (tempson!=-1) {
-              temploop.push({move:this.moves[this.resultStep[tempson].num],loop:this.resultStep[tempson].loop});
-              delNode.push(this.resultStep[tempson].index);
-              tempson = this.resultStep[tempson].son;
-          }
-          for(var l = 0; l<this.resultStep[ori_tempson].loop;l++){
-            for(var t = 1; t<temploop.length;t++){
-              this.resultmoves.push(temploop[t]);        
-            }
-          }
-        }
+        // }else{
+        //   var temploop = [];
+        //   var ori_tempson = tempson;
+        //   while (tempson!=-1) {
+        //       temploop.push({move:this.moves[this.resultStep[tempson].num],loop:this.resultStep[tempson].loop});
+        //       delNode.push(this.resultStep[tempson].index);
+        //       tempson = this.resultStep[tempson].son;
+        //   }
+        //   for(var l = 0; l<this.resultStep[ori_tempson].loop;l++){
+        //     for(var t = 1; t<temploop.length;t++){
+        //       this.resultmoves.push(temploop[t]);        
+        //     }
+        //   }
+        // }
       }
       // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
@@ -480,16 +468,17 @@ export default {
       var y = this.distY+event.pageY;
       var playtarget = document.getElementById('play');
       const playRect = playtarget.getBoundingClientRect();
-      var underForblocks = document.getElementsByClassName('underForblock');
-      var underForblocksPositions = [];
-      for(var u=0; u<underForblocks.length;u++){
-        underForblocksPositions.push(underForblocks[u].getBoundingClientRect());
-      }
 
-      console.log(underForblocksPositions);
-        // console.log(playRect.left+this.distX+" "+(playRect.right+this.distX));
-        // console.log(playRect.top+this.distY+" "+(playRect.bottom+this.distY));
-        // console.log(x+" "+y);
+      // for(var f=0;f<this.underfor.length;f++){
+      //   if(x>this.underfor[f].x&&x<this.underfor[f].x+50&&y>this.underfor[f].y&&y<this.underfor[f].y+30){
+      //     this.underfor[f].overMe=true;
+      //   }else{
+      //     this.underfor[f].overMe=false;
+      //   }
+      // }
+      // console.log(x+','+y)
+      // console.log("underfor[0]"+this.underfor[0].x+" "+this.underfor[0].y)
+      
       if(x<playRect.right+this.distX&&x>playRect.left+this.distX&&y<playRect.bottom+this.distY&&playRect.top+this.distY){
         this.playClass={background:'green',show:'block'};
       }else{
@@ -553,24 +542,7 @@ export default {
     //   // MOVE.classList.remove('on-menu-bar');
     //   // OBSTACLE.classList.add('on-menu-bar');
     // },
-    dragstartAdd(event){
-      let posX = event.pageX;
-      let posY = event.pageY;
-      // console.log(event.target);
-      event.dataTransfer.effectAllowed = 'copyMove';
-      event.dataTransfer.dropEffect = "copy";
-      this.targetdiv = event.target;
-      this.distX = event.srcElement.offsetLeft - posX;
-      this.distY = event.srcElement.offsetTop - posY;
-      this.selectnum = event.target.className;
-      this.isAdded = false;
-      this.isOnMove = true;//움직이고있다.
-      var selectedNum = this.selectnum;
-      selectedNum = selectedNum.split("block")[2].split(' ')[0]
-      this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1});
-      // this.alterDragObject();
-      console.log(this.resultStep);
-    },                                             
+                                              
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
       // console.log(event.target);
@@ -633,22 +605,16 @@ export default {
       let posY = event.pageY;
       this.onMove = false ; //블록움직임이 끝났다.
       if (posX >= relativeLeft && posX <= relativeRight) {
-        if(!this.isAdded){
-        // var selectedNum = this.selectnum;
-        // selectedNum = selectedNum.split("block")[2].split(' ')[0]
-        // this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false});
-        // const tempTarget = document.getElementById('block-board');
-        // this.targetdiv = tempTarget.querySelector(':last-child');
-        // console.log(tempTarget.childNodes.findIndex(0));
-        this.targetdivNum = this.resultStep.length-1;
-        this.updateLink();
-        }else{
           this.resultStep[this.targetdivNum].marginleft = posX + this.distX + 'px';
           this.resultStep[this.targetdivNum].marginTop = posY + this.distY + 'px';
           this.resultStep[this.targetdivNum].x = posX + this.distX;
           this.resultStep[this.targetdivNum].y = posY + this.distY;
           this.updateLink();
-        }
+          if(this.resultStep[this.targetdivNum].num == 7){
+            this.underfor[this.resultStep[this.targetdivNum].forindex].x = this.resultStep[this.targetdivNum].x;
+            this.underfor[this.resultStep[this.targetdivNum].forindex].y = this.resultStep[this.targetdivNum].y+50;
+          }
+          
         // console.log(event);
         if(this.playClass.show=='block'){
           if(!this.alreadyOverPlay){
@@ -681,6 +647,8 @@ export default {
           }
         }
         // var original_son = -1;
+        //x와 y를 움직이기
+
         this.resultStep.some( step => {
           if(step.overMe=='block' || step.class=='overMe'){
             var os = this.resultStep[step.index].son;
@@ -696,6 +664,7 @@ export default {
               parent = son;
               son = this.resultStep[son].son;
             }
+            
             step.overMe = 'none';
           }
           if(step.overMe=='block' || step.class=='overMe')return;
@@ -739,7 +708,10 @@ export default {
       this.isClear = true;
       this.makeCode();
       this.setInStageNum(this.stageNum);
-      this.setInStageStar(3);
+      this.setInStageStar(this.starNum);
+      if(this.stageNum == 5) {
+        this.setIsLastStage(true)
+      }
     },
     onModal2() {
       this.isFail = true;
