@@ -52,7 +52,6 @@ export default {
                         axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
                             email : userInfo.email,
                             nickname : userInfo.nickname,
-                            pw : authObj.access_token,
                         })
                         .then(res => {
                           console.log(res);

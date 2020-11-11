@@ -44,22 +44,40 @@
                   </div>
               </div>
               <div id="block-board">
-                <div v-for="(m,index) in resultStep" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
+                <div v-for="(m,index) in resultStep" :class="moves[m.num].isForblock" :index="m.index" :key="index" draggable="true" @dragstart="dragstart(index,$event)" :style="{position:m.position,top: 0,left:0,'margin-left':m.marginleft,'margin-top':m.marginTop}" >
                   <div class="block" :class="'block'+m.num+' '+m.class" style="margin-bottom:0px;">
                     {{moves[m.num].move_kor}}
+                    <div v-if="m.num==7"  style="background-color: white; width: 48px; height: 70%; margin: 0px 9px; box-shadow: 0px 0px 0px 3px #e58603;border-radius: 7px;">
+                      <div @click="choiceLoopNum(index)" style="background-color:#e58603; width:50%; height:100%;float:left"><v-icon style="color:white">mdi-menu-down</v-icon>
+                      </div>
+                      <div style="width: 50%; height: 100%; float: right; color: black; text-align: center;">{{m.loop}}</div>
+                      <div v-if="choiceNum" class="choiceNum">
+                        <div v-for="index in (1,10)" :key="index" @click="selectLoopNum(index)" style="color: black; text-align: center; border-bottom: 1px solid #e3e1e1; height: 27px;">
+                          {{index}}
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon> -->
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
                   <div class="block" style="background-color:gray;margin-bottom:0px;" :style="{display:m.overMe}">
                   </div>
+                  <div class="block" :class="'underForblock under'+index" v-if="m.num==7" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="underFor[index]">
+                  </div>
                 </div>
             </div>
-            <v-btn id="hintBtn" @click="clickHint" @mouseover="openHint" @mouseout="closeHint">
+            <v-btn id="hintBtn" @click="clickHint" >
               <v-icon>mdi-lightbulb-on</v-icon>
               <h3>힌트</h3>
             </v-btn>
             <div id="hint" :style="{display:this.showhint}">
-                <div>{{hint}}</div>
-                <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div>
+                <button style="color:red;" @click="buyHint">힌트 보기</button>
+                <div style="float:right;">남은 힌트 : {{hintCount}}개</div>
+                <div v-if="buyhint">
+                  <img :src="require(`../assets/images/${story[stageNum-1].hint}`)" alt="hint" style="width:100%; height:100%;">
+                </div>
+                <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
             </div>
             <v-btn id="historyBtn" @click="clickHistory" @mouseover="openHistory" @mouseout="closeHistory">
               <v-icon>mdi-history</v-icon>
@@ -101,26 +119,33 @@ export default {
       isObstacle: false,
       distX: '',
       distY: '',
+      choiceNum:false,
+      underFor:[],
       story:[
         { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
-          end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다."
+          end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
+          hint:"basicHint1.png"
           },
           { start_modal:"",
           start:"컴퓨터의 두뇌인 CPU에 대해 알아보았어요.<br>컴퓨터를 조금 더 살펴보기위해 다가가보세요!",
-          end:"<h3>컴퓨터의 공부 책상, 메모리</h3><br>공부할 때 교과서나 참고서, 필기도구 등을 책상위에 올려놓고 참고서를 보면서 공책에 필기를 하죠?<br>메모리 또한 컴퓨터가 작업에 필요한 것을 일시적으로 기억해서 CPU가 프로그램을 작동시킬 때 사용할 수 있게 합니다!"
+          end:"<h3>컴퓨터의 공부 책상, 메모리</h3><br>공부할 때 교과서나 참고서, 필기도구 등을 책상위에 올려놓고 참고서를 보면서 공책에 필기를 하죠?<br>메모리 또한 컴퓨터가 작업에 필요한 것을 일시적으로 기억해서 CPU가 프로그램을 작동시킬 때 사용할 수 있게 합니다!",
+          hint:"basicHint2.png"
           },
           { start_modal:"",
           start:"앗! 이게뭐지?<br>갑자기 이상한게 나타났어요! 이게 뭘까요?<br>알아보기위해 다가가보세요.",
-          end:"<h3>I'm the creeper, catch me if you can!</h3>크리퍼, 최초의 컴퓨터 바이러스.<br>컴퓨터 바이러스란, <br>우리몸을 아프게하는 바이러스와 비슷하게 스스로를 복제하여 컴퓨터를 아프게하는 바이러스에요.<br>인터넷 이나 네트워크 또는 이동식 매체를 통해 전파가 되어 내 컴퓨터의 파일시스템을 망가트려요!"
+          end:"<h3>I'm the creeper, catch me if you can!</h3>크리퍼, 최초의 컴퓨터 바이러스.<br>컴퓨터 바이러스란, <br>우리몸을 아프게하는 바이러스와 비슷하게 스스로를 복제하여 컴퓨터를 아프게하는 바이러스에요.<br>인터넷 이나 네트워크 또는 이동식 매체를 통해 전파가 되어 내 컴퓨터의 파일시스템을 망가트려요!",
+          hint:"basicHint3.png"
           },
           { start_modal:"",
           start:"바이러스라니,무서워요! <br>컴퓨터를 망가뜨리는 바이러스의 종류에는 어떤것이 있을까요?<br>살펴보기위해 다가가보세요.",
-          end:"<h3>꿈틀거리는 벌레라는 의미의 '웜(Worm)바이러스'</h3>웜바이러스는 스스로 복제를 해서 내부시스템을 망가트리는 나쁜 바이러스에요.<br>웜바이러스는 인터넷속도에는 큰영향을 주지않지만 파일을 변형하거나 예측불가능한 증상을 만드는게 특징이에요.<br> 웜바이러스에 예방하기위해선 이메일첨부파일을 다운로드를 주의해서 해야해요."
+          end:"<h3>꿈틀거리는 벌레라는 의미의 '웜(Worm)바이러스'</h3>웜바이러스는 스스로 복제를 해서 내부시스템을 망가트리는 나쁜 바이러스에요.<br>웜바이러스는 인터넷속도에는 큰영향을 주지않지만 파일을 변형하거나 예측불가능한 증상을 만드는게 특징이에요.<br> 웜바이러스에 예방하기위해선 이메일첨부파일을 다운로드를 주의해서 해야해요.",
+          hint:"basicHint4.png"
           },
           { start_modal:"",
           start:"또다른 바이러스가 나타났어요!<br> 저 바이러스는 뭘까요? 알아보러 가봅시다!",
-          end:"<h3>트로이 전쟁 중 성 안에 몰래 침입한전략에서 비유된 '트로이목마'</h3>바이러스 중 가장 유명한 바이러스이며, 정상적인 프로그램으로 위장해 숨어있다가 실행하면 악성코드를 퍼트리는 바이러스에요.<br>해킹기능이 존재하는 바이러스이니 컴퓨터에 트로이목마가 감염되었다면 내 개인정보가 유출되었다는 의미이니 조심하여야합니다."
+          end:"<h3>트로이 전쟁 중 성 안에 몰래 침입한전략에서 비유된 '트로이목마'</h3>바이러스 중 가장 유명한 바이러스이며, 정상적인 프로그램으로 위장해 숨어있다가 실행하면 악성코드를 퍼트리는 바이러스에요.<br>해킹기능이 존재하는 바이러스이니 컴퓨터에 트로이목마가 감염되었다면 내 개인정보가 유출되었다는 의미이니 조심하여야합니다.",
+          hint:"basicHint5.png"
           },
       ],
       moves:[
@@ -135,110 +160,138 @@ export default {
           move:'Right',
           move_kor:'오른쪽',
           icon:'mdi-arrow-right-bold-circle',
+          isForblock:''
         },
         {
           num:2,
           move:'Left',
           move_kor:'왼쪽',
           icon:'mdi-arrow-left-bold-circle',
+          isForblock:''
         },
         {
           num:3,
           move:'Down',
           move_kor:'아래',
           icon:'mdi-arrow-down-bold-circle',
+          isForblock:''
         },
         {
           num:4,
           move:'TurnRight',
           move_kor:'오른쪽 90˚ 회전',
           // icon:'mdi-rotate-right-variant',
+          isForblock:''
         },
         {
           num:5,
           move:'TurnLeft',
           move_kor:'왼쪽 90˚ 회전',
           // icon:'mdi-rotate-left-variant',
+          isForblock:''
         },
         {
           num:6,
           move:'Jump',
           move_kor:'점프',
           icon:'mdi-trending-up',
+          isForblock:''
         },
+        {
+          num:7,
+          move:'For',
+          move_kor:'반복',
+          isForblock:'forblock'
+        },
+        {
+          num:8,
+          move:'If',
+          move_kor:'조건',
+          isForblock:''
+        }
       ],
       defaultStep:[
         {
           num:0,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
-          index:0,x:0,y:0,son:-1,onPlayBtn:false
+          index:0,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:1,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
-          index:1,x:0,y:0,son:-1,onPlayBtn:false
+          index:1,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:2,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
-          index:2,x:0,y:0,son:-1,onPlayBtn:false
+          index:2,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:3,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
-          index:3,x:0,y:0,son:-1,onPlayBtn:false
+          index:3,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:4,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
-          index:4,x:0,y:0,son:-1,onPlayBtn:false
+          index:4,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:5,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
-          index:5,x:0,y:0,son:-1,onPlayBtn:false
+          index:5,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:6,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
-          index:6,x:0,y:0,son:-1,onPlayBtn:false
+          index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
+        {
+          num:7,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
+          index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
+        }
       ],
       resultStep:[
         {
           num:0,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'10px',
-          index:0,x:0,y:0,son:-1,onPlayBtn:false
+          index:0,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:1,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'65px',
-          index:1,x:0,y:0,son:-1,onPlayBtn:false
+          index:1,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:2,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'120px',
-          index:2,x:0,y:0,son:-1,onPlayBtn:false
+          index:2,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:3,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'175px',
-          index:3,x:0,y:0,son:-1,onPlayBtn:false
+          index:3,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:4,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
-          index:4,x:0,y:0,son:-1,onPlayBtn:false
+          index:4,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:5,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
-          index:5,x:0,y:0,son:-1,onPlayBtn:false
+          index:5,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:6,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
-          index:6,x:0,y:0,son:-1,onPlayBtn:false
+          index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
+        },
+        {
+          num:7,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'395px',
+          index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false,
         },
       ],
       selectnum:0,
@@ -260,7 +313,9 @@ export default {
       hint:"스테이지의 힌트",
       starNum: 1,
       stageType: 1,
-      openStory:true
+      openStory:true,
+      buyhint: false,
+      hintCount: store.state.kakaoUserInfo.hint,
     }
   },
   components: {
@@ -270,21 +325,45 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    if(this.$cookies.isKey("access_token")){
+      let kakao_account;
+      await window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.hintCount = res.data.hint;
+              });
+    }
 
   },
   mounted() {
-    this.onMove();
+    // this.onMove();
   },
   watch: {
   },
   methods: {
      ...mapMutations(['setInStageNum', 'setInStageStar']),
+     selectLoopNum(loopnum){
+       this.resultStep[this.targetdivNum].loop = loopnum;
+       this.choiceNum = false;
+       console.log(loopnum);
+       console.log(this.resultStep);
+     },
+     choiceLoopNum(mynum){
+       this.choiceNum = true;
+        this.targetdivNum = mynum;
+     },
      clickStory(){
        this.openStory = false;
      },
@@ -293,18 +372,33 @@ export default {
       var delNode = [];
       this.resultmoves = [];
       while(tempson != -1){
-        this.resultmoves.push(this.moves[this.resultStep[tempson].num]);
-        delNode.push(this.resultStep[tempson].index);
-        tempson = this.resultStep[tempson].son;
+        if(this.resultStep[tempson].num!=7){
+          this.resultmoves.push({move:this.moves[this.resultStep[tempson].num],loop:this.resultStep[tempson].loop});
+          delNode.push(this.resultStep[tempson].index);
+          tempson = this.resultStep[tempson].son;
+        }else{
+          var temploop = [];
+          var ori_tempson = tempson;
+          while (tempson!=-1) {
+              temploop.push({move:this.moves[this.resultStep[tempson].num],loop:this.resultStep[tempson].loop});
+              delNode.push(this.resultStep[tempson].index);
+              tempson = this.resultStep[tempson].son;
+          }
+          for(var l = 0; l<this.resultStep[ori_tempson].loop;l++){
+            for(var t = 1; t<temploop.length;t++){
+              this.resultmoves.push(temploop[t]);        
+            }
+          }
+        }
       }
-      console.log("resultStep["+0+"]="+this.resultStep[0].son);
+      // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
-        this.$refs.myInstance.message('JavascriptHook',step.move);
+        this.$refs.myInstance.message('JavascriptHook',step.move.move);
      });
      for(var i=0; i<this.resultmoves.length;i++){
-       this.history.push(this.resultmoves[i]);
+       this.history.push(this.resultmoves[i].move);
      }
-
+    
      
      this.resultStep = [];
      this.playClass.background='#1dc360';
@@ -315,6 +409,7 @@ export default {
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
+      console.log(this.resultmoves);
     },
     clickHint(){
       if(this.clickhint){
@@ -331,6 +426,17 @@ export default {
     closeHint(){
       this.showhint = 'none';
       this.clickhint = false;
+    },
+    buyHint(){
+      console.log(store.state.kakaoUserInfo);
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+      .then(()=>{
+        this.hintCount -= 1;
+        this.buyhint = true;
+      })
+      .catch(() => {
+        alert('힌트 구매 불가!');
+      });
     },
     clickHistory(){
       if(this.clickhistory){
@@ -358,7 +464,13 @@ export default {
       var y = this.distY+event.pageY;
       var playtarget = document.getElementById('play');
       const playRect = playtarget.getBoundingClientRect();
+      var underForblocks = document.getElementsByClassName('underForblock');
+      var underForblocksPositions = [];
+      for(var u=0; u<underForblocks.length;u++){
+        underForblocksPositions.push(underForblocks[u].getBoundingClientRect());
+      }
 
+      console.log(underForblocksPositions);
         // console.log(playRect.left+this.distX+" "+(playRect.right+this.distX));
         // console.log(playRect.top+this.distY+" "+(playRect.bottom+this.distY));
         // console.log(x+" "+y);
@@ -375,6 +487,15 @@ export default {
            checkson = this.resultStep[checkson].son;
          }
        }
+      
+      // underForblocksPositions.forEach(step=>{
+      //   var stepx = step.x;
+      //   var stepy = step.y;
+      //   if(x<stepx+step.width&&x>stepx&&y>stepy&&y<stepy+step.height){
+      //     var tempclass = 
+      //   }
+      // });
+
      this.resultStep.forEach( step => {
       var stepx = step.x;
       var stepy = step.y;
@@ -402,20 +523,20 @@ export default {
     deleteNode(event){
       event.target.deleteNode();
     },
-    onMove() {
-      this.isMove = true; this.isObstacle = false
-      const MOVE = document.querySelector('.move-menu');
-      const OBSTACLE = document.querySelector('.obstacle-menu');
-      MOVE.classList.add('on-menu-bar');
-      OBSTACLE.classList.remove('on-menu-bar');
-    },
-    onObstacle() {
-      this.isObstacle = true; this.isMove = false
-      const MOVE = document.querySelector('.move-menu');
-      const OBSTACLE = document.querySelector('.obstacle-menu');
-      MOVE.classList.remove('on-menu-bar');
-      OBSTACLE.classList.add('on-menu-bar');
-    },
+    // onMove() {
+    //   this.isMove = true; this.isObstacle = false
+    //   // const MOVE = document.querySelector('.move-menu');
+    //   // const OBSTACLE = document.querySelector('.obstacle-menu');
+    //   // MOVE.classList.add('on-menu-bar');
+    //   // OBSTACLE.classList.remove('on-menu-bar');
+    // },
+    // onObstacle() {
+    //   this.isObstacle = true; this.isMove = false
+    //   const MOVE = document.querySelector('.move-menu');
+    //   const OBSTACLE = document.querySelector('.obstacle-menu');
+    //   // MOVE.classList.remove('on-menu-bar');
+    //   // OBSTACLE.classList.add('on-menu-bar');
+    // },
     dragstartAdd(event){
       let posX = event.pageX;
       let posY = event.pageY;
@@ -430,9 +551,10 @@ export default {
       this.isOnMove = true;//움직이고있다.
       var selectedNum = this.selectnum;
       selectedNum = selectedNum.split("block")[2].split(' ')[0]
-      this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false});
+      this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1});
       // this.alterDragObject();
-    },
+      console.log(this.resultStep);
+    },                                             
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
       // console.log(event.target);
@@ -451,7 +573,7 @@ export default {
       //마우스가 움직이면서 계속 마우스 위치를 가져온다.
       this.getNeighbor(event);
 
-      },
+    },
     updateLink(){
       var parent = this.targetdivNum;
         var son = this.resultStep[parent].son;
@@ -477,7 +599,7 @@ export default {
       }
 
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -563,7 +685,7 @@ export default {
           if(step.overMe=='block' || step.class=='overMe')return;
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
-    console.log(this.resultStep);
+    // console.log(this.resultStep);
      this.playClass.show='none';
       }
 
@@ -607,15 +729,15 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      console.log(this.resultmoves);
+      // console.log(this.resultmoves);
       var code = [];
       var code_kor = [];
       this.resultmoves.forEach(move => {
         code.push(move.move + "();");
         code_kor.push(move.move_kor + "();");
       });
-      console.log(code);
-      console.log(code_kor);
+      // console.log(code);
+      // console.log(code_kor);
 
     }
   },
@@ -710,8 +832,10 @@ export default {
 .block {
   width:105px;
   height:45px;
-  text-align: center;
-  padding: 5px;
+  text-align: left;
+  padding: 5px 0px 5px 10px;
+  display: flex;
+  align-items: center;
   border-radius: 20px;
   background-color: rgb(76, 151, 255);
   /* border:1px solid rgb(51, 115, 204); */
@@ -722,9 +846,10 @@ export default {
   float: left;
   clear: both;
   text-shadow: 1px rgb(51, 115, 204);
+      overflow: hidden;
 }
 
-.block::before {
+/* .block::before {
   content: "";
   position: absolute;
   right: 50%;
@@ -748,7 +873,7 @@ export default {
   background-color: #fff;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-}
+} */
 
 .play-box .play {
   position: absolute;
@@ -815,7 +940,7 @@ export default {
     right: 20%;
     z-index: 2;
     background-color: white;
-    padding: 107px 50px;
+    /* padding: 107px 50px; */
     
 }
 .story{
@@ -835,4 +960,41 @@ export default {
     font-size: x-large;
     padding: 5vh 5vw;
 }
+
+.block7{
+  background-color: orange;
+}
+
+.block72{
+  background-color: orange;
+  height:20px;
+}
+
+.block8{
+  background-color: orange;
+}
+
+.forblock{
+  background-color: #ffa5004d;
+  border-radius: 20px;
+}
+.choiceNum{
+  width: 60px;
+    height: 100px;
+    background-color: white;
+    margin-top: -22px;
+    position: absolute;
+    margin-left: -3px;
+    overflow-y: scroll;
+    z-index:4;
+}
+.choiceNum::-webkit-scrollbar {
+    width: 5px;
+  }
+.choiceNum::-webkit-scrollbar-thumb {
+    background-color: gray;
+  }
+.container::-webkit-scrollbar-track {
+    background-color: black;
+  }
 </style>
