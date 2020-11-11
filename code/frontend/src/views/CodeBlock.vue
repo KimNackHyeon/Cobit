@@ -429,7 +429,7 @@ export default {
     },
     buyHint(){
       console.log(store.state.kakaoUserInfo);
-      axios.post(`http://localhost:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
       .then(()=>{
         if(this.hintCount >= 1){
           this.hintCount -= 1;

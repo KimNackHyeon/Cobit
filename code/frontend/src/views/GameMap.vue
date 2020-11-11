@@ -280,8 +280,7 @@ export default {
     },
     goNext() {
       this.$cookies.set('stageType', parseInt(this.type)+1);
-      // this.$router.go(0);
-      window.location.reload();
+      this.$router.go(0);
     }
   },
   
