@@ -2,6 +2,7 @@ package com.finalproject.cobit.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.finalproject.cobit.model.Attend;
 import com.finalproject.cobit.model.Stage;
+import com.finalproject.cobit.model.StageProgress;
 import com.finalproject.cobit.model.User;
 import com.finalproject.cobit.repo.AttendRepo;
+import com.finalproject.cobit.repo.StageProgressRepo;
+import com.finalproject.cobit.repo.StageRepo;
 import com.finalproject.cobit.repo.UserRepo;
 
 import io.swagger.annotations.Api;
@@ -50,6 +54,12 @@ public class UserController {
 
 	@Autowired
 	AttendRepo attendRepo;
+
+	@Autowired
+	StageProgressRepo spRepo;
+
+	@Autowired
+	StageRepo stageRepo;
 
 	@ApiOperation(value = "회원정보 가져오기")
 	@GetMapping("")
@@ -142,14 +152,46 @@ public class UserController {
 	@PostMapping("/hint")
 	public ResponseEntity<Boolean> buyHint(@RequestBody User user) {
 		System.out.println(user);
-		if(user.getHint() >= 1) {
+		if (user.getHint() >= 1) {
 			user.setHint(user.getHint() - 1);
 			userRepo.save(user);
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
 		}
+	}
 
+	@ApiOperation(value = "스테이지 클리어 현황 가져오기")
+	@GetMapping("/stage")
+	public List<Integer> getStage(@RequestParam Long id) {
+		List<StageProgress> list = spRepo.getStageProgressByUserId(id);
+
+		int oneCount = 0; // 초급 스테이지 클리어 수
+		int twoCount = 0; // 중급 스테이지 클리어 수
+		int threeCount = 0; // 고급 스테이지 클리어 수
+
+		for (StageProgress sp : list) {
+			Optional<Stage> stageOpt = stageRepo.findById(sp.getStageId());
+			if (stageOpt.get().getType() == 1) {
+				oneCount++;
+			} else if (stageOpt.get().getType() == 2) {
+				twoCount++;
+			} else if (stageOpt.get().getType() == 3) {
+				threeCount++;
+			}
+		}
+		List<Integer> result = new ArrayList<Integer>();
+		if (oneCount == 5) {
+			result.add(1);
+		}
+		if (twoCount == 1) {
+			result.add(2);
+		}
+		if (threeCount == 1) {
+			result.add(3);
+		}
+
+		return result;
 	}
 
 }

@@ -198,7 +198,7 @@
         </div>
       </div>
     </div>
-    <DifficultyModal v-if="showModal2" @close="showModal2= false"/>
+    <DifficultyModal v-if="showModal2" @close="showModal2= false" :stage2="stage2" :stage3="stage3"/>
   </div>
 </template>
 
@@ -230,6 +230,8 @@ export default {
       nMonth:11,
       isAttend: false,
       showModal2: false,
+      stage2: false,
+      stage3: false,
     }
   },
   components: {
@@ -334,7 +336,17 @@ export default {
     },
     moveGame(){
       // this.$router.push('/gamemap');
-      this.showModal2 = true;
+      axios.get(`http://localhost:9999/cobit/user/stage`,{
+        params:{
+          id : store.state.kakaoUserInfo.id
+        }
+      })
+      .then(res => {
+        console.log(res);
+        this.stage2 = res.data.includes(2);
+        this.stage3 = res.data.includes(3);
+        this.showModal2 = true;
+      })
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
@@ -367,7 +379,7 @@ export default {
     },
     movePractice(){
       this.$router.push('/practice')
-    }
+    },
   },
   async created(){
     window.addEventListener('start', this.handleStart);

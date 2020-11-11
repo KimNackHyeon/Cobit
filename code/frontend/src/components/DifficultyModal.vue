@@ -7,20 +7,20 @@
           <img src="@/assets/images/stage1.png" alt="초급">
           <div class="diff-modal-name">초 급</div>
         </div>
-        <div v-if="false" class="diff-modal-content diff-modal-on-stage" @click="moveStage(2)">
+        <div v-if="stage2" class="diff-modal-content diff-modal-on-stage" @click="moveStage(2)">
           <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
-        <div class="diff-modal-content">
+        <div v-else class="diff-modal-content">
           <div class="diff-modal-unlock"><i class="fas fa-lock"></i></div>
           <img src="@/assets/images/stage2.png" alt="중급">
           <div class="diff-modal-name">중 급</div>
         </div>
-        <div v-if="false" class="diff-modal-content diff-modal-on-stage" @click="moveStage(3)">
+        <div v-if="stage3" class="diff-modal-content diff-modal-on-stage" @click="moveStage(3)">
           <img src="@/assets/images/stage3.png" alt="고급">
           <div class="diff-modal-name">고 급</div>
         </div>
-        <div class="diff-modal-content">
+        <div v-else class="diff-modal-content">
           <div class="diff-modal-unlock"><i class="fas fa-lock"></i></div>
           <img src="@/assets/images/stage3.png" alt="고급">
           <div class="diff-modal-name">고 급</div>
@@ -32,8 +32,12 @@
 
 <script>
 import { mapMutations } from 'vuex';
+// import axios from 'axios';
+// import store from '../vuex/store';
+
 export default {
   name: 'DifficultyModal',
+  props:['stage2','stage3'],
   data() {
     return {
     }
@@ -42,8 +46,18 @@ export default {
   },
   computed: {
   },
-  created() {
-  },
+  // async created() {
+  //     await axios.get(`http://localhost:9999/cobit/user/stage`,{
+  //       params:{
+  //         id : store.state.kakaoUserInfo.id
+  //       }
+  //     })
+  //     .then(res => {
+  //       console.log(res);
+  //       this.stage2 = res.data.includes(2);
+  //       this.stage3 = res.data.includes(3);
+  //     })
+  // },
   mounted() {
   },
   methods: {
