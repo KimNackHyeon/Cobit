@@ -147,7 +147,7 @@ public class UserController {
 			userRepo.save(user);
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
 		}
 
 	}
