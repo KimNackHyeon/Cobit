@@ -62,12 +62,13 @@
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
           </div>
-          <div v-show="isObstacle" class="block-list">
+          <!-- <div v-show="isObstacle" class="block-list">
             <div class="block">장애물추가</div>
-          </div>
+          </div> -->
         </div>
         <div id="play-box" class="play-box">
           <div v-show="isMove" class="block-list">
+            
             <div style="display:flex; justify-content:center; margin-left: 30%;">
               <div id="play" @click="clickPlayBtn" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
@@ -96,10 +97,13 @@
   
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="m.num==7&&m.onclick" :style="{display:m.overMe}"></div>
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
                   <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!(m.num==7&&m.onclick)" :style="{display:m.overMe}">
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
+                  <!-- <div v-if="m.class=='activate'" style="position:fixed;display:flex; justify-content:center;width:100%;height:5%; margin-left:15%; margin-top: 14%; z-index:3;">
+                    <div style="width:50%; height:100%; background-color:#00000096; text-align:center;color:white;">반복문이 활성화 되었습니다.<br>반복문 안에 블록을 넣을 수 있습니다.</div>
+                  </div>   -->
                 </div>
             </div>
           </div>
@@ -368,12 +372,13 @@ export default {
        this.openStory = false;
      },
      clickForblock(m,index){
-       console.log("clickFOrblock")
-       if(m.num==7 ||index==7){
+       if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
+           m.class = '';
          }else{
            m.onclick = true;
+          m.class = 'activate';
          }
        }
      },
@@ -397,9 +402,6 @@ export default {
             console.log(ForresultString);
             forlist.push(ForresultString);
           }
-          console.log("-------------forlist-------------");
-          console.log(forlist[0]);
-          console.log("--------------");
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
       }
@@ -666,7 +668,7 @@ export default {
 
         this.resultStep.some( step => {
           if(step.overMe=='block' || step.class=='overMe'){
-            if(step.num!=7){
+            if(step.num!=7 && step.num!=8){
             content[0].nextSibling.after(this.targetdiv);
             var os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
@@ -684,7 +686,6 @@ export default {
               var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
               console.log(underForblock);
               if(!step.onclick){
-                console.log("!onclick");
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
@@ -698,7 +699,6 @@ export default {
                   son = this.resultStep[son].son;
                 }
               }else{
-                console.log("onclick");
                 underForblock.nextSibling.before(this.targetdiv);
                  os = this.resultStep[step.index].forson;
                 this.resultStep[step.index].forson = this.targetdivNum
@@ -1118,6 +1118,10 @@ export default {
 .container::-webkit-scrollbar-track {
     background-color: black;
   }
+
+.activate{
+  background-color:orangered;
+}
 .stagebtn {
   top: 10px;
   left: 10px;
