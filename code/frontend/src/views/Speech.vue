@@ -132,7 +132,7 @@ export default {
         this.count += 1;
         console.log(this.count)
         console.log(this.transcription, '입력값')
-        axios.post('http://localhost:9999/cobit/speech/analyze1', this.transcription )
+        axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
           for (let index = 0; index < res.data.length; index++) {

@@ -47,7 +47,7 @@ export default {
   computed: {
   },
   // async created() {
-  //     await axios.get(`http://localhost:9999/cobit/user/stage`,{
+  //     await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user/stage`,{
   //       params:{
   //         id : store.state.kakaoUserInfo.id
   //       }
