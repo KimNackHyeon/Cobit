@@ -12,7 +12,7 @@
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
         <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
       </div>
       <div class="btnsbox">
@@ -728,7 +728,11 @@ export default {
     },
     LevelLoad() {
       this.commandList = []
-      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      if (this.stageType == 1) {
+        this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      } else if (this.stageType == 2) {
+        this.$refs.myInstance.message('JavascriptHook', 'MiddleStage', this.stageNum)
+      }
     },
     reStart() {
       this.commandList = []
@@ -748,6 +752,7 @@ export default {
       }, 10);
     },
     handleClear() {
+      console.log('clear')
       this.getStar();
       this.onModal();
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
@@ -761,7 +766,9 @@ export default {
       this.makeCode();
       this.setInStageNum(this.stageNum);
       this.setInStageStar(this.starNum);
-      if(this.stageNum == 5) {
+      if(this.stageType == 1 && this.stageNum == 5) {
+        this.setIsLastStage(true)
+      } else if (this.stageType == 2 && this.stageNum == 4) {
         this.setIsLastStage(true)
       }
     },
