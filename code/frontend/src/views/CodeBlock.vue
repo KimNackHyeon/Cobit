@@ -11,8 +11,22 @@
     </div>
     <!-- 튜토리얼 -->
     <div class="tutorial1 overay" v-if="showTutorial == 1">
-      <div>
-
+      <!-- <div class="whitebox"></div> -->
+      <div class="balloon1">
+        <div class="balloontext">
+          <div class="balloontext1">블록 옮기기</div>
+          <div class="balloontext2">펭귄이 컴퓨터에 다가갈 수 있도록 오른쪽 블록을 시작버튼에 4개 연결해주세요.</div>
+          <div class="showbtn" @click="tutorial1" @mouseover="tutorial0">미리보기</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial2" v-if="showTutorial == 2">
+      <div class="balloon1">
+        <div class="balloontext">
+          <div class="balloontext1">게임 실행</div>
+          <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
+          <div class="showbtn" @click="tutorial1" @mouseover="tutorial0">미리보기</div>
+        </div>
       </div>
     </div>
     <div class="code-block-container">
@@ -125,7 +139,7 @@ import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
 import Swal from 'sweetalert2';
-// import $ from 'jquery';
+import $ from 'jquery';
 
 export default {
   name: 'CodeBlock',
@@ -338,16 +352,45 @@ export default {
   watch: {
   },
   methods: {
+    tutorial0() {
+      var selectedNum = 1;
+      var posX = 790;
+      var posY = 12;
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'rightblock',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+    },
+    tutorial1() {
+      $(".block-list").children(".block1").css("z-index", "1");
+      $(".rightblock").css("position", 'relative');
+      $(".rightblock").css("z-index", '2');        
+      var divX = $("#play").offset().left;
+      var divY = $("#play").offset().top + $("#play").height();
+      console.log(divX + ',' + divY)
+      var blockX = $(".rightblock").offset().left;
+      var blockY = $(".rightblock").offset().top;
+      console.log(divX-blockX)
+      $(".rightblock").css("transform", `translate(${divX-blockX}px, ${divY-blockY}px)`)
+      $(".rightblock").addClass("tutorial1btn")
+      setTimeout(() => {
+        $(".rightblock").css("transform", "")
+        $(".rightblock").removeClass("tutorial1btn")
+      }, 2000);
+    },
      ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
-       let posX = event.pageX;
+      if(this.showTutorial == 1){
+        $(".block1").css("position", 'relative');
+        $(".block1").css("z-index", '2');
+      }
+      let posX = event.pageX;
       let posY = event.pageY;
+      console.log(posX + ',' + posY)
       // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
+      console.log(this.distX + ',' + this.distY)
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
@@ -376,7 +419,8 @@ export default {
        this.openStory = false;
        if(this.stageNum == 1){
          this.showTutorial = 1;
-        //  $(".block1").css("z-index", '2');
+         $(".block1").css("z-index", '2');
+         $("#play").css("z-index", "2");
        }
      },
      clickForblock(m,index){
@@ -735,6 +779,10 @@ export default {
     //  this.resultStep[this.targetdivNum].son = original_son;
     console.log(this.resultStep);
      this.playClass.show='none';
+      }
+      var playdivnum = $("#underplay").children().length;
+      if(this.showTutorial == 1 && playdivnum == 5){
+        this.showTutorial = 2
       }
 
     },
@@ -1152,17 +1200,72 @@ export default {
   float: right;
 }
 .tutorial1 {
-  /* width: 100vw;
-  height: 100vh;
-  position: absolute;
-  bottom: 0;
-  z-index: 1; */
-}
-.overay {
   position:fixed;
-  top: 100px;
-  left: 100px;
+  top: 10%;
+  right: 41%;
   box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
   z-index : 2;
+  border-radius: 10px;
+}
+.overay {
+  
+}
+/* .whitebox {
+  width: 110px;
+  height: 50px;
+} */
+.balloon1 {
+  position:relative;
+  width:350px;
+  height:150px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon1:after {
+  border-top: 15px solid transparent;
+  border-left: 15px solid white;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid transparent;
+  content: "";
+  position: absolute;
+  top: 60px;
+  left: 350px;
+}
+.balloontext {
+  padding: 5%;
+  font-family: 'BMJUA';
+}
+.balloontext1 {
+  font-size: 20px;
+  color: red;
+}
+.balloontext2 {
+  font-size: 16px;
+  padding: 5% 0;
+}
+.showbtn {
+  color: #ed2222;
+  border: 2px solid #ed2222;
+  float: right;
+  padding: 1% 3%;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.showbtn:hover {
+  background-color: #fc3f3f;
+  color: white;
+}
+.tutorial1btn {
+  /* transform: translate(325%, 20%); */
+  transition-property: all;
+  transition-duration: 2s;
+}
+.tutorial2 {
+  position:fixed;
+  top: 10%;
+  right: 41%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 3;
+  border-radius: 10px;
 }
 </style>
