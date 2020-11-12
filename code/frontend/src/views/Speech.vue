@@ -176,7 +176,7 @@ export default {
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -208,7 +208,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);

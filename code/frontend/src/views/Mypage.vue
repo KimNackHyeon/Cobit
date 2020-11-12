@@ -274,7 +274,7 @@ export default {
         this.renamemodal = false
       }
 
-      axios.put(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
+      axios.put(`http://localhost:9999/cobit/user`,{
         email : store.state.kakaoUserInfo.email,
         nickname : this.name
       }).then(res => {
@@ -289,7 +289,7 @@ export default {
     attendCheck(){
       if(!this.isAttend){
         this.isAttend = true;
-        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+        axios.post(`http://localhost:9999/cobit/user/attend`,{
           email : store.state.kakaoUserInfo.email,
           day : this.today,
           month : this.nMonth,
@@ -309,7 +309,7 @@ export default {
     loadAttend(){
       // 출석 정보 가져오기
       var date = new Date();
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user/attend`,{
+      axios.get(`http://localhost:9999/cobit/user/attend`,{
         params : {
           email : store.state.kakaoUserInfo.email,
           month : date.getMonth()+1
@@ -336,22 +336,26 @@ export default {
     },
     moveGame(){
       // this.$router.push('/gamemap');
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user/stage`,{
-        params:{
-          id : store.state.kakaoUserInfo.id
-        }
-      })
-      .then(res => {
-        console.log(res);
-        this.stage2 = res.data.includes(2);
-        this.stage3 = res.data.includes(3);
+      if(store.state.kakaoUserInfo.id == null){
         this.showModal2 = true;
-      })
+      }else{
+        axios.get(`http://localhost:9999/cobit/user/stage`,{
+          params:{
+            id : store.state.kakaoUserInfo.id
+          }
+        })
+        .then(res => {
+          console.log(res);
+          this.stage2 = res.data.includes(2);
+          this.stage3 = res.data.includes(3);
+          this.showModal2 = true;
+        })
+      }
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
@@ -372,7 +376,9 @@ export default {
       this.$router.push("/changecharacter")
     },
     handleStart(){
-      this.loadMyCharacter();
+      if(this.userEmail != null){
+        this.loadMyCharacter();
+      }
     //   setTimeout(() => {
     //   this.loadMyCharacter();
     // }, 10);
@@ -392,7 +398,7 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
