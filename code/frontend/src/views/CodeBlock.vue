@@ -1,6 +1,6 @@
 <template>
   <div class='wrap'>
-    <div class="story" @click="clickStory" v-if="openStory">
+    <!-- <div class="story" @click="clickStory" v-if="openStory">
       <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
@@ -8,7 +8,7 @@
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
       <div class="script" v-html="story[stageNum-1].start"></div>
-    </div>
+    </div> -->
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
