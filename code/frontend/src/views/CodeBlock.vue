@@ -1,6 +1,6 @@
 <template>
   <div class='wrap'>
-    <div class="story" @click="clickStory" v-if="openStory">
+    <!-- <div class="story" @click="clickStory" v-if="openStory">
       <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
@@ -8,12 +8,11 @@
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
       <div class="script" v-html="story[stageNum-1].start"></div>
-    </div>
+    </div> -->
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
-        <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
@@ -43,7 +42,7 @@
             <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
           </div>
         </div>
-        <div id="deleteAllBtn">
+        <div @click="deleteAll" id="deleteAllBtn">
           <div class="deleteAllBtnbox">
             <v-icon style="color: black">mdi-trash-can-outline</v-icon>
             전체 삭제
@@ -312,6 +311,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    console.log(this.starNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -334,9 +334,10 @@ export default {
   watch: {
   },
   methods: {
+    
      ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
-       let posX = event.pageX;
+      let posX = event.pageX;
       let posY = event.pageY;
       // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
@@ -382,38 +383,52 @@ export default {
          }
        }
      },
+     deleteAll(){
+       this.resultStep = [];
+     },
     clickPlayBtn(){
       var tempson = this.playson;
+      var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
       this.resultmoves = [];
       while(tempson != -1){
+        resultBlocknum +=1;
         // if(this.resultStep[tempson].num!=7){
           delNode.push(this.resultStep[tempson].index);
           if(this.resultStep[tempson].num==7){
             var tempforson = this.resultStep[tempson].forson;
             var ForresultString = String(this.resultStep[tempson].loop);
             while(tempforson !=-1){
+              resultBlocknum +=1;
               ForresultString+=',';
+              console.log(this.resultStep);
+              console.log(this.resultStep[tempforson]);
+              console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              tempforson = this.resultStep[tempforson].forson;
+              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+                tempforson = this.resultStep[tempforson].son;
+              }else{
+                tempforson = this.resultStep[tempforson].forson;
+              }
             }
             this.resultStep[tempson].forindex = forlist.length;
-            console.log(ForresultString);
+            // console.log(ForresultString);
             forlist.push(ForresultString);
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
+          console.log("최종 블록 수:"+resultBlocknum);
       }
 
       // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         if(step.move.num!=7){
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move);
-          console.log(this.moves[step.move.num].move);
+          // console.log(this.moves[step.move.num].move);
         }else{
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move,forlist[step.move.forindex]);
-          console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
+          // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
         }
       });
      for(var i=0; i<this.resultmoves.length;i++){
@@ -430,7 +445,7 @@ export default {
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
-      console.log(this.resultmoves);
+      // console.log(this.resultmoves);
     },
     // clickHint(){
     //   if(this.clickhint){
@@ -595,7 +610,7 @@ export default {
     },
     getStar() {
       const LENG = this.commandList.length
-      if(this.stageNum == 1) {
+      if(this.stageType == 1 && this.stageNum == 1) {
         if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
       } if(this.stageNum == 2) {
         if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
@@ -717,6 +732,7 @@ export default {
             // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
+            console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
      });
@@ -741,9 +757,14 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-      this.stageNum += 1
-      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      this.LevelLoad();
+
+      var stageInfo = this.$cookies.get('stageInfo');
+      stageInfo.stageNum = this.stageNum +1;
+      this.$cookies.set('stageInfo',stageInfo);
+
+      this.$router.push('/speech');
+      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      // this.LevelLoad();
     },
     handleStart() {
       setTimeout(() => {
@@ -752,7 +773,6 @@ export default {
       }, 10);
     },
     handleClear() {
-      console.log('clear')
       this.getStar();
       this.onModal();
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
@@ -791,6 +811,7 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
+        this.$cookies.set('reload', 'true');
       },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기

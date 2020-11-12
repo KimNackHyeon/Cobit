@@ -73,9 +73,11 @@ export default {
     goNext() {
       if (this.levelName == '초급') {
         this.$cookies.set('stageType', 2);
+        this.$cookies.set('reload', 'true');
         this.$router.push('/gamemap');
       } else {
         this.$cookies.set('stageType', 3);
+        this.$cookies.set('reload', 'true');
         this.$router.push('/gamemap');
       }
     },

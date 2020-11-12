@@ -471,6 +471,8 @@ export default {
   /* font-weight: 600; */
   font-family: 'BMJUA';
   border-bottom: 1px solid black;
+  background-color: #ffffff1a;
+  text-shadow: 0px 0px 9px black;
 }
 .pencilicon:hover {
   color: #a4d4ff;
@@ -575,6 +577,7 @@ export default {
   border-radius: 15px;
   font-weight: 600;
   color: white;
+  background-color: #00000061;
 }
 .attendBox {
   padding: 1vh 6vh;
@@ -680,6 +683,7 @@ td {
   font-family: 'BMJUA';
   top: -15px;
   color: gold;
+  background-color: white;
 }
 .itemname {
   position: absolute;

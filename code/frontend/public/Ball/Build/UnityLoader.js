@@ -5670,7 +5670,7 @@ var UnityLoader = UnityLoader || {
     //    at  (<WASM>[24000]+73)
     //
     // [Firefox]
-    // eWg@blob:http://localhost:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:10:1
+    // eWg@blob:https://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:10:1
     // P7h@blob:https://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:28:1
     // invoke_iiii@blob:https://k3b102.p.ssafy.io:8080/67513e21-4cf2-de4e-a571-c6ee67cc2a72:1:334616
     // DJd@blob:https://k3b102.p.ssafy.io:8080/0e677969-e11c-e24b-bb23-4f3afdbd5a3a:15:1
