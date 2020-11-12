@@ -1,5 +1,6 @@
 package com.finalproject.cobit.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,8 +60,18 @@ public class StageController {
 
 	@ApiOperation(value = "나의 스테이지 정보 가져오기")
 	@GetMapping("/user")
-	public List<StageProgress> getMyStage(@RequestParam Long id) {
-		List<StageProgress> list = spRepo.getStageProgressByUserId(id);
+	public List<StageProgress> getMyStage(@RequestParam Long id, Long type) {
+		List<StageProgress> spList = spRepo.getStageProgressByUserId(id);
+		
+		List<StageProgress> list = new ArrayList<StageProgress>(); 
+		
+		for (StageProgress sp : spList) {
+			Optional<Stage> stageOpt = stageRepo.findById(sp.getStageId());
+			if(stageOpt.get().getType() == type) {
+				list.add(sp);
+			}
+		}
+		
 		return list;
 	}
 
