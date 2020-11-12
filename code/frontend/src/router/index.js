@@ -8,7 +8,7 @@ import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
 import Speech from '../views/Speech.vue'
 import VRTest from '../views/vrtest.vue'
-import PracticeMode from '../views/PracticeMode.vue'
+import Practice from '../views/Practice.vue'
 import Main from '../views/Main.vue'
 
 
@@ -62,8 +62,8 @@ const routes = [
   },
   {
     path: '/practice',
-    name: 'PracticeMode',
-    component: PracticeMode
+    name: 'Practice',
+    component: Practice
   },
   {
     path: '*',
