@@ -330,7 +330,7 @@ export default {
   watch: {
   },
   methods: {
-     ...mapMutations(['setInStageNum', 'setInStageStar']),
+     ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
        let posX = event.pageX;
       let posY = event.pageY;
@@ -776,8 +776,10 @@ export default {
         code.push(m.move.move + "();");
         code_kor.push(m.move.move_kor + "();");
       });
-      console.log(code);
-      console.log(code_kor);
+      this.setCode(code)
+      this.setCodeKor(code_kor)
+      console.log(code, '1');
+      console.log(code_kor, '2');
 
     },
     gostage(){
@@ -802,7 +804,6 @@ export default {
           this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.sword)
         }
       })
-      
     },
   },
   beforeDestroy () {

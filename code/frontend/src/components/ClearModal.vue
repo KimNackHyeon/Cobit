@@ -20,6 +20,28 @@
             <div class="clear-modal-btn" @click="reStart">다시하기</div>
           </div>
         </div>
+        <div v-show="isOpen" class="clear-modal-content">
+          <div class="clear-modal-toggle-btn-area">
+            <div class="clear-modal-toggle-btn kor-toggle" @click="onKor">한글</div>
+            <div class="clear-modal-toggle-btn eng-toggle" @click="onEng">영어</div>
+          </div>
+          <div v-show="isKor" class="clear-modal-code-area">
+            <p>시작() {</p>
+            <p class="clear-modal-inner-code" v-for='kor in CodeKor' :key="kor">{{ kor }}</p>
+            <p>}</p>
+          </div>
+          <div v-show="!isKor" class="clear-modal-code-area">
+            <p>main() {</p>
+            <p class="clear-modal-inner-code" v-for='eng in Code' :key="eng">{{ eng }}</p>
+            <p>}</p>
+          </div>
+        </div>
+        <div class="clear-modal-open-area">
+          <div v-if="!isOpen" class="clear-modal-open-btn" @click="openCode"><i class="fas fa-chevron-right"></i></div>
+          <div v-if="isOpen" class="clear-modal-open-btn" @click="openCode"><i class="fas fa-chevron-left"></i></div>
+          <div v-if="!isOpen" class="clear-modal-open-text">코드보기</div>
+          <div v-if="isOpen" class="clear-modal-open-text">접기</div>
+        </div>
       </div>
 
       <SummeryModal v-if="showModal" @close="showModal= false"/>
@@ -36,6 +58,8 @@ export default {
   data() {
     return {
       showModal: false,
+      isOpen: false,
+      isKor: true,
     }
   },
   components: {
@@ -44,7 +68,7 @@ export default {
   watch: {
   },
   computed: {
-    ...mapState(['InStageNum', 'InStageStar', 'IsLastStage']),
+    ...mapState(['InStageNum', 'InStageStar', 'IsLastStage', 'Code', 'CodeKor']),
   },
   created() {
   },
@@ -62,6 +86,38 @@ export default {
     },
     onModal() {
       this.showModal = true
+    },
+    openCode() {
+      this.isOpen = !this.isOpen
+      const BASE = document.querySelector('.clear-modal-wrap')
+      const BTN = document.querySelector('.clear-modal-open-area')
+      if(this.isOpen) {
+        BASE.style.maxWidth = '800px';
+        BTN.style.right = '45%';
+        this.onKor()
+      } else {
+        BASE.style.maxWidth = '400px';
+        BTN.style.right = '-8%';
+      }
+      console.log(BASE.style)
+    },
+    onKor() {
+      this.isKor = true
+      const KOR = document.querySelector('.kor-toggle')
+      const ENG = document.querySelector('.eng-toggle')
+      KOR.style.boxShadow = '0 0 0 0 rgba(0,0,0,0), 0 0 0 0 rgba(0,0,0,0), inset 4px 4px 6px -1px rgba(0,0,0,0.2), inset -3px -3px 4px -1px #ffffff'
+      KOR.style.color = '#000'
+      ENG.style.boxShadow = '6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff'
+      ENG.style.color = 'rgba(0,0,0,0.5)'
+    },
+    onEng() {
+      this.isKor = false
+      const KOR = document.querySelector('.kor-toggle')
+      const ENG = document.querySelector('.eng-toggle')
+      ENG.style.boxShadow = '0 0 0 0 rgba(0,0,0,0), 0 0 0 0 rgba(0,0,0,0), inset 4px 4px 6px -1px rgba(0,0,0,0.2), inset -3px -3px 4px -1px #ffffff'
+      ENG.style.color = '#000'
+      KOR.style.boxShadow = '6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff'
+      KOR.style.color = 'rgba(0,0,0,0.5)'
     }
   }
 }
@@ -102,6 +158,8 @@ export default {
   transition: 0.3s ease;
   background-color: #fff;
   border-radius: 30px;
+  position: relative;
+  display: flex;
 }
 
 .modal-enter {
@@ -125,6 +183,7 @@ export default {
   align-items: center;
   padding: 30px 10px;
   position: relative;
+  width: 100%;
 }
 
 .clear-modal-content .clear-modal-header {
@@ -234,4 +293,117 @@ export default {
               inset -3px -3px 4px -1px #ffffff !important;
 }
 
+.clear-modal-wrap .clear-modal-open-area {
+  position: absolute;
+  top: 36%;
+  right: -8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all .3s ease;
+}
+
+.clear-modal-wrap .clear-modal-open-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #d7ebfd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
+}
+
+.clear-modal-wrap .clear-modal-open-text {
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  font-family: 'BMJUA';
+  background-color: #d7ebfd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all .3s ease;
+}
+
+.clear-modal-wrap .clear-modal-open-btn > i {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.clear-modal-wrap .clear-modal-open-btn:hover {
+  background-color: #cbdff0;
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+
+.clear-modal-content .clear-modal-toggle-btn-area {
+  display: flex;
+  width: 90%;
+  height: 15%;
+  margin-left: 15%;
+  justify-content: space-evenly;
+}
+
+.clear-modal-toggle-btn-area .clear-modal-toggle-btn {
+  width: 40%;
+  background-color: #a4d4ff;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  font-family: 'BMJUA';
+  cursor: pointer;
+  color: rgba(0,0,0,0.5);
+  transition: 0.3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff;
+  
+}
+
+.clear-modal-toggle-btn-area .clear-modal-toggle-btn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+
+.clear-modal-content .clear-modal-code-area {
+  width: 90%;
+  height: 85%;
+  max-height: 250px;
+  margin-left: 15%;
+  overflow: auto;
+  border-radius: 20px;
+  padding: 20px;
+  background-color:rgb(249, 252, 255);
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px rgb(241, 248, 255) !important;
+}
+
+.clear-modal-code-area > p {
+  font-family: 'GmarketSansMedium';
+  margin-bottom: 5px;
+  transition: all .3s ease;
+}
+
+.clear-modal-code-area .clear-modal-inner-code {
+  margin-left: 10px;
+}
+
+.clear-modal-content .clear-modal-code-area::-webkit-scrollbar { width: 10px;}
+::-webkit-scrollbar-track { background-color: #ffffff; }
+::-webkit-scrollbar-thumb { background: #cee8ff; }
+::-webkit-scrollbar-button { display: none; }
+::-webkit-scrollbar-thumb:hover { background: #a4d5ff; }
+::-webkit-scrollbar-thumb:active {background: #84c5ff; }
 </style>
