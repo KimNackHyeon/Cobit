@@ -142,7 +142,7 @@ export default {
   },
   async created() {
     // window.addEventListener('scroll', this.handleScroll)
-    this.type = this.$cookies.get('stageType');
+    this.type = this.$cookies.get('stageInfo').stageType;
     if (this.type == 1) {
       this.openStory1 = 'flex'
       this.openStory2 = 'none'
