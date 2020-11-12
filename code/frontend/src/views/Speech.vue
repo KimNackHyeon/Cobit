@@ -227,6 +227,7 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
+        this.$cookies.set('reload', 'true');
     },
     clickStory(){
       this.openStory = false;
