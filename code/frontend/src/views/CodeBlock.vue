@@ -43,7 +43,7 @@
             <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
           </div>
         </div>
-        <div id="deleteAllBtn">
+        <div @click="deleteAll" id="deleteAllBtn">
           <div class="deleteAllBtnbox">
             <v-icon style="color: black">mdi-trash-can-outline</v-icon>
             전체 삭제
@@ -382,38 +382,52 @@ export default {
          }
        }
      },
+     deleteAll(){
+       this.resultStep = [];
+     },
     clickPlayBtn(){
       var tempson = this.playson;
+      var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
       this.resultmoves = [];
       while(tempson != -1){
+        resultBlocknum +=1;
         // if(this.resultStep[tempson].num!=7){
           delNode.push(this.resultStep[tempson].index);
           if(this.resultStep[tempson].num==7){
             var tempforson = this.resultStep[tempson].forson;
             var ForresultString = String(this.resultStep[tempson].loop);
             while(tempforson !=-1){
+              resultBlocknum +=1;
               ForresultString+=',';
+              console.log(this.resultStep);
+              console.log(this.resultStep[tempforson]);
+              console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              tempforson = this.resultStep[tempforson].forson;
+              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+                tempforson = this.resultStep[tempforson].son;
+              }else{
+                tempforson = this.resultStep[tempforson].forson;
+              }
             }
             this.resultStep[tempson].forindex = forlist.length;
-            console.log(ForresultString);
+            // console.log(ForresultString);
             forlist.push(ForresultString);
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
+          console.log("최종 블록 수:"+resultBlocknum);
       }
 
       // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         if(step.move.num!=7){
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move);
-          console.log(this.moves[step.move.num].move);
+          // console.log(this.moves[step.move.num].move);
         }else{
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move,forlist[step.move.forindex]);
-          console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
+          // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
         }
       });
      for(var i=0; i<this.resultmoves.length;i++){
@@ -430,7 +444,7 @@ export default {
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
-      console.log(this.resultmoves);
+      // console.log(this.resultmoves);
     },
     // clickHint(){
     //   if(this.clickhint){
@@ -717,6 +731,7 @@ export default {
             // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
+            console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
      });

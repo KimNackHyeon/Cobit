@@ -336,7 +336,7 @@ export default {
     },
     moveGame(){
       // this.$router.push('/gamemap');
-      axios.get(`http://localhost:9999/cobit/user/stage`,{
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user/stage`,{
         params:{
           id : store.state.kakaoUserInfo.id
         }
