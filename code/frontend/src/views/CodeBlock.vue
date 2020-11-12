@@ -297,6 +297,7 @@ export default {
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       fori : 0,
+      code:[]
     }
   },
   components: {
@@ -390,15 +391,18 @@ export default {
       var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
+      this.code = [];
       this.resultmoves = [];
       while(tempson != -1){
         resultBlocknum +=1;
+        this.code.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
         // if(this.resultStep[tempson].num!=7){
           delNode.push(this.resultStep[tempson].index);
           if(this.resultStep[tempson].num==7){
             var tempforson = this.resultStep[tempson].forson;
             var ForresultString = String(this.resultStep[tempson].loop);
             while(tempforson !=-1){
+              this.code.push({move:this.resultStep[tempforson],loop:this.resultStep[tempson].loop});
               resultBlocknum +=1;
               ForresultString+=',';
               console.log(this.resultStep);
@@ -791,12 +795,17 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      console.log(this.resultmoves);
+      console.log(this.code);
       var code = [];
       var code_kor = [];
-      this.resultmoves.forEach(m => {
-        code.push(m.move.move + "();");
-        code_kor.push(m.move.move_kor + "();");
+      this.code.forEach(m => {
+        if(m.move.num==7){
+          code.push(this.moves[m.move.num].move + "();"+m.loop+"times");
+          code_kor.push(this.moves[m.move.num].move_kor + "();"+m.loop+"번 반복");
+        }else{
+          code.push(this.moves[m.move.num].move + "();");
+          code_kor.push(this.moves[m.move.num].move_kor + "();");
+        }
       });
       this.setCode(code)
       this.setCodeKor(code_kor)
