@@ -807,6 +807,7 @@ export default {
     console.log(this.resultStep);
      this.playClass.show='none';
       }
+      // 튜토리얼
       var playdivnum = $("#underplay").children().length;
       if(this.showTutorial == 1 && playdivnum == 5){
         this.showTutorial = 2
