@@ -334,9 +334,10 @@ export default {
   watch: {
   },
   methods: {
+    
      ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
-       let posX = event.pageX;
+      let posX = event.pageX;
       let posY = event.pageY;
       // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
@@ -595,7 +596,7 @@ export default {
     },
     getStar() {
       const LENG = this.commandList.length
-      if(this.stageNum == 1) {
+      if(this.stageType == 1 && this.stageNum == 1) {
         if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
       } if(this.stageNum == 2) {
         if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
@@ -757,7 +758,6 @@ export default {
       }, 10);
     },
     handleClear() {
-      console.log('clear')
       this.getStar();
       this.onModal();
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
@@ -796,6 +796,7 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
+        this.$cookies.set('reload', 'true');
       },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
