@@ -13,7 +13,6 @@
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
-        <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
@@ -312,6 +311,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    console.log(this.starNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -741,9 +741,14 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-      this.stageNum += 1
-      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      this.LevelLoad();
+
+      var stageInfo = this.$cookies.get('stageInfo');
+      stageInfo.stageNum = this.stageNum +1;
+      this.$cookies.set('stageInfo',stageInfo);
+
+      this.$router.push('/speech');
+      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      // this.LevelLoad();
     },
     handleStart() {
       setTimeout(() => {

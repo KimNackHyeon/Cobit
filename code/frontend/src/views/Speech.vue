@@ -55,6 +55,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    console.log(this.stageNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -88,10 +89,16 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-      this.stageNum += 1
-      this.count = 0
-      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      this.LevelLoad();
+      // this.stageNum += 1
+      this.count = 0;
+      // this.stageNum = this.$cookies.get('stageInfo').stageNum;
+      // this.stageType = this.$cookies.get('stageInfo').stageType;
+      // var stageInfo = this.$cookies.get('stageInfo');
+      // this.$cookies.set('stageInfo',stageInfo);
+
+      this.$router.push('/codeblock');
+      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      // this.LevelLoad();
     },
     handleStart() {
       setTimeout(() => {
