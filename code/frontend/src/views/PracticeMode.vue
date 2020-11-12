@@ -40,6 +40,8 @@
 <script>
 import Unity from 'vue-unity-webgl'
 import FailModal from '../components/FailModal.vue';
+import axios from 'axios';
+import store from '../vuex/store';
 
 export default {
   name: 'Test3',
@@ -62,6 +64,7 @@ export default {
   computed: {
   },
   created() {
+    window.removeEventListener('start', this.handleStart)
     window.addEventListener('coin', this.handleCoin)
     window.addEventListener('heart', this.handleHeart)
     window.addEventListener('fail', this.handleFail)
@@ -138,6 +141,32 @@ export default {
     },
     onModal() {
       this.isFail = true;
+    },
+    handleStart() {
+      console.log('start!!!!!');
+      setTimeout(() => {
+        this.loadMyCharacter();
+      }, 10);
+    },
+    loadMyCharacter(){
+      // 캐릭터 정보 불러오기
+      console.log("캐릭터 정보 불러오기");
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      .then(res => {
+        console.log(res);
+        this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
+        this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
+        this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)
+        if(res.data.crown){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.crown)
+        }
+        if(res.data.shield){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.shield)
+        }
+        if(res.data.sword){
+          this.$refs.myInstance.message('Penguin', 'ChangeItem', res.data.sword)
+        }
+      })
     },
   },
   beforeDestroy () {

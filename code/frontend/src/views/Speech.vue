@@ -2,6 +2,7 @@
   <div class='wrap speech-wrap'>
     <div class="speech-container">
       <div class="unity-box">
+        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" src="cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn">
           <div @click="setSpeech">{{ buttonText }}</div>
@@ -48,12 +49,26 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    if(this.$cookies.isKey("access_token")){
+      let kakao_account;
+      await window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.hintCount = res.data.hint;
+              });
+    }
 
   },
   mounted() {
@@ -166,6 +181,9 @@ export default {
         }
       })
     },
+    gostage(){
+        this.$router.push('/gamemap')
+      },
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -235,6 +253,30 @@ export default {
   animation: blink 1.5s linear infinite;
   margin-right: 10px;
 
+}
+
+.stagebtn {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  background-color: #a4d4ff;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: BMJUA;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px #ffffff;
+}
+.stagebtn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
 }
 
 @keyframes blink {
