@@ -9,9 +9,15 @@
       </div>
       <div class="script" v-html="story[stageNum-1].start"></div>
     </div>
+    <!-- 튜토리얼 -->
+    <div class="tutorial1 overay" v-if="showTutorial == 1">
+      <div>
+
+      </div>
+    </div>
     <div class="code-block-container">
       <div class="unity-box">
-        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
+        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 1;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
         <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
       </div>
@@ -57,7 +63,7 @@
           </div> -->
         <div class="block-box">
            <div v-show="isMove" class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)" style="position: relative">
               {{m.move_kor}}
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
@@ -119,6 +125,7 @@ import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
 import Swal from 'sweetalert2';
+// import $ from 'jquery';
 
 export default {
   name: 'CodeBlock',
@@ -292,6 +299,7 @@ export default {
       openStory:true,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
+      showTutorial: 0,
     }
   },
   components: {
@@ -366,6 +374,10 @@ export default {
      },
      clickStory(){
        this.openStory = false;
+       if(this.stageNum == 1){
+         this.showTutorial = 1;
+        //  $(".block1").css("z-index", '2');
+       }
      },
     clickPlayBtn(){
       var tempson = this.playson;
@@ -1064,5 +1076,19 @@ export default {
   height: 8%;
   width: 40%;
   float: right;
+}
+.tutorial1 {
+  /* width: 100vw;
+  height: 100vh;
+  position: absolute;
+  bottom: 0;
+  z-index: 1; */
+}
+.overay {
+  position:fixed;
+  top: 100px;
+  left: 100px;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 2;
 }
 </style>
