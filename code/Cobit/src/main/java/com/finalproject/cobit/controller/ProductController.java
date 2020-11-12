@@ -73,9 +73,10 @@ public class ProductController {
 		Optional<User> userOpt = userRepo.getUserByEmail(email);
 
 		// 회원 구매 목록 가져오기
+		if(userOpt.isPresent()) {
 		Purchase p = purchaseRepo.getPurchaseByUserId(userOpt.get().getId());
-		System.out.println(p);
 		return p;
+		}else return null; 
 	}
 
 }

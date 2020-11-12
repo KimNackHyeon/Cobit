@@ -164,6 +164,7 @@ public class UserController {
 	@ApiOperation(value = "스테이지 클리어 현황 가져오기")
 	@GetMapping("/stage")
 	public List<Integer> getStage(@RequestParam Long id) {
+		
 		List<StageProgress> list = spRepo.getStageProgressByUserId(id);
 
 		int oneCount = 0; // 초급 스테이지 클리어 수
