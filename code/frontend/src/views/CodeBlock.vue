@@ -135,6 +135,7 @@ export default {
       distX: '',
       distY: '',
       underfor:[],
+      blockNum: 0,
       story:[
         { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
@@ -418,7 +419,7 @@ export default {
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
-          console.log("최종 블록 수:"+resultBlocknum);
+          this.blockNum = resultBlocknum
       }
 
       // console.log("resultStep["+0+"]="+this.resultStep[0].son);
@@ -609,19 +610,30 @@ export default {
         }
     },
     getStar() {
-      const LENG = this.commandList.length
-      if(this.stageType == 1 && this.stageNum == 1) {
-        if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
-      } if(this.stageNum == 2) {
-        if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
-      } if(this.stageNum == 3) {
-        if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
-      } if(this.stageNum == 4) {
-        if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
-      } if(this.stageNum == 5) {
-        if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+      const LENG = this.blockNum.length
+      if(this.stageType == 1) {
+        if(this.stageNum == 1) {
+          if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
+        } if(this.stageNum == 2) {
+          if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
+        } if(this.stageNum == 3) {
+          if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
+        } if(this.stageNum == 4) {
+          if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
+        } if(this.stageNum == 5) {
+          if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+        } 
+      } else if(this.stageType == 2) {
+        if(this.stageNum == 1) {
+          if(LENG <= 10) {this.starNum=3} else if(LENG > 10 && LENG <= 17) {this.starNum=2}
+        } if(this.stageNum == 2) {
+          if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 11) {this.starNum=2}
+        } if(this.stageNum == 3) {
+          if(LENG <= 6) {this.starNum=3} else if(LENG > 6 && LENG <= 10) {this.starNum=2}
+        } if(this.stageNum == 4) {
+          if(LENG <= 7) {this.starNum=3} else if(LENG > 7 && LENG <= 10) {this.starNum=2}
+        }
       }
-
       // axios
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,

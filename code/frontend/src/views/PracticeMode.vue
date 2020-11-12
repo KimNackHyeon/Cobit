@@ -194,12 +194,15 @@ export default {
 
 .unity-box .player-box {
   position: absolute;
-  top:-30px;
+  top:10px;
   left:0;
   width: 100%;
   height: 30px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 3;
 }
 
 .player-box i {
