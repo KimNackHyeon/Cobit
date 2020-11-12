@@ -50,6 +50,7 @@
           <div v-if="!inform.open&&!inform.user" class="stage-star lock-stage-star">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
+          <div class="map-road-box"></div>
           <div v-if="isLast">
             <div v-if="index == mapInform.length - 1" class="map-road-box map-road-last"></div>
           </div>
@@ -65,6 +66,7 @@
           <div v-if="!inform.open&&inform.user" class="map-character" @click="onModal(inform, index+1)">
             <img src="../assets/images/penguin2.png" alt="">
           </div>
+          
         </div>
 
         <div v-if="isLast" class="map-stage-box map-last-box" @click="goNext">
@@ -311,7 +313,7 @@ export default {
 .mystar {
   height: 7vh;
   display: inline-block;
-  background: #a4d4ff;
+  background:linear-gradient(0deg, rgba(254,198,55,1) 0%, rgba(255,242,181,1) 36%, rgba(252,212,26,1) 100%);
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
@@ -332,6 +334,8 @@ export default {
 }
 .wrap {
   height: 100%;
+  background-image: url('../assets/images/gamemap.png');
+      background-size: cover;
 }
 .map-container {
   margin-top: 50px;
@@ -339,6 +343,7 @@ export default {
   height: 70%;
   /* height: calc(100vh - 100px); */
   /* background-color: bisque; */
+
 }
 
 .map-header .back-btn {
@@ -473,6 +478,7 @@ export default {
   background: linear-gradient(to bottom, #e4eef3 0%,#c0dff1 47%,#94c7e7 100%);
   margin: 10px 0;
   cursor: pointer;
+   z-index: 1;
 }
 
 .map-stage-box .stage-area::before {
@@ -585,13 +591,14 @@ export default {
   flex: 0 0 auto;
   background: linear-gradient(to bottom, rgba(228,245,252,1) 0%,rgba(191,232,249,1) 50%,rgba(159,216,239,1) 51%,rgba(42,176,237,1) 100%);
   box-sizing: border-box;
-  z-index: -2;
+  z-index: 0;
 }
 
 .map-body .map-road-last {
   width: 250px;
   right: -70px;
   background: linear-gradient(to bottom, rgba(228,245,252,1) 0%,rgba(191,232,249,1) 50%,rgba(159,216,239,1) 51%,rgba(42,176,237,1) 100%);
+  z-index: 0;
 }
 
 .map-body .map-road-last-un {
@@ -602,15 +609,15 @@ export default {
 .map-body .map-road-last::after {
   content: '';
   position: absolute;
-  top: -5px;
+  top: 0px;
   right: 0;
   width: 250px;
-  height: 20px;
+  height: 10px;
   flex: 0 0 auto;
   background: linear-gradient(90deg, #fff 50%, rgba(0,0,0,0) 0);
   background-size: 30px 100%;
   box-sizing: border-box;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 .map-body .map-character{
