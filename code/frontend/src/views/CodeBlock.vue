@@ -12,7 +12,7 @@
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="../cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
