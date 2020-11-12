@@ -1,7 +1,17 @@
 <template>
   <div class='wrap speech-wrap'>
+    <div class="story" @click="clickStory" v-if="openStory">
+      <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
+        <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
+      </div>
+      <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
+        <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
+      </div>
+      <div class="script" v-html="story[stageNum-1].start"></div>
+    </div>
     <div class="speech-container">
       <div class="unity-box">
+        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" src="cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn">
           <div @click="setSpeech">{{ buttonText }}</div>
@@ -39,6 +49,34 @@ export default {
       lastSentence: '',
       transcription: '',
       buttonText: "버튼을 누르고 말을 해보세요",
+      openStory:true,
+      story:[
+        { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
+          start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
+          end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
+          hint:"basicHint1.png"
+          },
+          { start_modal:"",
+          start:"컴퓨터의 두뇌인 CPU에 대해 알아보았어요.<br>컴퓨터를 조금 더 살펴보기위해 다가가보세요!",
+          end:"<h3>컴퓨터의 공부 책상, 메모리</h3><br>공부할 때 교과서나 참고서, 필기도구 등을 책상위에 올려놓고 참고서를 보면서 공책에 필기를 하죠?<br>메모리 또한 컴퓨터가 작업에 필요한 것을 일시적으로 기억해서 CPU가 프로그램을 작동시킬 때 사용할 수 있게 합니다!",
+          hint:"basicHint2.png"
+          },
+          { start_modal:"",
+          start:"앗! 이게뭐지?<br>갑자기 이상한게 나타났어요! 이게 뭘까요?<br>알아보기위해 다가가보세요.",
+          end:"<h3>I'm the creeper, catch me if you can!</h3>크리퍼, 최초의 컴퓨터 바이러스.<br>컴퓨터 바이러스란, <br>우리몸을 아프게하는 바이러스와 비슷하게 스스로를 복제하여 컴퓨터를 아프게하는 바이러스에요.<br>인터넷 이나 네트워크 또는 이동식 매체를 통해 전파가 되어 내 컴퓨터의 파일시스템을 망가트려요!",
+          hint:"basicHint3.png"
+          },
+          { start_modal:"",
+          start:"바이러스라니,무서워요! <br>컴퓨터를 망가뜨리는 바이러스의 종류에는 어떤것이 있을까요?<br>살펴보기위해 다가가보세요.",
+          end:"<h3>꿈틀거리는 벌레라는 의미의 '웜(Worm)바이러스'</h3>웜바이러스는 스스로 복제를 해서 내부시스템을 망가트리는 나쁜 바이러스에요.<br>웜바이러스는 인터넷속도에는 큰영향을 주지않지만 파일을 변형하거나 예측불가능한 증상을 만드는게 특징이에요.<br> 웜바이러스에 예방하기위해선 이메일첨부파일을 다운로드를 주의해서 해야해요.",
+          hint:"basicHint4.png"
+          },
+          { start_modal:"",
+          start:"또다른 바이러스가 나타났어요!<br> 저 바이러스는 뭘까요? 알아보러 가봅시다!",
+          end:"<h3>트로이 전쟁 중 성 안에 몰래 침입한전략에서 비유된 '트로이목마'</h3>바이러스 중 가장 유명한 바이러스이며, 정상적인 프로그램으로 위장해 숨어있다가 실행하면 악성코드를 퍼트리는 바이러스에요.<br>해킹기능이 존재하는 바이러스이니 컴퓨터에 트로이목마가 감염되었다면 내 개인정보가 유출되었다는 의미이니 조심하여야합니다.",
+          hint:"basicHint5.png"
+          },
+      ],
     }
   },
   components: {
@@ -48,12 +86,27 @@ export default {
   },
   computed: {
   },
-  created() {
+  async created() {
     window.addEventListener('start', this.handleStart)
     window.addEventListener('clear', this.handleClear)
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    console.log(this.stageNum + " " + this.stageType);
+    if(this.$cookies.isKey("access_token")){
+      let kakao_account;
+      await window.Kakao.API.request({
+          url:'/v2/user/me',
+          success : res => {
+              kakao_account = res.kakao_account;
+          },
+      });
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+              .then(res => {
+                this.$store.commit('setKakaoUserInfo', res.data);
+                this.hintCount = res.data.hint;
+              });
+    }
 
   },
   mounted() {
@@ -73,10 +126,16 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-      this.stageNum += 1
-      this.count = 0
-      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      this.LevelLoad();
+      // this.stageNum += 1
+      this.count = 0;
+      // this.stageNum = this.$cookies.get('stageInfo').stageNum;
+      // this.stageType = this.$cookies.get('stageInfo').stageType;
+      // var stageInfo = this.$cookies.get('stageInfo');
+      // this.$cookies.set('stageInfo',stageInfo);
+
+      this.$router.push('/codeblock');
+      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      // this.LevelLoad();
     },
     handleStart() {
       setTimeout(() => {
@@ -117,7 +176,7 @@ export default {
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -132,7 +191,7 @@ export default {
         this.count += 1;
         console.log(this.count)
         console.log(this.transcription, '입력값')
-        axios.post('http://localhost:9999/cobit/speech/analyze1', this.transcription )
+        axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
           for (let index = 0; index < res.data.length; index++) {
@@ -149,7 +208,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
@@ -166,6 +225,13 @@ export default {
         }
       })
     },
+    gostage(){
+        this.$router.push('/gamemap')
+        this.$cookies.set('reload', 'true');
+    },
+    clickStory(){
+      this.openStory = false;
+    },
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -176,9 +242,14 @@ export default {
 </script>
 
 <style scoped>
-.speech-wrap {
-  padding: 0 !important;
+.wrap{
+  padding:0px;
+  width:100%;
+  height:100%;
 }
+/* .speech-wrap {
+  padding: 0 !important;
+} */
 
 .speech-container {
   display: flex;
@@ -235,6 +306,47 @@ export default {
   animation: blink 1.5s linear infinite;
   margin-right: 10px;
 
+}
+
+.stagebtn {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  background-color: #a4d4ff;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: BMJUA;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px #ffffff;
+}
+.stagebtn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+.story{
+  width:100vw;
+  height:100vh;
+  position:absolute;
+  bottom:0;
+  z-index:4;
+}
+.script{
+    width: 100%;
+    height: 25%;
+    background-color: rgba(0, 0, 0, 0.66);
+    position: absolute;
+    bottom: 0px;
+    color: white;
+    font-size: x-large;
+    padding: 5vh 5vw;
 }
 
 @keyframes blink {

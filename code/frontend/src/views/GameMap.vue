@@ -142,7 +142,7 @@ export default {
   },
   async created() {
     // window.addEventListener('scroll', this.handleScroll)
-    this.type = this.$cookies.get('stageType');
+    this.type = this.$cookies.get('stageInfo').stageType;
     if (this.type == 1) {
       this.openStory1 = 'flex'
       this.openStory2 = 'none'
@@ -150,8 +150,8 @@ export default {
       this.openStory1 = 'none'
       this.openStory2 = 'flex'
     }
-    if(this.$cookies.isKey("access_token")){
       this.loadStage();
+    if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
           url:'/v2/user/me',
@@ -159,15 +159,21 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 
               });
       await this.loadMyStage();
+    }else{
+      this.loadMyStage();
     }
   },
   mounted() {
+    if(this.$cookies.get('reload') == 'true') {
+      this.$cookies.set('reload', 'false')
+      location.reload();
+    }
   },
   watch: {
      starCount(){
@@ -218,9 +224,21 @@ export default {
       this.$router.push('/mypage');
     },
     loadMyStage(){
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
-        params:{
-          id : store.state.kakaoUserInfo.id,
+      if(store.state.kakaoUserInfo.id== null){
+        console.log("hi")
+        const map = {
+            open: true,
+            star: 0,
+            unstar: 0,
+            user: false,
+            content : 0,
+          }
+          this.$set(this.mapInform, 0, map)
+      }else{
+
+        axios.get(`http://localhost:9999/cobit/stage/user`,{
+          params:{
+            id : store.state.kakaoUserInfo.id,
           type : this.type
         }
       })
@@ -254,9 +272,10 @@ export default {
           this.isLast = true;
         }
       })
+    }
     },
     loadStage(){
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage?type=${this.type}`)
+      axios.get(`http://localhost:9999/cobit/stage?type=${this.type}`)
       .then(res => {
         res.data.forEach(map =>{
           this.mapInform.push( {
@@ -606,19 +625,6 @@ export default {
 
 }
 
-.map-body .map-road-last::after {
-  content: '';
-  position: absolute;
-  top: 0px;
-  right: 0;
-  width: 250px;
-  height: 10px;
-  flex: 0 0 auto;
-  background: linear-gradient(90deg, #fff 50%, rgba(0,0,0,0) 0);
-  background-size: 30px 100%;
-  box-sizing: border-box;
-  /* z-index: -1; */
-}
 
 .map-body .map-character{
   position: absolute;
@@ -627,6 +633,7 @@ export default {
   width: 80px;
   height: 90px;
   cursor: pointer;
+  z-index: 1;
 }
 
 .map-body .map-character>img {

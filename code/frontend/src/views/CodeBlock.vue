@@ -1,6 +1,6 @@
 <template>
   <div class='wrap'>
-    <div class="story" @click="clickStory" v-if="openStory">
+    <!-- <div class="story" @click="clickStory" v-if="openStory">
       <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
@@ -31,9 +31,8 @@
     </div>
     <div class="code-block-container">
       <div class="unity-box">
-        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 1;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
-        <VueSpeech style="position:absolute; z-index: 3; bottom:0;"></VueSpeech>
+        <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
+        <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
@@ -63,7 +62,7 @@
             <div v-if="history.length==0">히스토리 내역이 없습니다.</div>
           </div>
         </div>
-        <div id="deleteAllBtn">
+        <div @click="deleteAll" id="deleteAllBtn">
           <div class="deleteAllBtnbox">
             <v-icon style="color: black">mdi-trash-can-outline</v-icon>
             전체 삭제
@@ -82,12 +81,13 @@
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
           </div>
-          <div v-show="isObstacle" class="block-list">
+          <!-- <div v-show="isObstacle" class="block-list">
             <div class="block">장애물추가</div>
-          </div>
+          </div> -->
         </div>
         <div id="play-box" class="play-box">
           <div v-show="isMove" class="block-list">
+            
             <div style="display:flex; justify-content:center; margin-left: 30%;">
               <div id="play" @click="clickPlayBtn" :style="{'background-color':playClass.background}"><v-icon style="color:white;" size="4vw">mdi-play-circle</v-icon></div>
               
@@ -116,10 +116,13 @@
   
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="m.num==7&&m.onclick" :style="{display:m.overMe}"></div>
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
                   <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!(m.num==7&&m.onclick)" :style="{display:m.overMe}">
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
+                  <!-- <div v-if="m.class=='activate'" style="position:fixed;display:flex; justify-content:center;width:100%;height:5%; margin-left:15%; margin-top: 14%; z-index:3;">
+                    <div style="width:50%; height:100%; background-color:#00000096; text-align:center;color:white;">반복문이 활성화 되었습니다.<br>반복문 안에 블록을 넣을 수 있습니다.</div>
+                  </div>   -->
                 </div>
             </div>
           </div>
@@ -153,6 +156,7 @@ export default {
       distX: '',
       distY: '',
       underfor:[],
+      blockNum: 0,
       story:[
         { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
@@ -330,6 +334,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
+    console.log(this.starNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -338,7 +343,7 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.hintCount = res.data.hint;
@@ -424,50 +429,62 @@ export default {
        }
      },
      clickForblock(m,index){
-       console.log("clickFOrblock")
-       if(m.num==7 ||index==7){
+       if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
+           m.class = '';
          }else{
            m.onclick = true;
+          m.class = 'activate';
          }
        }
      },
+     deleteAll(){
+       this.resultStep = [];
+     },
     clickPlayBtn(){
       var tempson = this.playson;
+      var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
       this.resultmoves = [];
       while(tempson != -1){
+        resultBlocknum +=1;
         // if(this.resultStep[tempson].num!=7){
           delNode.push(this.resultStep[tempson].index);
           if(this.resultStep[tempson].num==7){
             var tempforson = this.resultStep[tempson].forson;
             var ForresultString = String(this.resultStep[tempson].loop);
             while(tempforson !=-1){
+              resultBlocknum +=1;
               ForresultString+=',';
+              console.log(this.resultStep);
+              console.log(this.resultStep[tempforson]);
+              console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              tempforson = this.resultStep[tempforson].forson;
+              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+                tempforson = this.resultStep[tempforson].son;
+              }else{
+                tempforson = this.resultStep[tempforson].forson;
+              }
             }
             this.resultStep[tempson].forindex = forlist.length;
-            console.log(ForresultString);
+            // console.log(ForresultString);
             forlist.push(ForresultString);
           }
-          console.log("-------------forlist-------------");
-          console.log(forlist[0]);
-          console.log("--------------");
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
+          this.blockNum = resultBlocknum
       }
 
       // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         if(step.move.num!=7){
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move);
-          console.log(this.moves[step.move.num].move);
+          // console.log(this.moves[step.move.num].move);
         }else{
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move,forlist[step.move.forindex]);
-          console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
+          // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
         }
       });
      for(var i=0; i<this.resultmoves.length;i++){
@@ -484,7 +501,7 @@ export default {
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
-      console.log(this.resultmoves);
+      // console.log(this.resultmoves);
     },
     // clickHint(){
     //   if(this.clickhint){
@@ -498,7 +515,7 @@ export default {
     buyHint(){
       console.log(store.state.kakaoUserInfo);
       if(this.buyhint == false){
-        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+        axios.post(`http://localhost:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
           this.hintCount -= 1;
           this.buyhint = true;
@@ -648,21 +665,32 @@ export default {
         }
     },
     getStar() {
-      const LENG = this.commandList.length
-      if(this.stageNum == 1) {
-        if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
-      } if(this.stageNum == 2) {
-        if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
-      } if(this.stageNum == 3) {
-        if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
-      } if(this.stageNum == 4) {
-        if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
-      } if(this.stageNum == 5) {
-        if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+      const LENG = this.blockNum.length
+      if(this.stageType == 1) {
+        if(this.stageNum == 1) {
+          if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
+        } if(this.stageNum == 2) {
+          if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 12) {this.starNum=2}
+        } if(this.stageNum == 3) {
+          if(LENG <= 13) {this.starNum=3} else if(LENG > 13 && LENG <= 16) {this.starNum=2}
+        } if(this.stageNum == 4) {
+          if(LENG <= 12) {this.starNum=3} else if(LENG > 12 && LENG <= 15) {this.starNum=2}
+        } if(this.stageNum == 5) {
+          if(LENG <= 16) {this.starNum=3} else if(LENG > 16 && LENG <= 20) {this.starNum=2}
+        } 
+      } else if(this.stageType == 2) {
+        if(this.stageNum == 1) {
+          if(LENG <= 10) {this.starNum=3} else if(LENG > 10 && LENG <= 17) {this.starNum=2}
+        } if(this.stageNum == 2) {
+          if(LENG <= 9) {this.starNum=3} else if(LENG > 9 && LENG <= 11) {this.starNum=2}
+        } if(this.stageNum == 3) {
+          if(LENG <= 6) {this.starNum=3} else if(LENG > 6 && LENG <= 10) {this.starNum=2}
+        } if(this.stageNum == 4) {
+          if(LENG <= 7) {this.starNum=3} else if(LENG > 7 && LENG <= 10) {this.starNum=2}
+        }
       }
-
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -722,7 +750,7 @@ export default {
 
         this.resultStep.some( step => {
           if(step.overMe=='block' || step.class=='overMe'){
-            if(step.num!=7){
+            if(step.num!=7 && step.num!=8){
             content[0].nextSibling.after(this.targetdiv);
             var os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
@@ -740,7 +768,6 @@ export default {
               var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
               console.log(underForblock);
               if(!step.onclick){
-                console.log("!onclick");
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
@@ -754,7 +781,6 @@ export default {
                   son = this.resultStep[son].son;
                 }
               }else{
-                console.log("onclick");
                 underForblock.nextSibling.before(this.targetdiv);
                  os = this.resultStep[step.index].forson;
                 this.resultStep[step.index].forson = this.targetdivNum
@@ -773,6 +799,7 @@ export default {
             // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
+            console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
      });
@@ -788,7 +815,11 @@ export default {
     },
     LevelLoad() {
       this.commandList = []
-      this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      if (this.stageType == 1) {
+        this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
+      } else if (this.stageType == 2) {
+        this.$refs.myInstance.message('JavascriptHook', 'MiddleStage', this.stageNum)
+      }
     },
     reStart() {
       this.commandList = []
@@ -797,9 +828,14 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-      this.stageNum += 1
-      this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      this.LevelLoad();
+
+      var stageInfo = this.$cookies.get('stageInfo');
+      stageInfo.stageNum = this.stageNum +1;
+      this.$cookies.set('stageInfo',stageInfo);
+
+      this.$router.push('/speech');
+      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+      // this.LevelLoad();
     },
     handleStart() {
       setTimeout(() => {
@@ -821,7 +857,9 @@ export default {
       this.makeCode();
       this.setInStageNum(this.stageNum);
       this.setInStageStar(this.starNum);
-      if(this.stageNum == 5) {
+      if(this.stageType == 1 && this.stageNum == 5) {
+        this.setIsLastStage(true)
+      } else if (this.stageType == 2 && this.stageNum == 4) {
         this.setIsLastStage(true)
       }
     },
@@ -844,11 +882,12 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
+        this.$cookies.set('reload', 'true');
       },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
@@ -1171,6 +1210,10 @@ export default {
 .container::-webkit-scrollbar-track {
     background-color: black;
   }
+
+.activate{
+  background-color:orangered;
+}
 .stagebtn {
   top: 10px;
   left: 10px;
