@@ -65,6 +65,7 @@ export default {
     moveStage(type){
       // this.setStageType(type);
       this.$cookies.set('stageType',type);
+      this.$cookies.set('reload', 'true');
       this.$router.push('/gamemap');
     }
   }

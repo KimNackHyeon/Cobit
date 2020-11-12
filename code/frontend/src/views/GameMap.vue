@@ -168,6 +168,10 @@ export default {
     }
   },
   mounted() {
+    if(this.$cookies.get('reload') == 'true') {
+      this.$cookies.set('reload', 'false')
+      location.reload();
+    }
   },
   watch: {
      starCount(){
@@ -606,19 +610,6 @@ export default {
 
 }
 
-.map-body .map-road-last::after {
-  content: '';
-  position: absolute;
-  top: 0px;
-  right: 0;
-  width: 250px;
-  height: 10px;
-  flex: 0 0 auto;
-  background: linear-gradient(90deg, #fff 50%, rgba(0,0,0,0) 0);
-  background-size: 30px 100%;
-  box-sizing: border-box;
-  /* z-index: -1; */
-}
 
 .map-body .map-character{
   position: absolute;
@@ -627,6 +618,7 @@ export default {
   width: 80px;
   height: 90px;
   cursor: pointer;
+  z-index: 1;
 }
 
 .map-body .map-character>img {
