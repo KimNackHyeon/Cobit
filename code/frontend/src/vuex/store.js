@@ -10,6 +10,9 @@ const state = {
   StageType: 0,
   InStageNum: '',
   InStageStar: '',
+  IsLastStage: false,
+  Code: [],
+  CodeKor: [],
 }
 console.log(state);
 
