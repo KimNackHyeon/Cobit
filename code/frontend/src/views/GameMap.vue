@@ -142,7 +142,7 @@ export default {
   },
   async created() {
     // window.addEventListener('scroll', this.handleScroll)
-    this.type = this.$cookies.get('stageInfo').stageType;
+    this.type = this.$cookies.get('stageType');
     if (this.type == 1) {
       this.openStory1 = 'flex'
       this.openStory2 = 'none'
@@ -285,6 +285,7 @@ export default {
       }
     },
     goNext() {
+      console.log(this.type);
       this.$cookies.set('stageType', parseInt(this.type)+1);
       this.$router.go(0);
     }
