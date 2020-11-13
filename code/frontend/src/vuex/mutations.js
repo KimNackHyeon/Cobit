@@ -36,5 +36,8 @@ export default {
   },
   setCodeKor(state, data) {
     state.CodeKor = data
+  },
+  setSpeechType(state, data) {
+    state.SpeechType = data
   }
 }
