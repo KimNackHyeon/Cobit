@@ -29,7 +29,6 @@
 import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
-import SpeechModal from '../components/SpeechModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store'
@@ -41,6 +40,7 @@ export default {
       isClick: false,
       isMove: true,
       isObstacle: false,
+      commandList: [],
       isClear: false,
       isFail: false,
       isFirst: false,
@@ -88,7 +88,6 @@ export default {
     Unity,
     ClearModal,
     FailModal,
-    SpeechModal
   },
   computed: {
   },
@@ -120,17 +119,18 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar', 'setSpeechType']),
+    ...mapMutations(['setInStageNum', 'setInStageStar']),
     LevelLoad() {
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
-      this.count = 0;
-      this.hintCnt = 2
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       this.LevelLoad();
     },
     nextLevel() {
+      this.commandList = []
       // this.stageNum += 1
       this.count = 0;
       // this.stageNum = this.$cookies.get('stageInfo').stageNum;
@@ -194,7 +194,7 @@ export default {
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -205,7 +205,7 @@ export default {
       if (this.isClick) {
         this.buttonText="말을 마쳤다면 버튼을 눌러주세요."
       } else {
-        this.buttonText="데이터 전송중입니다..."
+        this.buttonText="버튼을 누르고 말을 해보세요"
         this.count += 1;
         console.log(this.count)
         console.log(this.transcription, '입력값')
@@ -227,7 +227,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
