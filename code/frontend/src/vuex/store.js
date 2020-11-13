@@ -13,6 +13,7 @@ const state = {
   IsLastStage: false,
   Code: [],
   CodeKor: [],
+  SpeechType: 0
 }
 console.log(state);
 
