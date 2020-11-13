@@ -9,6 +9,61 @@
       </div>
       <div class="script" v-html="story[stageNum-1].start"></div>
     </div> -->
+    <!-- 튜토리얼 -->
+    <div class="tutorial1" v-if="showTutorial == 1">
+      <div class="balloon1">
+        <div class="balloon1text">
+          <div class="balloontext1">1. 힌트 버튼</div>
+          <div class="balloontext2">힌트 버튼을 누르면 힌트를 얻을 수 있습니다.</div>
+          <div class="tutorialnextbtn" @click="tutorial1nextbtn">다음</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial2" v-if="showTutorial == 2">
+      <div class="balloon2">
+        <div class="balloon1text">
+          <div class="balloontext1">2. 히스토리 버튼</div>
+          <div class="balloontext2">히스토리 버튼을 누르면 실행 내역을 볼 수 있습니다.</div>
+          <div class="tutorialnextbtn" @click="tutorial2nextbtn">다음</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial3" v-if="showTutorial == 3">
+      <div class="balloon3">
+        <div class="balloon1text">
+          <div class="balloontext1">3. 전체삭제 버튼</div>
+          <div class="balloontext2">전체삭제 버튼을 누르면 보드에 있는 블럭이 모두 삭제됩니다.</div>
+          <div class="tutorialnextbtn" @click="tutorial3nextbtn">다음</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial4" v-if="showTutorial == 4">
+      <!-- <div class="whitebox"></div> -->
+      <div class="balloon4">
+        <div class="balloon1text">
+          <div class="balloontext1">4. 블록 옮기기</div>
+          <div class="balloontext2">펭귄이 컴퓨터에 다가갈 수 있도록 보드에 오른쪽 블록을 4개 연결해주세요.</div>
+          <div class="showbtn" @click="deleteAll" style="margin-left: 2%">다시하기</div>
+          <div class="showbtn" @click="tutorial4" @mouseover="tutorial4_0">미리보기</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial5" v-if="showTutorial == 5">
+      <div class="balloon5">
+        <div class="balloon1text">
+          <div class="balloontext1">5-1. 게임 실행</div>
+          <div class="balloontext2">보드에 만든 블럭을 시작 버튼에 연결합니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tutorial6" v-if="showTutorial == 6">
+      <div class="balloon6">
+        <div class="balloon1text">
+          <div class="balloontext1">5-2. 게임 실행</div>
+          <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
+        </div>
+      </div>
+    </div>
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
@@ -56,7 +111,7 @@
           </div> -->
         <div class="block-box">
            <div v-show="isMove" class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)" style="position: relative">
               {{m.move_kor}}
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
@@ -122,6 +177,7 @@ import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
 import Swal from 'sweetalert2';
+import $ from 'jquery';
 
 export default {
   name: 'CodeBlock',
@@ -296,6 +352,7 @@ export default {
       openStory:true,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
+      showTutorial: 1,
       fori : 0,
       code:[]
     }
@@ -332,21 +389,100 @@ export default {
   },
   mounted() {
     // this.onMove();
+    if(this.stageNum == 1 && this.stageType == 1){
+      this.showTutorial = 1;
+      $(".hintBtnbox").css('position', 'relative');
+      $(".hintBtnbox").css('z-index', '4');
+      $(".hintBtnbox").css('box-shadow', "unset");
+    }
   },
   watch: {
   },
   methods: {
-    
+    tutorial1nextbtn() {
+      this.showTutorial = 2
+      $(".hintBtnbox").css('position', 'unset');
+      $(".hintBtnbox").css('z-index', 'unset');
+      $(".hintBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
+      $(".historyBtnbox").css('position', 'relative');
+      $(".historyBtnbox").css('z-index', '4');
+      $(".historyBtnbox").css('box-shadow', "unset");
+      $("#history").css('z-index', '4');
+    },
+    tutorial2nextbtn() {
+      this.showTutorial = 3
+      $(".historyBtnbox").css('position', 'unset');
+      $(".historyBtnbox").css('z-index', 'unset');
+      $(".historyBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
+      $(".deleteAllBtnbox").css('position', 'relative');
+      $(".deleteAllBtnbox").css('z-index', '4');
+      $(".deleteAllBtnbox").css('box-shadow', "unset");
+    },
+    tutorial3nextbtn() {
+      this.showTutorial = 4
+      $(".deleteAllBtnbox").css('position', 'unset');
+      $(".deleteAllBtnbox").css('z-index', 'unset');
+      $(".deleteAllBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
+      $(".block1").css("z-index", '4');
+      $("#play").css("z-index", "4");
+    },
+    tutorial4_0() {
+      var selectedNum = 1;
+      var posX = 790;
+      var posY = 12;
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'rightblock1',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'rightblock2',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'rightblock3',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'rightblock4',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+    },
+    tutorial4() {
+      $(".block1").css("z-index", 'unset');
+      $(".block-list").children(".block1").css("z-index", "4");
+      var divX = $("#play").offset().left;
+      var divY = $("#play").offset().top + $("#play").height();
+      var blockX = $(".rightblock1").offset().left;
+      var blockY = $(".rightblock1").offset().top;
+      for(var i=1; i<5; i++){
+        $(`.rightblock${i}`).css("position", 'relative');
+        $(`.rightblock${i}`).css("z-index", '4');
+      }
+      $(".rightblock1").css("transform", `translate(${divX-blockX}px, ${divY-blockY+25}px)`)
+      $(".rightblock1").addClass("tutorial4btn")
+      setTimeout(() => {
+        $(".rightblock2").css("transform", `translate(${divX-blockX}px, ${divY-blockY+70}px)`)
+        $(".rightblock2").addClass("tutorial4btn")
+      }, 800)
+      setTimeout(() => {
+        $(".rightblock3").css("transform", `translate(${divX-blockX}px, ${divY-blockY+115}px)`)
+        $(".rightblock3").addClass("tutorial4btn")
+      }, 1600)
+      setTimeout(() => {
+        $(".rightblock4").css("transform", `translate(${divX-blockX}px, ${divY-blockY+160}px)`)
+        $(".rightblock4").addClass("tutorial4btn")
+      }, 2400)
+      setTimeout(() => {
+        for(var j=1; j<5; j++){
+          $(`.rightblock${j}`).css("transform", "")
+          $(`.rightblock${j}`).removeClass("tutorial4btn")
+        }
+      }, 4500);
+    },
      ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
+      if(this.showTutorial == 4){
+        $(".block1").css("position", 'relative');
+        $(".block1").css("z-index", '4');
+      }
       let posX = event.pageX;
       let posY = event.pageY;
+      console.log(posX + ',' + posY)
       // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
+      console.log(this.distX + ',' + this.distY)
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
@@ -371,9 +507,9 @@ export default {
        this.resultStep[this.targetdivNum].choiceNum = true;
        this.targetdivNum = mynum;
      },
-     clickStory(){
-       this.openStory = false;
-     },
+    //  clickStory(){
+       
+    //  },
      clickForblock(m,index){
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
@@ -390,6 +526,7 @@ export default {
      },
     clickPlayBtn(){
       var tempson = this.playson;
+      console.log(this.resultStep.length + '여기')
       var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
@@ -451,6 +588,13 @@ export default {
       this.playson = -1;
       this.alreadyOverPlay = false;
       // console.log(this.resultmoves);
+
+      // 튜토리얼
+      if(this.showTutorial == 6){
+        this.showTutorial = 7
+        $(".tutorial6").css('display', 'none')
+        $(".block1").css("z-index", 'unset');
+      }
     },
     // clickHint(){
     //   if(this.clickhint){
@@ -614,7 +758,7 @@ export default {
         }
     },
     getStar() {
-      const LENG = this.blockNum.length
+      const LENG = this.blockNum
       if(this.stageType == 1) {
         if(this.stageNum == 1) {
           if(LENG <= 5) {this.starNum=3} else if(LENG > 5 && LENG <= 7) {this.starNum=2}
@@ -646,6 +790,7 @@ export default {
       });
     },
     drop(event) {
+      console.log(this.resultmoves)
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
       const relativeLeft = clientRect.left;
@@ -678,12 +823,20 @@ export default {
             this.playson = this.targetdivNum;
             document.getElementById('underplay').prepend(this.targetdiv);
           }
-          this.resultStep[this.targetdivNum].position = 'unset';
+          this.resultStep[this.targetdivNum].position = 'relative'; // 수정
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
           if(!this.alreadyOverPlay){
               this.alreadyOverPlay = true;
             }
+          // 튜토리얼
+          var tempson2 = this.playson;
+          var blocknum2 = 0;
+          while(tempson2 != -1){
+            blocknum2 += 1
+            tempson2 = this.resultStep[tempson2].son
+          }
+          console.log(blocknum2 + '여기여기')
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -755,6 +908,28 @@ export default {
     //  this.resultStep[this.targetdivNum].son = original_son;
     console.log(this.resultStep);
      this.playClass.show='none';
+      }
+      // 튜토리얼 4
+      var tempson = 0;
+      var blocknum = 0;
+      this.resultStep[0].class = 'rightblocks'
+      while(tempson != -1){
+        blocknum += 1
+        tempson = this.resultStep[tempson].son
+      }
+      if(this.showTutorial == 4 && blocknum == 4){
+        this.showTutorial = 5
+        $("#play").css("z-index", "5")
+        // $(".rightblocks").parent().css("z-index", "5")
+        $("#block-board").children().first().css("z-index", "5")
+
+      }
+      // 튜토리얼 5
+      if(blocknum2 == 4){
+        this.showTutorial = 6
+        $("#play").css("z-index", "5")
+        $("#underplay").children().last().css("z-index", "5")
+        $("#underplay").children().last().css("position", "relative")
       }
 
     },
@@ -1019,11 +1194,12 @@ export default {
   min-height:50px;
   display:flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 #historyBtn{
   display: inline-block;
-  width: 120px;
+  width: 25%;
   height: 45px;
   margin: 1% 5% 1% 3%;
 }
@@ -1043,7 +1219,7 @@ export default {
 }
 #hintBtn{
   display: inline-block;
-  width: 120px;
+  width: 25%;
   height: 45px;
   margin: 1% 3% 1% 5%;
 
@@ -1087,7 +1263,7 @@ export default {
 }
 #deleteAllBtn {
   display: inline-block;
-  width: 120px;
+  width: 25%;
   height: 45px;
   margin: 1% 3% 1% 5%;
   float: right;
@@ -1191,5 +1367,196 @@ export default {
   height: 8%;
   width: 40%;
   float: right;
+}
+.tutorial1 {
+  position:fixed;
+  top: 9.5%;
+  left: 55%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 3;
+  border-radius: 10px;
+}
+.balloon1 {
+  position:relative;
+  width:300px;
+  height:120px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon1:after {
+  border-top: 0px solid transparent;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 140px;
+}
+.tutorialnextbtn {
+  color: #ed2222;
+  border: 2px solid #ed2222;
+  float: right;
+  padding: 1% 3%;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.tutorialnextbtn:hover {
+  background-color: #fc3f3f;
+  color: white;
+}
+.tutorial2 {
+  position:fixed;
+  top: 9.5%;
+  left: 65%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 3;
+  border-radius: 10px;
+}
+.balloon2 {
+  position:relative;
+  width:350px;
+  height:130px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon2:after {
+  border-top: 0px solid transparent;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 140px;
+}
+.tutorial3 {
+  position:fixed;
+  top: 9.5%;
+  right: 1%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 3;
+  border-radius: 10px;
+}
+.balloon3 {
+  position:relative;
+  width: 290px;
+  height: 140px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon3:after {
+  border-top: 0px solid transparent;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: 50px;
+}
+.tutorial4 {
+  position:fixed;
+  top: 10%;
+  right: 41%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 2;
+  border-radius: 10px;
+}
+.balloon4 {
+  position:relative;
+  width:350px;
+  height:150px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon4:after {
+  border-top: 15px solid transparent;
+  border-left: 15px solid white;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid transparent;
+  content: "";
+  position: absolute;
+  top: 60px;
+  left: 350px;
+}
+.balloon1text {
+  padding: 5%;
+  font-family: 'BMJUA';
+}
+.balloontext1 {
+  font-size: 20px;
+  color: red;
+}
+.balloontext2 {
+  font-size: 16px;
+  padding: 5% 0;
+}
+.showbtn {
+  color: #ed2222;
+  border: 2px solid #ed2222;
+  float: right;
+  padding: 1% 3%;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.showbtn:hover {
+  background-color: #fc3f3f;
+  color: white;
+}
+.tutorial4btn {
+  /* transform: translate(325%, 20%); */
+  transition-property: all;
+  transition-duration: 1s;
+}
+.tutorial5 {
+  position:fixed;
+  top: 2%;
+  right: 21%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 5;
+  border-radius: 10px;
+}
+.balloon5 {
+  position:relative;
+  width:350px;
+  height:150px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon5:after {
+  border-top: 15px solid transparent;
+  border-left: 15px solid white;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid transparent;
+  content: "";
+  position: absolute;
+  top: 60px;
+  left: 350px;
+}
+.tutorial6 {
+  position:fixed;
+  top: 2%;
+  right: 21%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 5;
+  border-radius: 10px;
+}
+.balloon6 {
+  position:relative;
+  width:350px;
+  height:150px;
+  background:white;
+  border-radius: 10px;
+}
+.balloon6:after {
+  border-top: 15px solid transparent;
+  border-left: 15px solid white;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid transparent;
+  content: "";
+  position: absolute;
+  top: 60px;
+  left: 350px;
 }
 </style>
