@@ -12,7 +12,7 @@
     <div class="speech-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" src="../cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="../stt/Build/stt.json" unityLoader="../stt/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn">
           <div @click="setSpeech">{{ buttonText }}</div>
           <span></span><vue-speech class="my-speech" v-if="isClick" lang="ko" @onTranscriptionEnd="onEnd"/>
@@ -117,7 +117,6 @@ export default {
     ...mapMutations(['setInStageNum', 'setInStageStar']),
     LevelLoad() {
       this.commandList = []
-      console.log('?')
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
@@ -228,7 +227,6 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
-        this.$cookies.set('reload', 'true');
     },
     clickStory(){
       this.openStory = false;
