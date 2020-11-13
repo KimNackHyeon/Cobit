@@ -29,6 +29,7 @@
 import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
+import SpeechModal from '../components/SpeechModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store'
@@ -88,6 +89,7 @@ export default {
     Unity,
     ClearModal,
     FailModal,
+    SpeechModal
   },
   computed: {
   },
@@ -119,7 +121,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar']),
+    ...mapMutations(['setInStageNum', 'setInStageStar','setSpeechType']),
     LevelLoad() {
       this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
@@ -194,7 +196,7 @@ export default {
       }
 
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -227,7 +229,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);

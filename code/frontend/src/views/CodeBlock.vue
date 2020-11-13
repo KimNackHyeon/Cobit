@@ -1,14 +1,14 @@
 <template>
   <div class='wrap'>
-    <!-- <div class="story" @click="clickStory" v-if="openStory">
+    <div class="story" @click="clickStory" v-if="openStory && stageType == 1">
       <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
-      <div class="script" v-html="story[stageNum-1].start"></div>
-    </div> -->
+      <div class="script" v-html="story[stageNum-1].end"></div>
+    </div>
     <!-- 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1">
       <div class="balloon1">
@@ -191,7 +191,7 @@ export default {
       distY: '',
       underfor:[],
       story:[
-        { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
+        { start_modal:"",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
           end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
           hint:"basicHint1.png"
@@ -347,7 +347,7 @@ export default {
       hint:"스테이지의 힌트",
       starNum: 1,
       stageType: this.$cookies.get('stageInfo').stageType,
-      openStory:true,
+      openStory:false,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
@@ -376,7 +376,7 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.hintCount = res.data.hint;
@@ -434,6 +434,7 @@ export default {
      },
      clickStory(){
        this.openStory = false;
+       this.onModal();
      },
      clickForblock(m,index){
        if(m.num==7 ||m.num==8 ||index==101){
@@ -522,7 +523,7 @@ export default {
     buyHint(){
       console.log(store.state.kakaoUserInfo);
       if(this.buyhint == false){
-        axios.post(`http://localhost:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
           this.hintCount -= 1;
           this.buyhint = true;
@@ -686,7 +687,7 @@ export default {
       }
 
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -843,7 +844,8 @@ export default {
     },
     handleClear() {
       this.getStar();
-      this.onModal();
+      
+      this.openStory = true;
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
     },
     handleFail() {
@@ -874,6 +876,7 @@ export default {
         if(fornum != m.loop && isFor){
           code.push("}");
           code_kor.push("}");
+          isFor = false;
         }
         if(m.move.num==7){ // 반복문이 있을 때
           code.push("for (i = 0; i < "+ m.loop + "; i++) {");
@@ -907,7 +910,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
