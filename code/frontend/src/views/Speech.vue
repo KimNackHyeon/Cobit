@@ -12,7 +12,7 @@
     <div class="speech-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" src="../stt/Build/stt.json" unityLoader="../stt/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn">
           <div @click="setSpeech">{{ buttonText }}</div>
           <span></span><vue-speech class="my-speech" v-if="isClick" lang="ko" @onTranscriptionEnd="onEnd"/>
@@ -21,7 +21,6 @@
     </div>
     <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
     <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
-    <SpeechModal v-if="isHint" @close="isHint= false"/>
   </div>
 </template>
 
@@ -29,7 +28,6 @@
 import Unity from 'vue-unity-webgl'
 import ClearModal from '../components/ClearModal.vue';
 import FailModal from '../components/FailModal.vue';
-import SpeechModal from '../components/SpeechModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store'
@@ -41,10 +39,9 @@ export default {
       isClick: false,
       isMove: true,
       isObstacle: false,
+      commandList: [],
       isClear: false,
       isFail: false,
-      isHint: false,
-      hintCnt: 2,
       stageNum: 1,
       count: 0,
       starNum: 1,
@@ -86,7 +83,6 @@ export default {
     Unity,
     ClearModal,
     FailModal,
-    SpeechModal
   },
   computed: {
   },
@@ -118,24 +114,25 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar', 'setSpeechType']),
+    ...mapMutations(['setInStageNum', 'setInStageStar']),
     LevelLoad() {
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
-      this.count = 0;
-      this.hintCnt = 2
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       this.LevelLoad();
     },
     nextLevel() {
+      this.commandList = []
       // this.stageNum += 1
       this.count = 0;
       // this.stageNum = this.$cookies.get('stageInfo').stageNum;
       // this.stageType = this.$cookies.get('stageInfo').stageType;
       // var stageInfo = this.$cookies.get('stageInfo');
       // this.$cookies.set('stageInfo',stageInfo);
-    
+
       this.$router.push('/codeblock');
       // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       // this.LevelLoad();
@@ -165,19 +162,6 @@ export default {
     onModal2() {
       this.isFail = true;
     },
-    onModal3(){
-      if(this.hintCnt == 2) {
-        this.setSpeechType(2)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 1
-      } else if(this.hintCnt == 1 && this.stageNum != 5) {
-        this.setSpeechType(1)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 0
-      } 
-    },
     getStar() {
       if(this.stageNum == 1) {
         if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
@@ -192,7 +176,7 @@ export default {
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      axios.post(`http://localhost:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -203,17 +187,13 @@ export default {
       if (this.isClick) {
         this.buttonText="말을 마쳤다면 버튼을 눌러주세요."
       } else {
-        this.buttonText="데이터 전송중입니다..."
+        this.buttonText="버튼을 누르고 말을 해보세요"
         this.count += 1;
         console.log(this.count)
         console.log(this.transcription, '입력값')
         axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
-          if(res.data.length == 0) {
-            this.onModal3()
-          } 
-          this.buttonText="버튼을 누르고 말을 해보세요"
           for (let index = 0; index < res.data.length; index++) {
             this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
             this.$refs.myInstance.message('JavascriptHook', 'Go');
@@ -228,7 +208,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
