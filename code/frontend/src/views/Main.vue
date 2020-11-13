@@ -45,7 +45,7 @@
               <img src="../assets/images/block.png" alt="block">
             </div>
             <div class="twomainright">
-              <img src="../assets/images/main3.png" alt="map">
+              <img src="../assets/images/main3.gif" alt="map">
             </div>
           </div>
         </v-carousel-item>
