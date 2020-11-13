@@ -11,7 +11,7 @@
             <span class="itemtitle">내가 가진 캐릭터</span>
             <div class="mycharacters">
               <img src="../assets/images/penguin.png" alt="character1">
-              <img style="filter: brightness(0.5);" src="../assets/images/bear.png" alt="character2">
+              <img style="filter: brightness(0.5); cursor:unset" src="../assets/images/bear.png" alt="character2">
               <v-icon style="position: absolute; left: 24.3%; font-size: 3.5vw; color: white;">mdi-lock</v-icon>
             </div>
           </div>

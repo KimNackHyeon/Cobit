@@ -23,7 +23,7 @@
       <div class="balloon2">
         <div class="balloon1text">
           <div class="balloontext1">2. 히스토리 버튼</div>
-          <div class="balloontext2">nbsp;히스토리 버튼을 누르면 실행 내역을 볼 수 있습니다.</div>
+          <div class="balloontext2">히스토리 버튼을 누르면 실행 내역을 볼 수 있습니다.</div>
           <div class="tutorialnextbtn" @click="tutorial2nextbtn">다음</div>
         </div>
       </div>

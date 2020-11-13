@@ -38,13 +38,13 @@
         </v-carousel-item>
         <v-carousel-item >
           <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
-            <div class="twomainleft">
+            <div class="threemainleft">
               <div class="twomaintitle">cobit은 블록코딩을 통해<br> 논리적 사고를 기를 수 있습니다.</div>
               <br>
               <br>
               <img src="../assets/images/block.png" alt="block">
             </div>
-            <div class="twomainright">
+            <div class="threemainright">
               <img src="../assets/images/main3.png" alt="map">
             </div>
           </div>
@@ -198,12 +198,12 @@ export default {
   padding-top: 3%;
 }
 .subtitlecontent {
-  font-size: 17px;
+  font-size: 19px;
   padding-bottom: 3%;
 }
 .cobit {
   height: 20%;
-  margin: 3% 0;
+  margin: 2% 0;
 }
 .twomainleft {
   width: 50%;
@@ -231,6 +231,28 @@ export default {
 }
 .twomaintitle {
   font-size: 28px;
+}
+.threemainleft {
+  width: 42%;
+  height: 100%;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 0 10%;
+  flex-direction: column;
+}
+.threemainright {
+  width: 58%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5% 0 0;
+}
+.threemainright img {
+  width: 90%;
+  height: 50%;
 }
 .fourcontent {
   height: 100%;
