@@ -21,6 +21,7 @@
     </div>
     <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
     <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
+    <SpeechModal v-if="isFirst" @close="isFirst= false"/>
   </div>
 </template>
 
@@ -42,6 +43,8 @@ export default {
       commandList: [],
       isClear: false,
       isFail: false,
+      isFirst: false,
+      hintCnt: 2,
       stageNum: 1,
       count: 0,
       starNum: 1,
@@ -168,6 +171,15 @@ export default {
     onModal2() {
       this.isFail = true;
     },
+    onModal3(type){
+      if(type == 1) {
+        this.setSpeechType(1)
+        this.isFirst = true;
+      } else {
+        this.setSpeechType(2)
+        this.isFirst = true;
+      } 
+    },
     getStar() {
       if(this.stageNum == 1) {
         if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
@@ -200,6 +212,7 @@ export default {
         axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
+          this.buttonText="버튼을 누르고 말을 해보세요"
           for (let index = 0; index < res.data.length; index++) {
             this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
             this.$refs.myInstance.message('JavascriptHook', 'Go');
@@ -236,6 +249,11 @@ export default {
     },
     clickStory(){
       this.openStory = false;
+      if(this.stageNum == 1) {
+        this.onModal3(1);
+      } else if (this.stageNum == 5) {
+        this.onModal3(2);
+      }
     },
   },
   beforeDestroy () {
