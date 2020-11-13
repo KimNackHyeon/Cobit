@@ -49,7 +49,7 @@ export default {
                         }
                         console.log(userInfo);
                         // console.log(kakao_account);
-                        axios.post(`http://localhost:9999/cobit/user`,{
+                        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
                             email : userInfo.email,
                             nickname : userInfo.nickname,
                         })

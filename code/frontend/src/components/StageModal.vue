@@ -50,7 +50,11 @@ export default {
   methods: {
     startGame(){
       this.$cookies.set('stageInfo', {stageNum : this.StageNum, stageType : this.StageType});
-      this.$router.push('/speech')
+      if(this.$cookies.get('stageType') == 1){
+        this.$router.push('/speech')
+      }else{
+        this.$router.push('/codeblock');
+      }
     }
   }
 }

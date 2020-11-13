@@ -142,7 +142,7 @@ export default {
   },
   async created() {
     // window.addEventListener('scroll', this.handleScroll)
-    this.type = this.$cookies.get('stageInfo').stageType;
+    this.type = this.$cookies.get('stageType');
     if (this.type == 1) {
       this.openStory1 = 'flex'
       this.openStory2 = 'none'
@@ -159,7 +159,7 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 
@@ -236,7 +236,7 @@ export default {
           this.$set(this.mapInform, 0, map)
       }else{
 
-        axios.get(`http://localhost:9999/cobit/stage/user`,{
+        axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
           params:{
             id : store.state.kakaoUserInfo.id,
           type : this.type
@@ -275,7 +275,7 @@ export default {
     }
     },
     loadStage(){
-      axios.get(`http://localhost:9999/cobit/stage?type=${this.type}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/stage?type=${this.type}`)
       .then(res => {
         res.data.forEach(map =>{
           this.mapInform.push( {
@@ -300,6 +300,7 @@ export default {
       }
     },
     goNext() {
+      console.log(this.type);
       this.$cookies.set('stageType', parseInt(this.type)+1);
       this.$router.go(0);
     }

@@ -36,7 +36,7 @@
             <p>}</p>
           </div>
         </div>
-        <div class="clear-modal-open-area">
+        <div class="clear-modal-open-area" v-if="$route.path == '/codeblock'">
           <div v-if="!isOpen" class="clear-modal-open-btn" @click="openCode"><i class="fas fa-chevron-right"></i></div>
           <div v-if="isOpen" class="clear-modal-open-btn" @click="openCode"><i class="fas fa-chevron-left"></i></div>
           <div v-if="!isOpen" class="clear-modal-open-text">코드보기</div>

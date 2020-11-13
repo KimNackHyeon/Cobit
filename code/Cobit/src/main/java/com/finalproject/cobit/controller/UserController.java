@@ -1,10 +1,12 @@
 package com.finalproject.cobit.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,7 @@ public class UserController {
 	 * < API문서 주소 : http://localhost:8080/stock/swagger-ui.html (<=== CTRL+CLICK!!)
 	 * >
 	 */
-
+	
 	@Autowired
 	UserRepo userRepo;
 
@@ -183,12 +185,9 @@ public class UserController {
 		}
 		List<Integer> result = new ArrayList<Integer>();
 		if (oneCount == 5) {
-			result.add(1);
-		}
-		if (twoCount == 1) {
 			result.add(2);
 		}
-		if (threeCount == 1) {
+		if (twoCount == 4) {
 			result.add(3);
 		}
 

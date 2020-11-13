@@ -91,7 +91,7 @@ export default {
       formData.append("email","test@test.com");
       // formData.append("email",store.state.userInfo.email); // 사용자 이메일
 
-      axios.post(`http://localhost:9999/cobit/user/upload`, formData, { 
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/upload`, formData, { 
           headers: { 'Content-Type': 'multipart/form-data' } 
       }).then(response => {
         console.log(response.data);

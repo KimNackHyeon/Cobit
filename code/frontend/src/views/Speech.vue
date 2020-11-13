@@ -12,7 +12,7 @@
     <div class="speech-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" src="cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
+        <unity class="unity" src="../stt/Build/stt.json" unityLoader="../stt/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn">
           <div @click="setSpeech">{{ buttonText }}</div>
           <span></span><vue-speech class="my-speech" v-if="isClick" lang="ko" @onTranscriptionEnd="onEnd"/>
@@ -192,7 +192,7 @@ export default {
       }
 
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -228,7 +228,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
@@ -247,7 +247,6 @@ export default {
     },
     gostage(){
         this.$router.push('/gamemap')
-        this.$cookies.set('reload', 'true');
     },
     clickStory(){
       this.openStory = false;

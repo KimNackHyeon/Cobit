@@ -110,7 +110,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         if(res.data){
           console.log(res.data);
@@ -135,7 +135,7 @@ export default {
       })
     },
     saveItem(){
-      axios.post(`http://localhost:9999/cobit/product`,this.myItems)
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/product`,this.myItems)
       .then(()=>{
         Swal.fire(
           '저장되었습니다.',
@@ -190,7 +190,7 @@ export default {
           url:'/v2/user/me',
           success : res => {
               const kakao_account = res.kakao_account;
-              axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+              axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 // console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
@@ -198,7 +198,7 @@ export default {
           },
       })
 
-      axios.get(`http://localhost:9999/cobit/product`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product`)
       .then(res => {
         console.log(res);
         res.data.forEach(item => {

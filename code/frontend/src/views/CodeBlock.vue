@@ -67,7 +67,7 @@
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" style="width:100%; height:100%;" src="cobit/Build/cobit.json" unityLoader="cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="../cobit/Build/cobit.json" unityLoader="../cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
@@ -379,7 +379,7 @@ export default {
               kakao_account = res.kakao_account;
           },
       });
-      await axios.get(`http://localhost:9999/cobit/user?email=${kakao_account.email}`)
+      await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.hintCount = res.data.hint;
@@ -608,7 +608,7 @@ export default {
     buyHint(){
       console.log(store.state.kakaoUserInfo);
       if(this.buyhint == false){
-        axios.post(`http://localhost:9999/cobit/user/hint`,store.state.kakaoUserInfo)
+        axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
           this.hintCount -= 1;
           this.buyhint = true;
@@ -783,7 +783,7 @@ export default {
         }
       }
       // axios
-      axios.post(`http://localhost:9999/cobit/stage/user`,{
+      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
         userId : store.state.kakaoUserInfo.id,
         stageId : this.stageType + "" + this.stageNum,
         star : this.starNum 
@@ -1012,7 +1012,7 @@ export default {
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
       console.log("캐릭터 정보 불러오기");
-      axios.get(`http://localhost:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
+      axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
