@@ -23,7 +23,7 @@
       <div class="balloon2">
         <div class="balloon1text">
           <div class="balloontext1">2. 히스토리 버튼</div>
-          <div class="balloontext2">히스토리 버튼을 누르면 실행 내역을 볼 수 있습니다.</div>
+          <div class="balloontext2">nbsp;히스토리 버튼을 누르면 실행 내역을 볼 수 있습니다.</div>
           <div class="tutorialnextbtn" @click="tutorial2nextbtn">다음</div>
         </div>
       </div>
@@ -67,7 +67,7 @@
     <div class="code-block-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 3;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" style="width:100%; height:100%;" src="../cobit/Build/cobit.json" unityLoader="../cobit/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
+        <unity class="unity" style="width:100%; height:100%;" src="glacier/Build/glacier.json" unityLoader="glacier/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
       <div class="btnsbox">
         <div id="hintBtn" @click="buyHint">
@@ -185,7 +185,7 @@ export default {
     return {
       isClear: false,
       isFail: false,
-      stageNum: 1,
+      stageNum: this.$cookies.get('stageInfo').stageNum,
       isMove: true,
       isObstacle: false,
       distX: '',
@@ -348,11 +348,11 @@ export default {
       clickhint:false,
       hint:"스테이지의 힌트",
       starNum: 1,
-      stageType: 1,
+      stageType: this.$cookies.get('stageInfo').stageType,
       openStory:true,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
-      showTutorial: 1,
+      showTutorial: 0,
       fori : 0,
       code:[]
     }
@@ -370,7 +370,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
-    console.log(this.starNum + " " + this.stageType);
+    console.log(this.stageNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -389,6 +389,7 @@ export default {
   },
   mounted() {
     // this.onMove();
+    console.log(this.stageNum + " " + this.stageType);
     if(this.stageNum == 1 && this.stageType == 1){
       this.showTutorial = 1;
       $(".hintBtnbox").css('position', 'relative');
@@ -948,14 +949,20 @@ export default {
     },
     nextLevel() {
       this.commandList = []
-
+      this.stageNum += 1;
       var stageInfo = this.$cookies.get('stageInfo');
-      stageInfo.stageNum = this.stageNum +1;
+      stageInfo.stageNum = this.stageNum;
       this.$cookies.set('stageInfo',stageInfo);
 
-      this.$router.push('/speech');
-      // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
-      // this.LevelLoad();
+      if(this.stageType == 1){
+        setTimeout(() => {
+        location.reload()
+        }, 100);
+        this.$router.push('/speech');
+      }else{
+        this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
+        this.LevelLoad();
+      }
     },
     handleStart() {
       setTimeout(() => {
@@ -990,15 +997,32 @@ export default {
       console.log(this.code);
       var code = [];
       var code_kor = [];
+      var fornum = 0;
+      var isFor = false;
       this.code.forEach(m => {
-        if(m.move.num==7){
-          code.push(this.moves[m.move.num].move + "();"+m.loop+"times");
-          code_kor.push(this.moves[m.move.num].move_kor + "();"+m.loop+"번 반복");
-        }else{
-          code.push(this.moves[m.move.num].move + "();");
-          code_kor.push(this.moves[m.move.num].move_kor + "();");
+        if(fornum != m.loop && isFor){
+          code.push("}");
+          code_kor.push("}");
+        }
+        if(m.move.num==7){ // 반복문이 있을 때
+          code.push("for (i = 0; i < "+ m.loop + "; i++) {");
+          code_kor.push(this.moves[m.move.num].move_kor + "("+ m.loop + "번) {");
+          fornum = m.loop;
+          isFor = true;
+        }else{ // 반복문이 아니면
+          if(isFor){
+            code.push("&ensp;"+this.moves[m.move.num].move + "();");
+            code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "();");
+          }else{
+            code.push(this.moves[m.move.num].move + "();");
+            code_kor.push(this.moves[m.move.num].move_kor + "();");
+          }
         }
       });
+      if(isFor){
+        code.push("}");
+        code_kor.push("}");
+      }
       this.setCode(code)
       this.setCodeKor(code_kor)
       console.log(code, '1');
