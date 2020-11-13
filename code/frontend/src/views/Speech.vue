@@ -21,7 +21,7 @@
     </div>
     <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
     <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
-    <SpeechModal v-if="isHint" @close="isHint= false"/>
+    <SpeechModal v-if="isFirst" @close="isFirst= false"/>
   </div>
 </template>
 
@@ -41,9 +41,10 @@ export default {
       isClick: false,
       isMove: true,
       isObstacle: false,
+      commandList: [],
       isClear: false,
       isFail: false,
-      isHint: false,
+      isFirst: false,
       hintCnt: 2,
       stageNum: 1,
       count: 0,
@@ -120,17 +121,18 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar', 'setSpeechType']),
+    ...mapMutations(['setInStageNum', 'setInStageStar','setSpeechType']),
     LevelLoad() {
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
-      this.count = 0;
-      this.hintCnt = 2
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       this.LevelLoad();
     },
     nextLevel() {
+      this.commandList = []
       // this.stageNum += 1
       this.count = 0;
       // this.stageNum = this.$cookies.get('stageInfo').stageNum;
@@ -171,17 +173,13 @@ export default {
     onModal2() {
       this.isFail = true;
     },
-    onModal3(){
-      if(this.hintCnt == 2) {
-        this.setSpeechType(2)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 1
-      } else if(this.hintCnt == 1 && this.stageNum != 5) {
+    onModal3(type){
+      if(type == 1) {
         this.setSpeechType(1)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 0
+        this.isFirst = true;
+      } else {
+        this.setSpeechType(2)
+        this.isFirst = true;
       } 
     },
     getStar() {
@@ -209,16 +207,13 @@ export default {
       if (this.isClick) {
         this.buttonText="말을 마쳤다면 버튼을 눌러주세요."
       } else {
-        this.buttonText="데이터 전송중입니다..."
+        this.buttonText="버튼을 누르고 말을 해보세요"
         this.count += 1;
         console.log(this.count)
         console.log(this.transcription, '입력값')
         axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
           console.log(res);
-          if(res.data.length == 0) {
-            this.onModal3()
-          } 
           this.buttonText="버튼을 누르고 말을 해보세요"
           for (let index = 0; index < res.data.length; index++) {
             this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
@@ -256,6 +251,11 @@ export default {
     },
     clickStory(){
       this.openStory = false;
+      if(this.stageNum == 1) {
+        this.onModal3(1);
+      } else if (this.stageNum == 5) {
+        this.onModal3(2);
+      }
     },
   },
   beforeDestroy () {
