@@ -12,9 +12,9 @@
     <div class="speech-container">
       <div class="unity-box">
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
-        <unity class="unity" src="cobit-stt/Build/cobit-stt.json" unityLoader="cobit-stt/Build/UnityLoader.js" ref="myInstance"></unity>
-        <div class="speech-btn">
-          <div @click="setSpeech">{{ buttonText }}</div>
+        <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
+        <div class="speech-btn" @click="setSpeech">
+          <div >{{ buttonText }}</div>
           <span></span><vue-speech class="my-speech" v-if="isClick" lang="ko" @onTranscriptionEnd="onEnd"/>
         </div>
       </div>
@@ -51,8 +51,10 @@ export default {
       buttonText: "버튼을 누르고 말을 해보세요",
       openStory:true,
       story:[
-        { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
-          start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
+        { 
+          // start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
+        start_modal:"",
+          start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 나는 네가 말한대로 움직일게.",
           end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
           hint:"basicHint1.png"
           },
@@ -132,7 +134,9 @@ export default {
       // this.stageType = this.$cookies.get('stageInfo').stageType;
       // var stageInfo = this.$cookies.get('stageInfo');
       // this.$cookies.set('stageInfo',stageInfo);
-
+      setTimeout(() => {
+        location.reload()
+      }, 100);
       this.$router.push('/codeblock');
       // this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       // this.LevelLoad();
@@ -151,6 +155,8 @@ export default {
       this.onModal2();
     },
     onEnd ({ lastSentence, transcription }) {
+      console.log(lastSentence);
+      console.log(transcription);
       this.lastSentence = lastSentence
       this.transcription = transcription
     },

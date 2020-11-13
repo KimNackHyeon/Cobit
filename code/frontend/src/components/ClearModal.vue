@@ -27,12 +27,12 @@
           </div>
           <div v-show="isKor" class="clear-modal-code-area">
             <p>시작() {</p>
-            <p class="clear-modal-inner-code" v-for='kor in CodeKor' :key="kor">{{ kor }}</p>
+            <p class="clear-modal-inner-code" v-for='kor in CodeKor' :key="kor" v-html="kor"></p>
             <p>}</p>
           </div>
           <div v-show="!isKor" class="clear-modal-code-area">
             <p>main() {</p>
-            <p class="clear-modal-inner-code" v-for='eng in Code' :key="eng">{{ eng }}</p>
+            <p class="clear-modal-inner-code" v-for='eng in Code' :key="eng" v-html="eng"></p>
             <p>}</p>
           </div>
         </div>
