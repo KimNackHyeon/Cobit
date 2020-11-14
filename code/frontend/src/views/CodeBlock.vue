@@ -177,6 +177,7 @@ import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
 import Swal from 'sweetalert2';
+import $ from "jquery"
 
 export default {
   name: 'CodeBlock',

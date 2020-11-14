@@ -11,6 +11,12 @@
     </div>
     <div class="speech-container">
       <div class="unity-box">
+        <div class="direction-area">
+          <div class="left-arrow"><img src="../assets/images/arrow.png" alt="left"><span>왼쪽</span></div>
+          <div class="right-arrow"><img src="../assets/images/arrow.png" alt="right"><span>오른쪽</span></div>
+          <div class="up-arrow"><img src="../assets/images/arrow.png" alt="up"><span>위쪽</span></div>
+          <div class="down-arrow"><img src="../assets/images/arrow.png" alt="down"><span>아래쪽</span></div>
+        </div>
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn" @click="setSpeech">
@@ -315,6 +321,83 @@ export default {
 
 .unity-box .speech-btn:hover {
   background-color: #c4e1fc;
+}
+
+.unity-box .direction-area {
+  position: absolute;
+  top: 60px;
+  right: 80px;
+  width: 30px;
+  height: 30px;
+  z-index: 2;
+}
+
+.unity-box .direction-area > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.unity-box .direction-area > div > img {
+  width: 100%;
+  height: 100%;
+}
+
+.unity-box .direction-area > div > span {
+  position: absolute;
+  width: 50px;
+  text-align: center;
+  font-family: 'BMJUA';
+  color: #fff;
+  text-shadow: -1.5px 0 #000,
+                0 1.5px #000,
+                1.5px 0 #000,
+                0 -1.5px #000;
+}
+
+.unity-box .direction-area .up-arrow {
+  top: -60%;
+}
+.unity-box .direction-area .up-arrow > img {
+  transform: rotate(270deg);
+}
+.unity-box .direction-area .up-arrow > span {
+  top: -60%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.unity-box .direction-area .down-arrow {
+  bottom: -60%;
+}
+.unity-box .direction-area .down-arrow > img {
+  transform: rotate(90deg);
+}
+.unity-box .direction-area .down-arrow > span {
+  bottom: -70%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.unity-box .direction-area .right-arrow {
+  right: -60%;
+}
+.unity-box .direction-area .right-arrow > span{
+  top: 50%;
+  right: -160%;
+  transform: translate(0, -50%);
+}
+
+.unity-box .direction-area .left-arrow {
+  left: -60%;
+}
+.unity-box .direction-area .left-arrow > img {
+  transform: rotate(180deg);
+}
+.unity-box .direction-area .left-arrow > span {
+  top: 50%;
+  left: -140%;
+  transform: translate(0, -50%);
 }
 
 .speech-btn .my-speech {
