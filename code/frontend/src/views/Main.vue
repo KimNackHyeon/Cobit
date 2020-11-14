@@ -32,7 +32,7 @@
               <img src="../assets/images/directionkey.png" alt="directionkey">
             </div>
             <div class="twomainright">
-              <img src="../assets/images/main2.png" alt="map">
+              <img src="../assets/images/main2.gif" alt="map">
             </div>
           </div>
         </v-carousel-item>
