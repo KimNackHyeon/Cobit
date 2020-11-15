@@ -32,7 +32,7 @@
               <img src="../assets/images/directionkey.png" alt="directionkey">
             </div>
             <div class="twomainright">
-              <img src="../assets/images/main2.png" alt="map">
+              <img src="../assets/images/main2.gif" alt="map">
             </div>
           </div>
         </v-carousel-item>
@@ -98,7 +98,7 @@
           <div class="mainitem" @mousedown="onmousedown" @mouseup="onmouseup">
               <div class="lastcontent">
                 <div class="twomaintitle">나만의 캐릭터를 만들어 함께 모험을 떠나볼까요?</div>
-                <img src="../assets/images/mycharacter.png" alt="mycharacter">
+                <img src="../assets/images/mycharacter.gif" alt="mycharacter" style="margin-top : 50px;">
                 <div class="gohomebtnbox">
                   <div @click="gohome" class="gohomebtn">모험하기</div>
                 </div>
