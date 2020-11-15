@@ -352,7 +352,7 @@ export default {
       openStory:true,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
-      showTutorial: 1,
+      showTutorial: 0,
       fori : 0,
       code:[]
     }

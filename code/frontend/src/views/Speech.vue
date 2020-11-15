@@ -202,11 +202,11 @@ export default {
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
-        userId : store.state.kakaoUserInfo.id,
-        stageId : this.stageType + "" + this.stageNum,
-        star : this.starNum 
-      })
+      // axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      //   userId : store.state.kakaoUserInfo.id,
+      //   stageId : this.stageType + "" + this.stageNum,
+      //   star : this.starNum 
+      // })
     },
     setSpeech() {
       this.isClick = !this.isClick
