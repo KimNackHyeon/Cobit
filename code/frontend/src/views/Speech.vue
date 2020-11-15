@@ -134,6 +134,7 @@ export default {
     },
     reStart() {
       this.commandList = []
+      this.count = 0;
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       this.LevelLoad();
     },
@@ -192,21 +193,21 @@ export default {
       if(this.stageNum == 1) {
         if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 2) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 2) {this.starNum=3} else if(this.count == 3) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 3) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 3) {this.starNum=3} else if(this.count == 4) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 4) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 5) {this.starNum=3} else if(this.count == 6) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 5) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 6) {this.starNum=3} else if(this.count == 7) {this.starNum=2} else {this.starNum=1}
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
-        userId : store.state.kakaoUserInfo.id,
-        stageId : this.stageType + "" + this.stageNum,
-        star : this.starNum 
-      })
+      // axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      //   userId : store.state.kakaoUserInfo.id,
+      //   stageId : this.stageType + "" + this.stageNum,
+      //   star : this.starNum 
+      // })
     },
     setSpeech() {
       this.isClick = !this.isClick
