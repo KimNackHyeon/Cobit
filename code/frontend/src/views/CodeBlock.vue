@@ -10,7 +10,7 @@
       <div class="script" v-html="story[stageNum-1].start"></div>
     </div> -->
     <!-- 튜토리얼 -->
-    <div class="tutorial1" v-if="showTutorial == 1">
+    <div class="tutorial1" v-if="showTutorial == 1 && stageType == 1 && stageNum == 1">
       <div class="balloon1">
         <div class="balloon1text">
           <div class="balloontext1">1. 힌트 버튼</div>
@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="tutorial2" v-if="showTutorial == 2">
+    <div class="tutorial2" v-if="showTutorial == 2 && stageType == 1 && stageNum == 1">
       <div class="balloon2">
         <div class="balloon1text">
           <div class="balloontext1">2. 히스토리 버튼</div>
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="tutorial3" v-if="showTutorial == 3">
+    <div class="tutorial3" v-if="showTutorial == 3 && stageType == 1 && stageNum == 1">
       <div class="balloon3">
         <div class="balloon1text">
           <div class="balloontext1">3. 전체삭제 버튼</div>
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="tutorial4" v-if="showTutorial == 4">
+    <div class="tutorial4" v-if="showTutorial == 4 && stageType == 1 && stageNum == 1">
       <!-- <div class="whitebox"></div> -->
       <div class="balloon4">
         <div class="balloon1text">
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="tutorial5" v-if="showTutorial == 5">
+    <div class="tutorial5" v-if="showTutorial == 5 && stageType == 1 && stageNum == 1">
       <div class="balloon5">
         <div class="balloon1text">
           <div class="balloontext1">5-1. 게임 실행</div>
@@ -56,7 +56,7 @@
         </div>
       </div>
     </div>
-    <div class="tutorial6" v-if="showTutorial == 6">
+    <div class="tutorial6" v-if="showTutorial == 6 && stageType == 1 && stageNum == 1">
       <div class="balloon6">
         <div class="balloon1text">
           <div class="balloontext1">5-2. 게임 실행</div>
@@ -110,10 +110,14 @@
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
           </div> -->
         <div class="block-box">
-           <div v-show="isMove" class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)" style="position: relative">
-              {{m.move_kor}}
-              <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
+          <div v-if="isBlock1" class='block-mark-area'></div>
+          <div v-if="isBlock2" class='block-mark-area2'></div>
+          <div v-show="isMove" class="block-list">
+            <div v-for="(m,index) in moves" :key="index" @mouseover="blockmouseover(m,$event)" style="position: relative">
+              <div v-if="index != 4 && index != 5" class="block" :class="'block'+index">
+                {{m.move_kor}}
+                <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
+              </div>
             </div>
           </div>
           <!-- <div v-show="isObstacle" class="block-list">
@@ -188,6 +192,8 @@ export default {
       stageNum: this.$cookies.get('stageInfo').stageNum,
       isMove: true,
       isObstacle: false,
+      isBlock1: false,
+      isBlock2: false,
       distX: '',
       distY: '',
       underfor:[],
@@ -252,17 +258,17 @@ export default {
         },
         {
           num:6,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'230px',
           index:6,x:0,y:0,son:-1,onPlayBtn:false,loop:1
         },
         {
           num:7,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'395px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'305px',
           index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         },
         {
           num:8,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'450px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'340px',
           index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         }
       ],
@@ -324,7 +330,7 @@ export default {
         {
           num:8,
           move:'If',
-          move_kor:'조건',
+          move_kor:'만약 앞에 장애물이 있다면',
           isForblock:''
         }
       ],
@@ -395,8 +401,12 @@ export default {
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
     }
+    this.checkBlockArea();
   },
   watch: {
+    stageNum() {
+      this.checkBlockArea();
+    },
   },
   methods: {
     tutorial1nextbtn() {
@@ -492,7 +502,7 @@ export default {
       console.log(selectedNum);
       if(Number(selectedNum)==7){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
       }else{
         this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
@@ -1035,6 +1045,19 @@ export default {
         }
       })
     },
+    checkBlockArea() {
+      if(this.stageType == 1) {
+        this.isBlock1 = true
+        this.isBlock2 = true
+      } else if(this.stageType == 2) {
+        this.isBlock1 = false
+        if(this.stageNum < 3) {
+          this.isBlock2 = true
+        } else {
+          this.isBlock2 = false
+        }
+      } 
+    }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -1080,6 +1103,26 @@ export default {
   /* background-color: blue; */
   display: flex;
   height:100%
+}
+
+.block-box .block-mark-area {
+  position: absolute;
+  top: 280px;
+  width: 100%; 
+  height: 120px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #dcdcdc94;
+  z-index: 1;
+}
+
+.block-box .block-mark-area2 {
+  position: absolute;
+  top: 340px;
+  width: 100%; 
+  height: 60px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #dcdcdc94;
+  z-index: 1;
 }
 
 .code-box .play-box {
