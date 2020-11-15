@@ -185,7 +185,7 @@ export default {
     return {
       isClear: false,
       isFail: false,
-      stageNum: 1,
+      stageNum: this.$cookies.get('stageInfo').stageNum,
       isMove: true,
       isObstacle: false,
       distX: '',
@@ -348,7 +348,7 @@ export default {
       clickhint:false,
       hint:"스테이지의 힌트",
       starNum: 1,
-      stageType: 1,
+      stageType: this.$cookies.get('stageInfo').stageType,
       openStory:true,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
