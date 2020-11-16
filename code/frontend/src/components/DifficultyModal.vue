@@ -53,7 +53,7 @@ export default {
   //       }
   //     })
   //     .then(res => {
-  //       console.log(res);
+  //       // console.log(res);
   //       this.stage2 = res.data.includes(2);
   //       this.stage3 = res.data.includes(3);
   //     })

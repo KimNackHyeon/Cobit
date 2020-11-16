@@ -105,7 +105,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
-    console.log(this.stageNum + " " + this.stageType);
+    // console.log(this.stageNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -167,8 +167,8 @@ export default {
       this.onModal2();
     },
     onEnd ({ lastSentence, transcription }) {
-      console.log(lastSentence);
-      console.log(transcription);
+      // console.log(lastSentence);
+      // console.log(transcription);
       this.lastSentence = lastSentence
       this.transcription = transcription
     },
@@ -216,11 +216,11 @@ export default {
       } else {
         this.buttonText="버튼을 누르고 말을 해보세요"
         this.count += 1;
-        console.log(this.count)
-        console.log(this.transcription, '입력값')
+        // console.log(this.count)
+        // console.log(this.transcription, '입력값')
         axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.buttonText="버튼을 누르고 말을 해보세요"
           for (let index = 0; index < res.data.length; index++) {
             this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
@@ -228,17 +228,17 @@ export default {
             
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          // console.log(error);
         });
       }
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
         this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
         this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)

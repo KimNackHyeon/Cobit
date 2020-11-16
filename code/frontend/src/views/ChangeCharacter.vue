@@ -109,13 +109,13 @@ export default {
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
         if(res.data){
-          console.log(res.data);
+          // console.log(res.data);
           this.myItems = res.data;
-          console.log(this.myItems);
+          // console.log(this.myItems);
           this.onChangeColor(this.myItems.color);
           this.onChangeEyebrow(this.myItems.eyebrow);
           this.onChangeEye(this.myItems.eye);
@@ -174,10 +174,10 @@ export default {
           this.myItems.sword = null
         }
       }
-      console.log(this.myItems)
+      // console.log(this.myItems)
     },
     handleStart() {
-      console.log(event)
+      // console.log(event)
       setTimeout(() => {
       this.loadMyCharacter();
     }, 10);
@@ -192,7 +192,7 @@ export default {
               const kakao_account = res.kakao_account;
               axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
-                // console.log(res);
+                // // console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
               })
           },
@@ -200,7 +200,7 @@ export default {
 
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         res.data.forEach(item => {
           if(item.type == 1){ // 캐릭터색 아이템 불러오기
             this.colors.push(item);

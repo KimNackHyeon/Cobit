@@ -23,7 +23,7 @@
           </div>
           <div class="summery-modal-footer">
             <div class="summery-modal-btn" @click="goNext">{{ nextLevelName }}으로</div>
-            <div class="summery-modal-btn" @click="goMain">메인으로</div>
+            <div class="summery-modal-btn" @click="goMain" v-if="$route.path == '/codeblock'">메인으로</div>
           </div>
         </div>
       </div>
@@ -74,10 +74,15 @@ export default {
       if (this.levelName == '초급') {
         this.$cookies.set('stageType', 2);
         this.$cookies.set('reload', 'true');
-        this.$router.push('/gamemap');
+        // this.$router.push('/gamemap');
       } else {
         this.$cookies.set('stageType', 3);
         this.$cookies.set('reload', 'true');
+        
+      }
+      if(this.$route.path == '/gamemap'){
+        this.$router.go(0);
+      }else{
         this.$router.push('/gamemap');
       }
     },

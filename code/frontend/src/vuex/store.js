@@ -15,7 +15,8 @@ const state = {
   CodeKor: [],
   SpeechType: 0
 }
-console.log(state);
+state;
+// console.log(state);
 
 Vue.use(Vuex)
 

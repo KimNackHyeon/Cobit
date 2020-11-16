@@ -74,11 +74,11 @@ export default {
             axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.commands
           )
           .then(function (response) {
-            console.log(response);
+            // console.log(response);
             // window.location.reload();
           })
           .catch(function (error) {
-            console.log(error);
+            // console.log(error);
           });
           this.commands = [];
             this.transcription = [];
