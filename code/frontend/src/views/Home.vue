@@ -34,7 +34,7 @@ export default {
                 });
             },
             GetMe(authObj){
-                console.log(authObj.access_token);
+                // console.log(authObj.access_token);
                 this.$cookies.set('access_token', authObj.access_token);
                 this.$cookies.set('refresh_token', authObj.refresh_token);
                 // VueCookies.set('auth-token', authObj.access_token);
@@ -47,14 +47,14 @@ export default {
                             email : kakao_account.email,
                             // pw : authObj.access_token,
                         }
-                        console.log(userInfo);
-                        // console.log(kakao_account);
+                        // console.log(userInfo);
+                        // // console.log(kakao_account);
                         axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
                             email : userInfo.email,
                             nickname : userInfo.nickname,
                         })
                         .then(res => {
-                          console.log(res);
+                          // console.log(res);
                           store.commit('setKakaoUserInfo', res.data);
                           this.$router.push("/mypage");
                         })

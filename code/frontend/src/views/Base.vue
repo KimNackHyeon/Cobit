@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      console.log('Base')
+      // console.log('Base')
     },
   },
   beforeDestroy () {

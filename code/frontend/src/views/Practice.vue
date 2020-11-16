@@ -274,7 +274,7 @@ export default {
      blockmouseover(m,event){
       let posX = event.pageX;
       let posY = event.pageY;
-      // console.log(event.target);
+      // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
@@ -286,7 +286,7 @@ export default {
       // var selectedNum = this.selectnum;
       // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
       var selectedNum = m.num;
-      console.log(selectedNum);
+      // console.log(selectedNum);
       if(Number(selectedNum)==7){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
@@ -334,9 +334,9 @@ export default {
             while(tempforson !=-1){
               resultBlocknum +=1;
               ForresultString+=',';
-              console.log(this.resultStep);
-              console.log(this.resultStep[tempforson]);
-              console.log("tempforson: "+tempforson);
+              // console.log(this.resultStep);
+              // console.log(this.resultStep[tempforson]);
+              // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
               if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
@@ -345,22 +345,23 @@ export default {
               }
             }
             this.resultStep[tempson].forindex = forlist.length;
-            // console.log(ForresultString);
+            // // console.log(ForresultString);
             forlist.push(ForresultString);
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
-          console.log("최종 블록 수:"+resultBlocknum);
+          resultBlocknum;
+          // console.log("최종 블록 수:"+resultBlocknum);
       }
 
-      // console.log("resultStep["+0+"]="+this.resultStep[0].son);
+      // // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         if(step.move.num!=7){
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move);
-          // console.log(this.moves[step.move.num].move);
+          // // console.log(this.moves[step.move.num].move);
         }else{
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move,forlist[step.move.forindex]);
-          // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
+          // // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
         }
       });
      for(var i=0; i<this.resultmoves.length;i++){
@@ -371,13 +372,13 @@ export default {
      this.resultStep = [];
      this.playClass.background='#1dc360';
      this.$refs.myInstance.message('JavascriptHook',"Go");
-    //  console.log(delNode)
+    //  // console.log(delNode)
     //  for(var j=0; j<delNode.length;j++){
     //    this.resultStep.pop(j);
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
-      // console.log(this.resultmoves);
+      // // console.log(this.resultmoves);
     },
     // clickHint(){
     //   if(this.clickhint){
@@ -401,8 +402,8 @@ export default {
       //     this.underfor[f].overMe=false;
       //   }
       // }
-      // console.log(x+','+y)
-      // console.log("underfor[0]"+this.underfor[0].x+" "+this.underfor[0].y)
+      // // console.log(x+','+y)
+      // // console.log("underfor[0]"+this.underfor[0].x+" "+this.underfor[0].y)
       
       if(x<playRect.right+this.distX&&x>playRect.left+this.distX&&y<playRect.bottom+this.distY&&playRect.top+this.distY){
         this.playClass={background:'green',show:'block'};
@@ -470,7 +471,7 @@ export default {
                                               
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
-      // console.log(event.target);
+      // // console.log(event.target);
       this.targetdiv = event.target;
       // event.target.style.position = 'absolute';
       let posX = event.pageX;
@@ -519,7 +520,7 @@ export default {
           //   this.underfor[this.resultStep[this.targetdivNum].forindex].y = this.resultStep[this.targetdivNum].y+50;
           // }
           
-        // console.log(event);
+        // // console.log(event);
         if(this.playClass.show=='block'){
           if(!this.alreadyOverPlay){
             this.playson = this.targetdivNum;
@@ -543,7 +544,7 @@ export default {
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
           this.resultStep[this.targetdivNum].position = 'unset';
-          console.log(content[0]);
+          // console.log(content[0]);
           
         }
         // var original_son = -1;
@@ -567,7 +568,7 @@ export default {
           }else{
               var underForblockParent = content[0].parentNode;
               var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
-              console.log(underForblock);
+              // console.log(underForblock);
               if(!step.onclick){
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
@@ -597,15 +598,15 @@ export default {
                 }
               }
           }
-            // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
-            // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
+            // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
+            // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
-            console.log()
+            // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
-    console.log(this.resultStep);
+    // console.log(this.resultStep);
      this.playClass.show='none';
       }
 
@@ -638,10 +639,10 @@ export default {
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
         this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
         this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)

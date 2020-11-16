@@ -143,7 +143,7 @@ export default {
     },
     onmouseup(event) {
       if(this.prex > event.pageX) {
-        console.log('dragged left');
+        // console.log('dragged left');
         if(this.activeSlide >= 5){
           this.activeSlide = 5
         }else {
@@ -151,7 +151,7 @@ export default {
         }
       }
       else if(this.prex < event.pageX) {
-        console.log('dragged right');
+        // console.log('dragged right');
         if(this.activeSlide <= 0){
           this.activeSlide = 0
         }else{

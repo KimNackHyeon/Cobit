@@ -1,14 +1,14 @@
 <template>
   <div class='wrap'>
-    <!-- <div class="story" @click="clickStory" v-if="openStory">
+    <div class="story" @click="clickStory" v-if="openStory">
       <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
-      <div class="script" v-html="story[stageNum-1].start"></div>
-    </div> -->
+      <div class="script" v-html="story[stageNum-1].end"></div>
+    </div>
     <!-- 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1 && stageType == 1 && stageNum == 1">
       <div class="balloon1">
@@ -355,10 +355,10 @@ export default {
       hint:"스테이지의 힌트",
       starNum: 1,
       stageType: this.$cookies.get('stageInfo').stageType,
-      openStory:true,
+      openStory:false,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
-      showTutorial: 1,
+      showTutorial: 0,
       fori : 0,
       code:[]
     }
@@ -376,7 +376,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
-    console.log(this.starNum + " " + this.stageType);
+    // console.log(this.starNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -485,21 +485,21 @@ export default {
       }
       let posX = event.pageX;
       let posY = event.pageY;
-      console.log(posX + ',' + posY)
-      // console.log(event.target);
+      // console.log(posX + ',' + posY)
+      // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
-      console.log(this.distX + ',' + this.distY)
+      // console.log(this.distX + ',' + this.distY)
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
       // var selectedNum = this.selectnum;
       // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
       var selectedNum = m.num;
-      console.log(selectedNum);
+      // console.log(selectedNum);
       if(Number(selectedNum)==7){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
@@ -517,9 +517,10 @@ export default {
        this.resultStep[this.targetdivNum].choiceNum = true;
        this.targetdivNum = mynum;
      },
-    //  clickStory(){
-       
-    //  },
+     clickStory(){
+       this.openStory = false;
+       this.onModal();
+     },
      clickForblock(m,index){
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
@@ -536,7 +537,7 @@ export default {
      },
     clickPlayBtn(){
       var tempson = this.playson;
-      console.log(this.resultStep.length + '여기')
+      // console.log(this.resultStep.length + '여기')
       var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
@@ -554,9 +555,9 @@ export default {
               this.code.push({move:this.resultStep[tempforson],loop:this.resultStep[tempson].loop});
               resultBlocknum +=1;
               ForresultString+=',';
-              console.log(this.resultStep);
-              console.log(this.resultStep[tempforson]);
-              console.log("tempforson: "+tempforson);
+              // console.log(this.resultStep);
+              // console.log(this.resultStep[tempforson]);
+              // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
               if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
@@ -565,7 +566,7 @@ export default {
               }
             }
             this.resultStep[tempson].forindex = forlist.length;
-            // console.log(ForresultString);
+            // // console.log(ForresultString);
             forlist.push(ForresultString);
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
@@ -573,14 +574,14 @@ export default {
           this.blockNum = resultBlocknum
       }
 
-      // console.log("resultStep["+0+"]="+this.resultStep[0].son);
+      // // console.log("resultStep["+0+"]="+this.resultStep[0].son);
       this.resultmoves.forEach( step => {
         if(step.move.num!=7){
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move);
-          // console.log(this.moves[step.move.num].move);
+          // // console.log(this.moves[step.move.num].move);
         }else{
           this.$refs.myInstance.message('JavascriptHook',this.moves[step.move.num].move,forlist[step.move.forindex]);
-          // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
+          // // console.log(this.moves[step.move.num].move+','+forlist[step.move.forindex]);
         }
       });
      for(var i=0; i<this.resultmoves.length;i++){
@@ -591,13 +592,13 @@ export default {
      this.resultStep = [];
      this.playClass.background='#1dc360';
      this.$refs.myInstance.message('JavascriptHook',"Go");
-    //  console.log(delNode)
+    //  // console.log(delNode)
     //  for(var j=0; j<delNode.length;j++){
     //    this.resultStep.pop(j);
     //  }
       this.playson = -1;
       this.alreadyOverPlay = false;
-      // console.log(this.resultmoves);
+      // // console.log(this.resultmoves);
 
       // 튜토리얼
       if(this.showTutorial == 6){
@@ -616,7 +617,7 @@ export default {
     //   }
     // },
     buyHint(){
-      console.log(store.state.kakaoUserInfo);
+      // console.log(store.state.kakaoUserInfo);
       if(this.buyhint == false){
         axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
@@ -671,8 +672,8 @@ export default {
       //     this.underfor[f].overMe=false;
       //   }
       // }
-      // console.log(x+','+y)
-      // console.log("underfor[0]"+this.underfor[0].x+" "+this.underfor[0].y)
+      // // console.log(x+','+y)
+      // // console.log("underfor[0]"+this.underfor[0].x+" "+this.underfor[0].y)
       
       if(x<playRect.right+this.distX&&x>playRect.left+this.distX&&y<playRect.bottom+this.distY&&playRect.top+this.distY){
         this.playClass={background:'green',show:'block'};
@@ -740,7 +741,7 @@ export default {
                                               
     dragstart(mynum,event) {
       this.targetdivNum = mynum;
-      // console.log(event.target);
+      // // console.log(event.target);
       this.targetdiv = event.target;
       // event.target.style.position = 'absolute';
       let posX = event.pageX;
@@ -800,7 +801,7 @@ export default {
       });
     },
     drop(event) {
-      console.log(this.resultmoves)
+      // console.log(this.resultmoves)
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
       const relativeLeft = clientRect.left;
@@ -822,7 +823,7 @@ export default {
           //   this.underfor[this.resultStep[this.targetdivNum].forindex].y = this.resultStep[this.targetdivNum].y+50;
           // }
           
-        // console.log(event);
+        // // console.log(event);
         if(this.playClass.show=='block'){
           if(!this.alreadyOverPlay){
             this.playson = this.targetdivNum;
@@ -846,7 +847,7 @@ export default {
             blocknum2 += 1
             tempson2 = this.resultStep[tempson2].son
           }
-          console.log(blocknum2 + '여기여기')
+          // console.log(blocknum2 + '여기여기')
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -854,7 +855,7 @@ export default {
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
           this.resultStep[this.targetdivNum].position = 'unset';
-          console.log(content[0]);
+          // console.log(content[0]);
           
         }
         // var original_son = -1;
@@ -878,7 +879,7 @@ export default {
           }else{
               var underForblockParent = content[0].parentNode;
               var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
-              console.log(underForblock);
+              // console.log(underForblock);
               if(!step.onclick){
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
@@ -908,15 +909,15 @@ export default {
                 }
               }
           }
-            // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
-            // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
+            // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
+            // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
-            console.log()
+            // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
-    console.log(this.resultStep);
+    // console.log(this.resultStep);
      this.playClass.show='none';
       }
       // 튜토리얼 4
@@ -981,7 +982,7 @@ export default {
     },
     handleClear() {
       this.getStar();
-      this.onModal();
+      this.openStory = true;
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
     },
     handleFail() {
@@ -1003,7 +1004,7 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      console.log(this.code);
+      // console.log(this.code);
       var code = [];
       var code_kor = [];
       this.code.forEach(m => {
@@ -1017,8 +1018,8 @@ export default {
       });
       this.setCode(code)
       this.setCodeKor(code_kor)
-      console.log(code, '1');
-      console.log(code_kor, '2');
+      // console.log(code, '1');
+      // console.log(code_kor, '2');
 
     },
     gostage(){
@@ -1027,10 +1028,10 @@ export default {
       },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
         this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
         this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)

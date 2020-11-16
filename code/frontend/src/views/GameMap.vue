@@ -94,16 +94,19 @@
 
     <StageModal v-if="showModal" @close="showModal= false"/>
     <DifficultyModal v-if="showModal2" @close="showModal2= false"/>
+    <SummeryModal v-if="showModal3" @close="showModal3= false"/>
   </div>
 </template>
 
 <script>
 import StageModal from '../components/StageModal.vue';
 import DifficultyModal from '../components/DifficultyModal.vue';
+import SummeryModal from '../components/SummeryModal.vue';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import store from '../vuex/store';
 import $ from 'jquery';
+
 
 export default {
   name: 'GameMap',
@@ -132,11 +135,13 @@ export default {
       clearLength: 0,
       isLast: false,
       totalCount : 0,
+      showModal3 : false,
     }
   },
   components: {
     StageModal,
     DifficultyModal,
+    SummeryModal,
   },
   computed: {
   },
@@ -193,7 +198,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setStageDetail', 'setStageNum','setStageType']),
+    ...mapMutations(['setInStageNum','setStageDetail', 'setStageNum','setStageType']),
     clickStory(type){
       if (type == 1) {
         this.openStory1 = 'none';
@@ -225,7 +230,7 @@ export default {
     },
     loadMyStage(){
       if(store.state.kakaoUserInfo.id== null){
-        console.log("hi")
+        // console.log("hi")
         const map = {
             open: true,
             star: 0,
@@ -243,9 +248,9 @@ export default {
         }
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         this.clearLength = res.data.length
-        // console.log(res);
+        // // console.log(res);
         var index = 0;
         res.data.forEach(d => {
           const map = {
@@ -286,7 +291,7 @@ export default {
               content : map.content,
             });
         });
-        console.log(this.mapInform);
+        // console.log(this.mapInform);
         this.totalCount = this.mapInform.length*3;
       })
     },
@@ -300,9 +305,14 @@ export default {
       }
     },
     goNext() {
-      console.log(this.type);
-      this.$cookies.set('stageType', parseInt(this.type)+1);
-      this.$router.go(0);
+      // console.log(this.type);
+      if(this.type == 1){
+        this.stageNum = 5;
+      }
+      this.setInStageNum(this.stageNum);
+      this.showModal3 = true;
+      // this.$cookies.set('stageType', parseInt(this.type)+1);
+      // this.$router.go(0);
     }
   },
   
