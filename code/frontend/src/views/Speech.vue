@@ -11,6 +11,12 @@
     </div>
     <div class="speech-container">
       <div class="unity-box">
+        <div class="direction-area">
+          <div class="left-arrow"><img src="../assets/images/arrow.png" alt="left"><span>왼쪽</span></div>
+          <div class="right-arrow"><img src="../assets/images/arrow.png" alt="right"><span>오른쪽</span></div>
+          <div class="up-arrow"><img src="../assets/images/arrow.png" alt="up"><span>위쪽</span></div>
+          <div class="down-arrow"><img src="../assets/images/arrow.png" alt="down"><span>아래쪽</span></div>
+        </div>
         <div class="stagebtn" @click="gostage" style="position:absolute; z-index: 2;"><v-icon>mdi-chevron-left</v-icon>스테이지</div>
         <unity class="unity" src="jslib/Build/jslib.json" unityLoader="jslib/Build/UnityLoader.js" ref="myInstance"></unity>
         <div class="speech-btn" @click="setSpeech">
@@ -21,7 +27,7 @@
     </div>
     <ClearModal v-if="isClear" @close="isClear= false" @restart="reStart" @next="nextLevel"/>
     <FailModal v-if="isFail" @close="isFail= false" @restart="reStart"/>
-    <SpeechModal v-if="isHint" @close="isHint= false"/>
+    <SpeechModal v-if="isFirst" @close="isFirst= false"/>
   </div>
 </template>
 
@@ -41,9 +47,10 @@ export default {
       isClick: false,
       isMove: true,
       isObstacle: false,
+      commandList: [],
       isClear: false,
       isFail: false,
-      isHint: false,
+      isFirst: false,
       hintCnt: 2,
       stageNum: 1,
       count: 0,
@@ -98,7 +105,7 @@ export default {
     window.addEventListener('fail', this.handleFail)
     this.stageNum = this.$cookies.get('stageInfo').stageNum;
     this.stageType = this.$cookies.get('stageInfo').stageType;
-    console.log(this.stageNum + " " + this.stageType);
+    // console.log(this.stageNum + " " + this.stageType);
     if(this.$cookies.isKey("access_token")){
       let kakao_account;
       await window.Kakao.API.request({
@@ -120,17 +127,19 @@ export default {
   watch: {
   },
   methods: {
-    ...mapMutations(['setInStageNum', 'setInStageStar', 'setSpeechType']),
+    ...mapMutations(['setInStageNum', 'setInStageStar','setSpeechType']),
     LevelLoad() {
+      this.commandList = []
       this.$refs.myInstance.message('JavascriptHook', 'Stage', this.stageNum)
     },
     reStart() {
+      this.commandList = []
       this.count = 0;
-      this.hintCnt = 2
       this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
       this.LevelLoad();
     },
     nextLevel() {
+      this.commandList = []
       // this.stageNum += 1
       this.count = 0;
       // this.stageNum = this.$cookies.get('stageInfo').stageNum;
@@ -158,8 +167,8 @@ export default {
       this.onModal2();
     },
     onEnd ({ lastSentence, transcription }) {
-      console.log(lastSentence);
-      console.log(transcription);
+      // console.log(lastSentence);
+      // console.log(transcription);
       this.lastSentence = lastSentence
       this.transcription = transcription
     },
@@ -171,54 +180,47 @@ export default {
     onModal2() {
       this.isFail = true;
     },
-    onModal3(){
-      if(this.hintCnt == 2) {
-        this.setSpeechType(2)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 1
-      } else if(this.hintCnt == 1 && this.stageNum != 5) {
+    onModal3(type){
+      if(type == 1) {
         this.setSpeechType(1)
-        this.setInStageNum(this.stageNum)
-        this.isHint = true;
-        this.hintCnt = 0
+        this.isFirst = true;
+      } else {
+        this.setSpeechType(2)
+        this.isFirst = true;
       } 
     },
     getStar() {
       if(this.stageNum == 1) {
         if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 2) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 2) {this.starNum=3} else if(this.count == 3) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 3) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 3) {this.starNum=3} else if(this.count == 4) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 4) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 5) {this.starNum=3} else if(this.count == 6) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 5) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count == 6) {this.starNum=3} else if(this.count == 7) {this.starNum=2} else {this.starNum=1}
       }
 
       // axios
-      axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
-        userId : store.state.kakaoUserInfo.id,
-        stageId : this.stageType + "" + this.stageNum,
-        star : this.starNum 
-      })
+      // axios.post(`https://k3b102.p.ssafy.io:9999/cobit/stage/user`,{
+      //   userId : store.state.kakaoUserInfo.id,
+      //   stageId : this.stageType + "" + this.stageNum,
+      //   star : this.starNum 
+      // })
     },
     setSpeech() {
       this.isClick = !this.isClick
       if (this.isClick) {
         this.buttonText="말을 마쳤다면 버튼을 눌러주세요."
       } else {
-        this.buttonText="데이터 전송중입니다..."
+        this.buttonText="버튼을 누르고 말을 해보세요"
         this.count += 1;
-        console.log(this.count)
-        console.log(this.transcription, '입력값')
+        // console.log(this.count)
+        // console.log(this.transcription, '입력값')
         axios.post('https://k3b102.p.ssafy.io:9999/cobit/speech/analyze1', this.transcription )
         .then(res => {
-          console.log(res);
-          if(res.data.length == 0) {
-            this.onModal3()
-          } 
+          // console.log(res);
           this.buttonText="버튼을 누르고 말을 해보세요"
           for (let index = 0; index < res.data.length; index++) {
             this.$refs.myInstance.message('JavascriptHook', `${res.data[index]}`);
@@ -226,17 +228,17 @@ export default {
             
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          // console.log(error);
         });
       }
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
         this.$refs.myInstance.message('Penguin', 'ChangeEyebrow', res.data.eyebrow)
         this.$refs.myInstance.message('Penguin', 'ChangeEye', res.data.eye)
@@ -256,6 +258,11 @@ export default {
     },
     clickStory(){
       this.openStory = false;
+      if(this.stageNum == 1) {
+        this.onModal3(1);
+      } else if (this.stageNum == 5) {
+        this.onModal3(2);
+      }
     },
   },
   beforeDestroy () {
@@ -315,6 +322,83 @@ export default {
 
 .unity-box .speech-btn:hover {
   background-color: #c4e1fc;
+}
+
+.unity-box .direction-area {
+  position: absolute;
+  top: 60px;
+  right: 80px;
+  width: 30px;
+  height: 30px;
+  z-index: 2;
+}
+
+.unity-box .direction-area > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.unity-box .direction-area > div > img {
+  width: 100%;
+  height: 100%;
+}
+
+.unity-box .direction-area > div > span {
+  position: absolute;
+  width: 50px;
+  text-align: center;
+  font-family: 'BMJUA';
+  color: #fff;
+  text-shadow: -1.5px 0 #000,
+                0 1.5px #000,
+                1.5px 0 #000,
+                0 -1.5px #000;
+}
+
+.unity-box .direction-area .up-arrow {
+  top: -60%;
+}
+.unity-box .direction-area .up-arrow > img {
+  transform: rotate(270deg);
+}
+.unity-box .direction-area .up-arrow > span {
+  top: -60%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.unity-box .direction-area .down-arrow {
+  bottom: -60%;
+}
+.unity-box .direction-area .down-arrow > img {
+  transform: rotate(90deg);
+}
+.unity-box .direction-area .down-arrow > span {
+  bottom: -70%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.unity-box .direction-area .right-arrow {
+  right: -60%;
+}
+.unity-box .direction-area .right-arrow > span{
+  top: 50%;
+  right: -160%;
+  transform: translate(0, -50%);
+}
+
+.unity-box .direction-area .left-arrow {
+  left: -60%;
+}
+.unity-box .direction-area .left-arrow > img {
+  transform: rotate(180deg);
+}
+.unity-box .direction-area .left-arrow > span {
+  top: 50%;
+  left: -140%;
+  transform: translate(0, -50%);
 }
 
 .speech-btn .my-speech {

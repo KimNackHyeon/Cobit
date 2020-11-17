@@ -99,7 +99,7 @@ export default {
         BASE.style.maxWidth = '400px';
         BTN.style.right = '-8%';
       }
-      console.log(BASE.style)
+      // console.log(BASE.style)
     },
     onKor() {
       this.isKor = true

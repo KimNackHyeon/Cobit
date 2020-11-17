@@ -240,8 +240,8 @@ export default {
   },
   watch: {
      starCount(){
-      console.log("watch");
-      console.log(this.starCount);
+      // console.log("watch");
+      // console.log(this.starCount);
       if(this.starCount == 0) {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
@@ -277,8 +277,8 @@ export default {
       axios.put(`https://k3b102.p.ssafy.io:9999/cobit/user`,{
         email : store.state.kakaoUserInfo.email,
         nickname : this.name
-      }).then(res => {
-        console.log(res);
+      }).then(() => {
+        // console.log(res);
         store.state.kakaoUserInfo.nickname = this.name;
       });
       
@@ -315,7 +315,7 @@ export default {
           month : date.getMonth()+1
         }
       }).then(res=>{
-        console.log(res);
+        // console.log(res);
         this.attendDay = [];
         res.data.forEach(d => {
           this.attendDay.push(d.day);
@@ -331,7 +331,7 @@ export default {
             this.noattendDay.push(i)
           }
         }
-        console.log(this.noattendDay)
+        // console.log(this.noattendDay)
       })
     },
     moveGame(){
@@ -345,7 +345,7 @@ export default {
           }
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.stage2 = res.data.includes(2);
           this.stage3 = res.data.includes(3);
           this.showModal2 = true;
@@ -354,10 +354,10 @@ export default {
     },
     loadMyCharacter(){
       // 캐릭터 정보 불러오기
-      console.log("캐릭터 정보 불러오기");
+      // console.log("캐릭터 정보 불러오기");
       axios.get(`https://k3b102.p.ssafy.io:9999/cobit/product/user?email=${store.state.kakaoUserInfo.email}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.$refs.myInstance.message('body', 'ChangeColor', res.data.color);
         this.$refs.myInstance.message('stand', 'ChangeEyebrow', res.data.eyebrow)
         this.$refs.myInstance.message('stand', 'ChangeEye', res.data.eye)
@@ -390,7 +390,7 @@ export default {
   async created(){
     window.addEventListener('start', this.handleStart);
     if(this.$cookies.isKey("access_token")){
-      console.log("로그인")
+      // console.log("로그인")
       let kakao_account;
       await window.Kakao.API.request({
           url:'/v2/user/me',
@@ -400,7 +400,7 @@ export default {
       });
       await axios.get(`https://k3b102.p.ssafy.io:9999/cobit/user?email=${kakao_account.email}`)
               .then(res => {
-                console.log(res);
+                // console.log(res);
                 this.$store.commit('setKakaoUserInfo', res.data);
                 this.name = store.state.kakaoUserInfo.nickname;
                 this.userEmail = store.state.kakaoUserInfo.email;

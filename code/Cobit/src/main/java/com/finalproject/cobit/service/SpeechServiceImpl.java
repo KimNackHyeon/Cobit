@@ -15,13 +15,10 @@ public class SpeechServiceImpl implements SpeechSerivce {
 	@Override
 	public List<String> analyzeText1(List<String> texts) {
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-//		List<String> temp = new ArrayList<String>();
-//		temp.add("앞으로 네 칸 가기");
 		List<String> commands = null;
 		for (String string : texts) {
 			KomoranResult analyzeResultList = komoran.analyze(string);
 			String common = analyzeResultList.getPlainText();
-			System.out.println(common);
 			List<String> targetPosCollection = new ArrayList<String>();
 			targetPosCollection.add("NNG");
 			targetPosCollection.add("NP");
@@ -29,6 +26,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			targetPosCollection.add("SN");
 			targetPosCollection.add("MM");
 			List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
+			System.out.println(list.toString());
 			if(commands == null) {
 				commands = makeCommand(list);
 			}else {
@@ -37,13 +35,43 @@ public class SpeechServiceImpl implements SpeechSerivce {
 		}
 		return commands;
 	}
+	public static void main(String[] args) {
+		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+		KomoranResult analyzeResultList = komoran.analyze("오른쪽으로 두칸 갔다가 위로 두칸 간 뒤 점프!!");
+		String common = analyzeResultList.getPlainText();
+		List<String> targetPosCollection = new ArrayList<String>();
+		targetPosCollection.add("NNG");
+		targetPosCollection.add("NP");
+		targetPosCollection.add("NNP");
+		targetPosCollection.add("SN");
+		targetPosCollection.add("MM");
+		List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
+		System.out.println("-----------------------------------------------------");
+		System.out.println();
+		System.out.println("자연어        :   \"오른쪽으로 두칸 갔다가 위로 두칸 간 뒤 점프!!\"");
+		System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+		System.out.println();
+		System.out.println("형태소        :   \""+common);
+		System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+		System.out.println();
+		System.out.println("키워드 추출    :   \""+list.toString());
+		System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+		System.out.println();
+		System.out.println("싫행 명령리스트 :	\""+makeCommand(list));
+		System.out.println("-----------------------------------------------------");
+		
+		
+	}
 
-	private List<String> makeCommand(List<String> list) {
+	private static List<String> makeCommand(List<String> list) {
 		List<String> result = new ArrayList<String>();
 		int N = list.size();
 		for(int i = 0; i < N; i++) {
 			String command = list.get(i);
-			if(command.contains("위")) {
+			if(command.contains("점프")) {
+				result.add("Jump");
+			}
+			else if(command.contains("위")) {
 				if(i != N-1) {
 					char nextCommand = list.get(i+1).charAt(0);
 					String next = list.get(i+1);

@@ -23,47 +23,119 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/mypage',
     name: 'Mypage',
-    component: Mypage
+    component: Mypage,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/speech',
     name: 'Speech',
-    component: Speech
+    component: Speech,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/codeblock',
     name: 'CodeBlock',
-    component: CodeBlock
+    component: CodeBlock,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/changecharacter',
     name: 'ChangeCharacter',
-    component: ChangeCharacter
+    component: ChangeCharacter,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/gamemap',
     name: 'GameMap',
-    component: GameMap
+    component: GameMap,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/apitest',
     name: 'Apitest',
-    component: Apitest
+    component: Apitest,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/vrtest',
     name: 'VRTest',
-    component: VRTest
+    component: VRTest,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '/practice',
     name: 'Practice',
-    component: Practice
+    component: Practice,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
   },
   {
     path: '*',

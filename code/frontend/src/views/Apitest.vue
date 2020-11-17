@@ -67,7 +67,7 @@ export default {
       this.canvas.getContext("2d").drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
       this.imageFile = new Image();
       this.imageFile.src = this.canvas.toDataURL();
-      // console.log(this.imageFile.src);
+      // // console.log(this.imageFile.src);
       this.uploadImage();
     },
     dataURLtoFile(dataurl, fileName){
@@ -87,7 +87,7 @@ export default {
       var date = new Date();
       var fileName = date.getMonth()+1 +"" + date.getDate()+"" +date.getHours() +""+date.getMinutes() + ""+date.getSeconds()+".png";
       var file = this.dataURLtoFile(this.imageFile.src,fileName);
-      console.log(file);
+      // console.log(file);
 
       var formData = new FormData();
       formData.append("image", file); 
@@ -97,12 +97,12 @@ export default {
       axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/upload`, formData, { 
           headers: { 'Content-Type': 'multipart/form-data' } 
       }).then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         this.findface(response.data);
       });
     },
     findface(img){
-      console.log(img);
+      // console.log(img);
       window.Kakao.API.request({
           url: `/v1/vision/face/detect`,
           data: {
@@ -111,9 +111,9 @@ export default {
           // image_url: 'https://k3b102.p.ssafy.io/img/1/profile/image3.png'
           },
           success: (msg) => {
-            console.log(msg.result);
+            // console.log(msg.result);
             // 눈, 눈썹 unity 연결
-            console.log(msg.result.faces)
+            // console.log(msg.result.faces)
             if(msg.result.faces==undefined){
               Swal.fire(
                 '얼굴 인식이 되지 않았습니다.',
@@ -133,10 +133,10 @@ export default {
               // 눈 변경
               var leftEyeDif = (facial_points.left_eye[5][1] - facial_points.left_eye[1][1])*2000
               var rightEyeDif = (facial_points.right_eye[5][1] - facial_points.right_eye[1][1])*2000
-              console.log('왼쪽눈' + leftEyeDif)
-              console.log('오른쪽눈' + rightEyeDif)
+              // console.log('왼쪽눈' + leftEyeDif)
+              // console.log('오른쪽눈' + rightEyeDif)
               if((0<=leftEyeDif && leftEyeDif<10) || (0<=rightEyeDif && rightEyeDif<10)){
-                console.log('실행')
+                // console.log('실행')
                 this.$emit('onChangeEye', 'eye4')
               }else if(leftEyeDif<30 || rightEyeDif<30){
                 this.$emit('onChangeEye', 'eye3')
@@ -146,8 +146,8 @@ export default {
               // 눈썹 변경
               var leftEyebrowDif = (facial_points.left_eyebrow[0][1] - facial_points.left_eyebrow[4][1])*2000
               var rightEyebrowDif = (facial_points.right_eyebrow[0][1] - facial_points.right_eyebrow[4][1])*2000
-              console.log('왼쪽눈썹' + leftEyebrowDif)
-              console.log('오른쪽눈썹' + rightEyebrowDif)
+              // console.log('왼쪽눈썹' + leftEyebrowDif)
+              // console.log('오른쪽눈썹' + rightEyebrowDif)
               if((-2<=leftEyebrowDif && leftEyebrowDif<=2) || (-2<=rightEyebrowDif && rightEyebrowDif<=2)){
                 this.$emit('onChangeEyebrow', 'eyebrow1')
               }else if(leftEyebrowDif>2 || rightEyebrowDif>2){
@@ -194,8 +194,8 @@ export default {
             ctx.lineTo(msg.result.faces[0].facial_points.right_eyebrow[4][0]*msg.result.width,msg.result.faces[0].facial_points.right_eyebrow[4][1]*msg.result.height);
             ctx.fill();
           },
-          fail: function(msg){
-            console.log(msg);
+          fail: function(){
+            // console.log(msg);
             Swal.fire(
               '얼굴이 인식되지 않았습니다.',
               '다시 촬영해주세요.',

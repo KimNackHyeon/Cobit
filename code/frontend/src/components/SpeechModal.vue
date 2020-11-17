@@ -6,11 +6,11 @@
           <div class='speech-modal-header'>
             <div>
               <img src="../assets/images/lightbulb.png" alt="">
-              <p>힌트</p>
+              <p>말하기 힌트</p>
             </div>
           </div>
           <div class='speech-modal-body'>
-            <p>{{ hint }}을</p>
+            <p>{{ hint }}</p>
             <p>말해보세요</p>
             <p v-if="extraHint">예를들어 {{ extraHint }}</p>
             <p v-if="extraHint">이렇게 말해보세요</p>
@@ -33,7 +33,6 @@ export default {
     return {
       hint: '',
       extraHint: '',
-      stageType: 0
     }
   },
   watch: {
@@ -44,22 +43,15 @@ export default {
   created() {
   },
   mounted() {
-    this.stageType = this.$cookies.get('stageType');
     this.setHint();
   },
   methods: {
     setHint() {
-      if(this.SpeechType == 2) {
-        if(this.InStageNum!=5) {
-          this.hint = '왼쪽 · 오른쪽 · 위쪽 · 아래쪽'
-        } else {
-          this.hint = '점프'
-        }
+      if(this.SpeechType == 1) {
+        this.hint = '왼쪽 · 오른쪽 · 위쪽 · 아래쪽을'
+        this.extraHint = '오른쪽으로 네번 가'
       } else {
-        if(this.InStageNum!=5) {
-          this.hint = '한 칸 · 두 칸 · 세 칸 · 네 칸'
-          this.extraHint = '오른쪽으로 네 칸 가'
-        }
+        this.hint = '점프를'
       }
     }
   }
@@ -145,7 +137,7 @@ export default {
 .speech-modal-content .speech-modal-header::after {
   content: "";
   display: block;
-  width: 30%;
+  width: 60%;
   margin-left: 2%;
   border-bottom: 3.5px solid black;
 }
