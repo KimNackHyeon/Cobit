@@ -1,5 +1,8 @@
 <template>
   <div class="mypage">
+    <div class="header">
+      <div class="back-btn" @click="onBack"><i class="fas fa-chevron-left"></i>돌아가기</div>
+    </div>
     <!-- 연습하기, 모험하기 -->
     <div class="leftbox">
       <div class="box" style=" height: 47%; position: relative; cursor: pointer;" @click="movePractice">
@@ -78,7 +81,7 @@
         </div>
         <div class="locktitle">로그인이 필요한 서비스입니다.</div>
       </div>
-      <div v-else style="padding: 4%; height: 40%;">
+      <div v-else style="padding: 3% 4%; height: 35%;">
         <!-- 별 모음 -->
         <div style="height: 28%; display: flex; align-items: center">
           <!-- <div>
@@ -94,18 +97,6 @@
               <div class="startotal"></div>
               <div class="starnum"><span>{{starCount}} / 30</span></div>
             </div>
-            <!-- <div class="star onestar">
-              <v-icon style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
-              {{starpercent[0]}}%
-            </div>
-            <div class="star twostar">
-              <v-icon v-for="i in 2" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
-              {{starpercent[1]}}%
-            </div>
-            <div class="star threestar">
-              <v-icon v-for="i in 3" :key="i" style="font-size: 1.6vw; color: yellow">mdi-star</v-icon>
-              {{starpercent[2]}}%
-            </div> -->
           </div>
         </div>
         <div style="height: 4%"></div>
@@ -386,6 +377,9 @@ export default {
     movePractice(){
       this.$router.push('/practice')
     },
+    onBack() {
+      this.$router.push('/home')
+    }
   },
   async created(){
     window.addEventListener('start', this.handleStart);
@@ -424,7 +418,7 @@ export default {
 }
 .mypage {
   display: flex;
-  padding: 2%;
+  padding: 4% 2% 2%;
   height: 100vh;
   font-family: 'BMJUA';
   /* background: #34558b; */
@@ -754,5 +748,37 @@ td {
   height: 100%;
   background-image: url("../assets/images/attendback3.jpg");
   background-size: cover;
+}
+.header {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+}
+.header .back-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  background-color: #a4d4ff;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: BMJUA;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2);
+  /* box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff; */
+}
+.header .back-btn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+.header .back-btn .fa-chevron-left {
+  margin: 0;
+  margin-right: 10px;
 }
 </style>
