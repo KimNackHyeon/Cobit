@@ -48,7 +48,6 @@
       </div>
     </div>
     <div class="tutorial4" v-if="showTutorial == 4 && stageType == 1 && stageNum == 1">
-      <!-- <div class="whitebox"></div> -->
       <div class="balloon4">
         <div class="balloon1text">
           <div class="balloontext1">4. 블록 옮기기</div>
@@ -73,6 +72,10 @@
           <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
         </div>
       </div>
+    </div>
+    <!-- for문 튜토리얼 -->
+    <div>
+
     </div>
     <div class="code-block-container">
       <div class="unity-box">
@@ -165,7 +168,7 @@
   
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&!m.onclick)||(m.num==8&&!m.onclick))" :style="{display:m.overMe}"></div>
+                  <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&!m.onclick)||(m.num==8&&!m.onclick))" :style="{display:m.overMe}"></div> -->
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
                   <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
@@ -400,7 +403,9 @@ export default {
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
+      forTutorial: 0,
       fori : 0,
+      ifi: 0,
       code:[]
     }
   },
@@ -442,6 +447,10 @@ export default {
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
     }
+    if(this.stageNum == 1 && this.stageType == 2){
+      this.forTutorial = 1;
+
+    }
     this.checkBlockArea();
     this.openStory2 = true;
     this.openStory2Start = true;
@@ -476,8 +485,8 @@ export default {
       $(".deleteAllBtnbox").css('position', 'unset');
       $(".deleteAllBtnbox").css('z-index', 'unset');
       $(".deleteAllBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
-      $(".block1").css("z-index", '4');
-      $("#play").css("z-index", "4");
+      $(".block1").css("z-index", '3');
+      $("#play").css("z-index", "3");
     },
     tutorial4_0() {
       var selectedNum = 1;
@@ -490,7 +499,7 @@ export default {
     },
     tutorial4() {
       $(".block1").css("z-index", 'unset');
-      $(".block-list").children(".block1").css("z-index", "4");
+      $(".block-list").children(".block1").css("z-index", "3");
       var divX = $("#play").offset().left;
       var divY = $("#play").offset().top + $("#play").height();
       var blockX = $(".rightblock1").offset().left;
@@ -524,10 +533,11 @@ export default {
      blockmouseover(m,event){
       if(this.showTutorial == 4){
         $(".block1").css("position", 'relative');
-        $(".block1").css("z-index", '4');
+        $(".block1").css("z-index", '3');
       }
       let posX = event.pageX;
       let posY = event.pageY;
+      // console.log(event.target);
       // console.log(posX + ',' + posY)
       // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
@@ -543,13 +553,16 @@ export default {
       // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
       var selectedNum = m.num;
       // console.log(selectedNum);
-      if(Number(selectedNum)==7){
+      // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
-      }else{
-        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
-      }
+      // }else if(Number(selectedNum)==8){
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
+      //   this.ifi+=1;
+      // }else{
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      // }
      },
      selectLoopNum(loopnum,mynum){
        this.resultStep[this.targetdivNum].loop = loopnum;
@@ -593,6 +606,7 @@ export default {
       var forlist = [];
       this.code = [];
       this.resultmoves = [];
+      // console.log(this.resultStep)
       while(tempson != -1){
         resultBlocknum +=1;
         this.code.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
@@ -609,7 +623,18 @@ export default {
               // console.log(this.resultStep[tempforson]);
               // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+              if(this.resultStep[tempforson].num==8){
+                ForresultString+='IfTrap';
+                var tempifson = this.resultStep[tempforson].forson;
+                while(tempifson!=-1){
+                  ForresultString+=';';
+                  // console.log(this.resultmoves[this.resultStep[tempifson].num]);
+                  ForresultString+=this.moves[this.resultStep[tempifson].num].move;
+                  tempifson = this.resultStep[tempifson].son;
+                }
+                tempforson = tempifson
+                console.log(ForresultString);
+              }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
                 tempforson = this.resultStep[tempforson].forson;
@@ -890,14 +915,17 @@ export default {
           if(!this.alreadyOverPlay){
               this.alreadyOverPlay = true;
             }
-          // 튜토리얼
-          var tempson2 = this.playson;
-          var blocknum2 = 0;
-          while(tempson2 != -1){
-            blocknum2 += 1
-            tempson2 = this.resultStep[tempson2].son
+          // 튜토리얼 5
+          if(this.showTutorial == 5 && this.stageType == 1 && this.stageNum == 1){
+            var tempson2 = this.playson;
+            var rightnum2 = this.resultStep[tempson2].num
+            var blocknum2 = 0;
+            while(tempson2 != -1 && rightnum2 == 1){
+              blocknum2 += 1
+              rightnum2 = this.resultStep[tempson2].num
+              tempson2 = this.resultStep[tempson2].son
+            }
           }
-          // console.log(blocknum2 + '여기여기')
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -940,28 +968,30 @@ export default {
                 this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
-                while(son != -1){
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].son;
-                }
-              }else{
-                underForblock.nextSibling.before(this.targetdiv);
-                 os = this.resultStep[step.index].forson;
-                this.resultStep[step.index].forson = this.targetdivNum
-                this.resultStep[this.targetdivNum].forson = os;
+                  while(son != -1){
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].son;
+                  }
+                }else{
+                  // console.log("여기여기")
+                  underForblock.nextSibling.before(this.targetdiv);
+                  os = this.resultStep[step.index].forson;
+                  this.resultStep[step.index].forson = this.targetdivNum
+                  this.resultStep[this.targetdivNum].forson = os;
 
-                parent = step.index;
-                son = this.targetdivNum;
-                while(son != -1){
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].forson;
+                  parent = step.index;
+                  son = this.targetdivNum;
+                  while(son != -1){
+                  // console.log("p:"+parent+" s:"+son);
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].forson;
+                  }
                 }
-              }
-          }
+            }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
@@ -975,22 +1005,39 @@ export default {
      this.playClass.show='none';
       }
       // 튜토리얼 4
-      var tempson = 0;
-      var blocknum = 0;
-      this.resultStep[0].class = 'rightblocks'
-      while(tempson != -1){
-        blocknum += 1
-        tempson = this.resultStep[tempson].son
+      if(this.showTutorial == 4) {
+        for(var i=0; i<this.resultStep.length; i++){
+          var rightblocks = [];
+          var tempson = this.resultStep[i].son
+          var rightnum = this.resultStep[i].num
+          var blocknum = 1;
+          rightblocks.push(this.resultStep[i])
+          
+          while(tempson != -1 && rightnum == 1){
+            blocknum += 1
+            rightblocks.push(this.resultStep[tempson])
+            rightnum = this.resultStep[tempson].num
+            tempson = this.resultStep[tempson].son
+            if(blocknum == 4 && rightblocks.length == 4){
+              rightblocks[0].class = 'rightblock'
+              break
+            }
+          }
+          if(blocknum == 4){
+            break
+          }
+        }
       }
+      
       if(this.showTutorial == 4 && blocknum == 4){
         this.showTutorial = 5
-        $("#play").css("z-index", "5")
-        // $(".rightblocks").parent().css("z-index", "5")
-        $("#block-board").children().first().css("z-index", "5")
+        $("#play").css("z-index", "4")
+        $(".block1").css("z-index", "4")
+        // $(".block-list").children(".block1").css("z-index", "unset")
 
       }
       // 튜토리얼 5
-      if(blocknum2 == 4){
+      if(this.showTutorial == 5 && blocknum2 == 4){
         this.showTutorial = 6
         $("#play").css("z-index", "5")
         $("#underplay").children().last().css("z-index", "5")
@@ -1629,7 +1676,7 @@ export default {
   top: 2%;
   right: 21%;
   box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
-  z-index : 5;
+  z-index : 4;
   border-radius: 10px;
 }
 .balloon5 {
