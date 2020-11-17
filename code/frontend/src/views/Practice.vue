@@ -67,10 +67,9 @@
                       </div>
                     </div>
                     <!-- <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon> -->
-  
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
+                  <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div> -->
                   <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
@@ -575,49 +574,58 @@ export default {
         this.resultStep.some( step => {
           if(step.overMe=='block' || step.class=='overMe'){
             if(step.num!=7 && step.num!=8){
-            content[0].nextSibling.after(this.targetdiv);
-            var os = this.resultStep[step.index].son;
+                content[0].nextSibling.after(this.targetdiv);
+                var os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
-                this.resultStep[this.targetdivNum].son = os;
+                // this.resultStep[this.targetdivNum].son = os;
                 var parent = step.index;
                 var son = this.targetdivNum;
+                var lastson = son;
                 while(son != -1){
+                  lastson = son;
                   this.resultStep[son].x = Number(this.resultStep[parent].x);
                   this.resultStep[son].y = this.resultStep[parent].y+47;
                   parent = son;
                   son = this.resultStep[son].son;
                 }
-          }else{
-              var underForblockParent = content[0].parentNode;
-              var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
-              // console.log(underForblock);
-              if(!step.onclick){
+                this.resultStep[lastson].son = os;
+              }else{
+                var underForblockParent = content[0].parentNode;
+                var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
+                // console.log(underForblock);
+                if(!step.onclick){
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
-                this.resultStep[this.targetdivNum].son = os;
+                 // this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
+                 lastson = son;
                 while(son != -1){
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].son;
-                }
-              }else{
-                underForblock.nextSibling.before(this.targetdiv);
-                 os = this.resultStep[step.index].forson;
-                this.resultStep[step.index].forson = this.targetdivNum
-                this.resultStep[this.targetdivNum].forson = os;
-
-                parent = step.index;
-                son = this.targetdivNum;
-                while(son != -1){
+                  lastson = son;
                   this.resultStep[son].x = Number(this.resultStep[parent].x);
                   this.resultStep[son].y = this.resultStep[parent].y+47;
                   parent = son;
                   son = this.resultStep[son].forson;
                 }
+                this.resultStep[lastson].son = os;
+              }else{
+                underForblock.nextSibling.before(this.targetdiv);
+                 os = this.resultStep[step.index].forson;
+                this.resultStep[step.index].forson = this.targetdivNum
+                 // this.resultStep[this.targetdivNum].son = os;
+                parent = step.index;
+                son = this.targetdivNum;
+                 lastson = son;
+                while(son != -1){
+                  lastson = son;
+                  this.resultStep[son].x = Number(this.resultStep[parent].x);
+                  this.resultStep[son].y = this.resultStep[parent].y+47;
+                  parent = son;
+                  son = this.resultStep[son].forson;
+                }
+                this.resultStep[lastson].son = os;
+                
               }
           }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
@@ -626,6 +634,7 @@ export default {
             // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
+          console.log(this.resultStep);
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
     // console.log(this.resultStep);
