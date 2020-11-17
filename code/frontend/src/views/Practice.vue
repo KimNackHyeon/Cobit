@@ -149,6 +149,16 @@ export default {
           num:8,
           marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'450px',
           index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
+        },
+        {
+          num:9,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'505px',
+          index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
+        },
+        {
+          num:10,
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'560px',
+          index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         }
       ],
       moves:[
@@ -210,6 +220,18 @@ export default {
           num:8,
           move:'If',
           move_kor:'조건',
+          isForblock:''
+        },
+        {
+          num:9,
+          move:'Front',
+          move_kor:'앞으로 가기',
+          isForblock:''
+        },
+        {
+          num:10,
+          move:'Back',
+          move_kor:'뒤로가기',
           isForblock:''
         }
       ],
