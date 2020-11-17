@@ -9,7 +9,7 @@
       </div>
       <div class="script" v-html="story[stageNum-1].end"></div>
     </div>
-    <!-- 튜토리얼 -->
+    <!-- 초급 stage1 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1 && stageType == 1 && stageNum == 1">
       <div class="balloon1">
         <div class="balloon1text">
@@ -38,7 +38,6 @@
       </div>
     </div>
     <div class="tutorial4" v-if="showTutorial == 4 && stageType == 1 && stageNum == 1">
-      <!-- <div class="whitebox"></div> -->
       <div class="balloon4">
         <div class="balloon1text">
           <div class="balloontext1">4. 블록 옮기기</div>
@@ -63,6 +62,10 @@
           <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
         </div>
       </div>
+    </div>
+    <!-- for문 튜토리얼 -->
+    <div>
+
     </div>
     <div class="code-block-container">
       <div class="unity-box">
@@ -359,6 +362,7 @@ export default {
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
+      forTutorial: 0,
       fori : 0,
       code:[]
     }
@@ -401,6 +405,10 @@ export default {
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
     }
+    if(this.stageNum == 1 && this.stageType == 2){
+      this.forTutorial = 1;
+
+    }
     this.checkBlockArea();
   },
   watch: {
@@ -433,8 +441,8 @@ export default {
       $(".deleteAllBtnbox").css('position', 'unset');
       $(".deleteAllBtnbox").css('z-index', 'unset');
       $(".deleteAllBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
-      $(".block1").css("z-index", '4');
-      $("#play").css("z-index", "4");
+      $(".block1").css("z-index", '3');
+      $("#play").css("z-index", "3");
     },
     tutorial4_0() {
       var selectedNum = 1;
@@ -447,7 +455,7 @@ export default {
     },
     tutorial4() {
       $(".block1").css("z-index", 'unset');
-      $(".block-list").children(".block1").css("z-index", "4");
+      $(".block-list").children(".block1").css("z-index", "3");
       var divX = $("#play").offset().left;
       var divY = $("#play").offset().top + $("#play").height();
       var blockX = $(".rightblock1").offset().left;
@@ -481,10 +489,11 @@ export default {
      blockmouseover(m,event){
       if(this.showTutorial == 4){
         $(".block1").css("position", 'relative');
-        $(".block1").css("z-index", '4');
+        $(".block1").css("z-index", '3');
       }
       let posX = event.pageX;
       let posY = event.pageY;
+      // console.log(event.target);
       // console.log(posX + ',' + posY)
       // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
@@ -842,12 +851,13 @@ export default {
             }
           // 튜토리얼
           var tempson2 = this.playson;
+          var rightnum2 = this.resultStep[tempson2].num
           var blocknum2 = 0;
-          while(tempson2 != -1){
+          while(tempson2 != -1 && rightnum2 == 1){
             blocknum2 += 1
+            rightnum2 = this.resultStep[tempson2].num
             tempson2 = this.resultStep[tempson2].son
           }
-          // console.log(blocknum2 + '여기여기')
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -921,18 +931,34 @@ export default {
      this.playClass.show='none';
       }
       // 튜토리얼 4
-      var tempson = 0;
-      var blocknum = 0;
-      this.resultStep[0].class = 'rightblocks'
-      while(tempson != -1){
-        blocknum += 1
-        tempson = this.resultStep[tempson].son
+      for(var i=0; i<this.resultStep.length; i++){
+        var rightblocks = [];
+        var tempson = this.resultStep[i].son
+        var rightnum = this.resultStep[i].num
+        var blocknum = 1;
+        rightblocks.push(this.resultStep[i])
+        
+        while(tempson != -1 && rightnum == 1){
+          blocknum += 1
+          rightblocks.push(this.resultStep[tempson])
+          rightnum = this.resultStep[tempson].num
+          tempson = this.resultStep[tempson].son
+          if(blocknum == 4 && rightblocks.length == 4){
+            rightblocks[0].class = 'rightblock'
+            break
+          }
+        }
+        if(blocknum == 4){
+          break
+        }
       }
+      console.log(blocknum + '최종')
+      
       if(this.showTutorial == 4 && blocknum == 4){
         this.showTutorial = 5
-        $("#play").css("z-index", "5")
-        // $(".rightblocks").parent().css("z-index", "5")
-        $("#block-board").children().first().css("z-index", "5")
+        $("#play").css("z-index", "4")
+        $(".block1").css("z-index", "4")
+        // $(".block-list").children(".block1").css("z-index", "unset")
 
       }
       // 튜토리얼 5
@@ -1564,7 +1590,7 @@ export default {
   top: 2%;
   right: 21%;
   box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
-  z-index : 5;
+  z-index : 4;
   border-radius: 10px;
 }
 .balloon5 {

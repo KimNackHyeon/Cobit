@@ -190,7 +190,7 @@
                   </div>
                 </div>
                 <div style="height: 9%; display: flex; justify-content: center;">
-                  <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px">확인</v-btn>
+                  <v-btn text color="black" @click="attendmodal=false" class="confirmbtn" style="width: 30%; font-size: 25px; background-color: #f2b23d !important;">확인</v-btn>
                 </div>
               </div>
             </v-card>
@@ -683,7 +683,7 @@ td {
   font-family: 'BMJUA';
   top: -15px;
   color: gold;
-  background-color: white;
+  /* background-color: white; */
 }
 .itemname {
   position: absolute;
