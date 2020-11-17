@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <!-- <div class="navbar">Navbar</div> -->
-    <div class="mainbox">
+    <div class="mainbox" style="overflow:hidden;">
       <v-carousel
         v-model="activeSlide" 
         hide-delimiters

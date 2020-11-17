@@ -92,7 +92,7 @@
       
     </div>
 
-    <StageModal v-if="showModal" @close="showModal= false"/>
+    <StageModal v-if="showModal" @close="showModal= false" :isClear="isClear"/>
     <DifficultyModal v-if="showModal2" @close="showModal2= false"/>
     <SummeryModal v-if="showModal3" @close="showModal3= false"/>
   </div>
@@ -136,6 +136,7 @@ export default {
       isLast: false,
       totalCount : 0,
       showModal3 : false,
+      isClear: false,
     }
   },
   components: {
@@ -220,6 +221,12 @@ export default {
       this.setStageDetail(detail);
       this.setStageNum(num);
       this.setStageType(this.type);
+
+      if(detail.open){
+        this.isClear = true;
+      }else{
+        this.isClear = false;
+      }
       this.showModal = true;
     },
     onModal2() {

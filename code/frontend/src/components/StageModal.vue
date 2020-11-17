@@ -20,8 +20,15 @@
               <div>{{StageDetail.content}}</div>
             </div>
           </div>
-          <div class="stage-modal-footer" @click="startGame">
+          <div class="stage-modal-footer" @click="startGame" v-if="!clear">
             <div class="stage-modal-btn">start</div>
+          </div>
+          <div class="stage-modal-footer" @click="startGame" v-if="clear && StageType != 1">
+            <div class="stage-modal-btn">start</div>
+          </div>
+          <div class="stage-modal-footer" v-if="clear && StageType == 1">
+            <div class="stage-modal-btn" @click="sttGame">말하는 코딩</div>
+            <div class="stage-modal-btn" @click="blockGame">블록 코딩</div>
           </div>
         </div>
       </div>
@@ -34,8 +41,12 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'StageModal',
+  props:{
+    isClear : Boolean,
+  },
   data() {
     return {
+      clear : this.isClear
     }
   },
   watch: {
@@ -55,6 +66,14 @@ export default {
       }else{
         this.$router.push('/codeblock');
       }
+    },
+    sttGame(){
+      this.$cookies.set('stageInfo', {stageNum : this.StageNum, stageType : this.StageType});
+      this.$router.push('/speech');
+    },
+    blockGame(){
+      this.$cookies.set('stageInfo', {stageNum : this.StageNum, stageType : this.StageType});
+      this.$router.push('/codeblock');
     }
   }
 }

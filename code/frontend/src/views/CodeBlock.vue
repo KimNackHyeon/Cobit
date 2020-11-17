@@ -213,7 +213,7 @@ export default {
       underfor:[],
       blockNum: 0,
       story:[
-        { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
+        { start_modal:"",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
           end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
           hint:"basicHint1.png"
@@ -965,33 +965,36 @@ export default {
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
-                this.resultStep[this.targetdivNum].son = os;
+                // this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
-                  while(son != -1){
-                    this.resultStep[son].x = Number(this.resultStep[parent].x);
-                    this.resultStep[son].y = this.resultStep[parent].y+47;
-                    parent = son;
-                    son = this.resultStep[son].son;
-                  }
-                }else{
-                  // console.log("여기여기")
-                  underForblock.nextSibling.before(this.targetdiv);
-                  os = this.resultStep[step.index].forson;
-                  this.resultStep[step.index].forson = this.targetdivNum
-                  this.resultStep[this.targetdivNum].forson = os;
-
-                  parent = step.index;
-                  son = this.targetdivNum;
-                  while(son != -1){
-                  // console.log("p:"+parent+" s:"+son);
-                    this.resultStep[son].x = Number(this.resultStep[parent].x);
-                    this.resultStep[son].y = this.resultStep[parent].y+47;
-                    parent = son;
-                    son = this.resultStep[son].forson;
-                  }
+                 lastson = son;
+                while(son != -1){
+                  lastson = son;
+                  this.resultStep[son].x = Number(this.resultStep[parent].x);
+                  this.resultStep[son].y = this.resultStep[parent].y+47;
+                  parent = son;
+                  son = this.resultStep[son].forson;
                 }
-            }
+                this.resultStep[lastson].son = os;
+              }else{
+                underForblock.nextSibling.before(this.targetdiv);
+                 os = this.resultStep[step.index].forson;
+                this.resultStep[step.index].forson = this.targetdivNum;
+
+                parent = step.index;
+                son = this.targetdivNum;
+                lastson = son;
+                while(son != -1){
+                  lastson = son;
+                  this.resultStep[son].x = Number(this.resultStep[parent].x);
+                  this.resultStep[son].y = this.resultStep[parent].y+47;
+                  parent = son;
+                  son = this.resultStep[son].forson;
+                }
+                this.resultStep[lastson].son = os;
+              }
+          }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
