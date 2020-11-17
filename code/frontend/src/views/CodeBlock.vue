@@ -1,13 +1,23 @@
 <template>
   <div class='wrap'>
-    <div class="story" @click="clickStory" v-if="openStory">
-      <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
+    <div class="story" @click="clickStory" v-show="openStory && stageType == 1">
+      <div v-show="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
       <div class="script" v-html="story[stageNum-1].end"></div>
+    </div>
+    <div class="story" @click="clickStory" v-show="openStory2 && stageType == 2">
+      <div v-show="story2[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
+        <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story2[stageNum-1].start_modal"></div>
+      </div>
+      <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
+        <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
+      </div>
+      <div v-show="openStory2Start" class="script" v-html="story2[stageNum-1].start"></div>
+      <div v-show="openStory2End" class="script" v-html="story2[stageNum-1].end"></div>
     </div>
     <!-- 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1 && stageType == 1 && stageNum == 1">
@@ -38,7 +48,6 @@
       </div>
     </div>
     <div class="tutorial4" v-if="showTutorial == 4 && stageType == 1 && stageNum == 1">
-      <!-- <div class="whitebox"></div> -->
       <div class="balloon4">
         <div class="balloon1text">
           <div class="balloontext1">4. 블록 옮기기</div>
@@ -63,6 +72,10 @@
           <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
         </div>
       </div>
+    </div>
+    <!-- for문 튜토리얼 -->
+    <div>
+
     </div>
     <div class="code-block-container">
       <div class="unity-box">
@@ -226,6 +239,32 @@ export default {
           hint:"basicHint5.png"
           },
       ],
+      story2:[
+        {
+          start_modal: "",
+          start:"메일이 왔어요!<br>누구한테서 온거지?<br>한번 열어볼까요?",
+          end:"<h3>낚시와 메일의 합성어인 '피싱메일(Fishing Mail)'</h3><br>피싱메일은 일반메일처럼 보이나 사용자를 속여 바이러스를 퍼트립니다.<br>항상 메일이나 메시지를 열람할때는 주의를 합시다!",
+          hint: ""
+        },
+        {
+          start_modal: "",
+          start:"바이러스는 미리 차단해야해요<br>차단할 수 있는 방법에는 무엇이 있을까요?",
+          end:"<h3>공격을 보호해주는 방화벽!</h3><br>방화벽은 의심스러운 접속을 차단해줘요<br>미리 방화벽을 설정해서 바이러스를 차단해요",
+          hint: ""
+        },
+        {
+          start_modal: "",
+          start:"바이러스가 다시 등장했어요!<br>차단하지 못한 바이러스 미리 예방했나요?",
+          end:"<h3>파일들을 임시 복제하는 백업!</h3><br>파일들을 미리 임시보관소에 저장을 하면<br>바이러스에 걸려도 복원을 할 수 있어요<br>자주 백업하는 습관을 길러 바이러스를 예방합시다",
+          hint: ""
+        },
+        {
+          start_modal: "",
+          start:"이미 감염된 바이러스는 어떻게 하죠?<br>감염된 PC를 치료할 수 있는 방법을 알아봐요",
+          end:"<h3>다양한 솔루션을 가진 백신프로그램</h3><br>백신프로그램은 예방과 치료 그리고 관리까지 바이러스의 종합 해결책이에요<br>자신에게 필요한 백신프로그램을 찾아서 꼭 설치를 해줍시다",
+          hint: ""
+        }
+      ],
         defaultStep:[
         {
           num:0,
@@ -357,10 +396,16 @@ export default {
       starNum: 1,
       stageType: this.$cookies.get('stageInfo').stageType,
       openStory:false,
+      openStory2: true,
+      openStory2Start: false,
+      openStory2End: false,
+      openClear: false,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
+      forTutorial: 0,
       fori : 0,
+      ifi: 0,
       code:[]
     }
   },
@@ -402,7 +447,13 @@ export default {
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
     }
+    if(this.stageNum == 1 && this.stageType == 2){
+      this.forTutorial = 1;
+
+    }
     this.checkBlockArea();
+    this.openStory2 = true;
+    this.openStory2Start = true;
   },
   watch: {
     stageNum() {
@@ -434,8 +485,8 @@ export default {
       $(".deleteAllBtnbox").css('position', 'unset');
       $(".deleteAllBtnbox").css('z-index', 'unset');
       $(".deleteAllBtnbox").css('box-shadow', "6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff");
-      $(".block1").css("z-index", '4');
-      $("#play").css("z-index", "4");
+      $(".block1").css("z-index", '3');
+      $("#play").css("z-index", "3");
     },
     tutorial4_0() {
       var selectedNum = 1;
@@ -448,7 +499,7 @@ export default {
     },
     tutorial4() {
       $(".block1").css("z-index", 'unset');
-      $(".block-list").children(".block1").css("z-index", "4");
+      $(".block-list").children(".block1").css("z-index", "3");
       var divX = $("#play").offset().left;
       var divY = $("#play").offset().top + $("#play").height();
       var blockX = $(".rightblock1").offset().left;
@@ -482,10 +533,11 @@ export default {
      blockmouseover(m,event){
       if(this.showTutorial == 4){
         $(".block1").css("position", 'relative');
-        $(".block1").css("z-index", '4');
+        $(".block1").css("z-index", '3');
       }
       let posX = event.pageX;
       let posY = event.pageY;
+      // console.log(event.target);
       // console.log(posX + ',' + posY)
       // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
@@ -501,13 +553,16 @@ export default {
       // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
       var selectedNum = m.num;
       // console.log(selectedNum);
-      if(Number(selectedNum)==7){
+      // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
-      }else{
-        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
-      }
+      // }else if(Number(selectedNum)==8){
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
+      //   this.ifi+=1;
+      // }else{
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      // }
      },
      selectLoopNum(loopnum,mynum){
        this.resultStep[this.targetdivNum].loop = loopnum;
@@ -520,7 +575,14 @@ export default {
      },
      clickStory(){
        this.openStory = false;
-       this.onModal();
+       this.openStory2 = false;
+       this.openStory2Start = false;
+       this.openStory2End = false;
+       if(this.stageType == 1) {
+         this.onModal();
+       } else if(this.stageType == 2 && this.openClear) {
+         this.onModal();
+       }
      },
      clickForblock(m,index){
        if(m.num==7 ||m.num==8 ||index==101){
@@ -544,6 +606,7 @@ export default {
       var forlist = [];
       this.code = [];
       this.resultmoves = [];
+      // console.log(this.resultStep)
       while(tempson != -1){
         resultBlocknum +=1;
         this.code.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
@@ -560,7 +623,18 @@ export default {
               // console.log(this.resultStep[tempforson]);
               // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+              if(this.resultStep[tempforson].num==8){
+                ForresultString+='IfTrap';
+                var tempifson = this.resultStep[tempforson].forson;
+                while(tempifson!=-1){
+                  ForresultString+=';';
+                  // console.log(this.resultmoves[this.resultStep[tempifson].num]);
+                  ForresultString+=this.moves[this.resultStep[tempifson].num].move;
+                  tempifson = this.resultStep[tempifson].son;
+                }
+                tempforson = tempifson
+                console.log(ForresultString);
+              }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
                 tempforson = this.resultStep[tempforson].forson;
@@ -841,14 +915,17 @@ export default {
           if(!this.alreadyOverPlay){
               this.alreadyOverPlay = true;
             }
-          // 튜토리얼
-          var tempson2 = this.playson;
-          var blocknum2 = 0;
-          while(tempson2 != -1){
-            blocknum2 += 1
-            tempson2 = this.resultStep[tempson2].son
+          // 튜토리얼 5
+          if(this.showTutorial == 5 && this.stageType == 1 && this.stageNum == 1){
+            var tempson2 = this.playson;
+            var rightnum2 = this.resultStep[tempson2].num
+            var blocknum2 = 0;
+            while(tempson2 != -1 && rightnum2 == 1){
+              blocknum2 += 1
+              rightnum2 = this.resultStep[tempson2].num
+              tempson2 = this.resultStep[tempson2].son
+            }
           }
-          // console.log(blocknum2 + '여기여기')
         }
 
         var content = window.document.getElementsByClassName("overMe");
@@ -931,22 +1008,39 @@ export default {
      this.playClass.show='none';
       }
       // 튜토리얼 4
-      var tempson = 0;
-      var blocknum = 0;
-      this.resultStep[0].class = 'rightblocks'
-      while(tempson != -1){
-        blocknum += 1
-        tempson = this.resultStep[tempson].son
+      if(this.showTutorial == 4) {
+        for(var i=0; i<this.resultStep.length; i++){
+          var rightblocks = [];
+          var tempson = this.resultStep[i].son
+          var rightnum = this.resultStep[i].num
+          var blocknum = 1;
+          rightblocks.push(this.resultStep[i])
+          
+          while(tempson != -1 && rightnum == 1){
+            blocknum += 1
+            rightblocks.push(this.resultStep[tempson])
+            rightnum = this.resultStep[tempson].num
+            tempson = this.resultStep[tempson].son
+            if(blocknum == 4 && rightblocks.length == 4){
+              rightblocks[0].class = 'rightblock'
+              break
+            }
+          }
+          if(blocknum == 4){
+            break
+          }
+        }
       }
+      
       if(this.showTutorial == 4 && blocknum == 4){
         this.showTutorial = 5
-        $("#play").css("z-index", "5")
-        // $(".rightblocks").parent().css("z-index", "5")
-        $("#block-board").children().first().css("z-index", "5")
+        $("#play").css("z-index", "4")
+        $(".block1").css("z-index", "4")
+        // $(".block-list").children(".block1").css("z-index", "unset")
 
       }
       // 튜토리얼 5
-      if(blocknum2 == 4){
+      if(this.showTutorial == 5 && blocknum2 == 4){
         this.showTutorial = 6
         $("#play").css("z-index", "5")
         $("#underplay").children().last().css("z-index", "5")
@@ -980,6 +1074,10 @@ export default {
         }, 100);
         this.$router.push('/speech');
       }else{
+        this.openClear = false;
+        this.openStory2 = true;
+        this.openStory2Start = true;
+        this.openStory2End = false;
         this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
         this.LevelLoad();
       }
@@ -992,7 +1090,10 @@ export default {
     },
     handleClear() {
       this.getStar();
+      this.openClear = true;
       this.openStory = true;
+      this.openStory2 = true;
+      this.openStory2End = true;
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
     },
     handleFail() {
@@ -1350,14 +1451,18 @@ export default {
   z-index:1;
 }
 .script{
-      width: 100%;
-    height: 25%;
-    background-color: rgba(0, 0, 0, 0.66);
-    position: absolute;
-    bottom: 0px;
-    color: white;
-    font-size: x-large;
-    padding: 5vh 5vw;
+  width: 100%;
+  height: 25%;
+  background-color: rgba(0, 0, 0, 0.66);
+  position: absolute;
+  bottom: 0px;
+  color: white;
+  font-size: 20px;
+  padding: 20px 5vw;
+}
+
+.script > h3 {
+  margin-bottom: 5px;
 }
 
 .block7{
@@ -1574,7 +1679,7 @@ export default {
   top: 2%;
   right: 21%;
   box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
-  z-index : 5;
+  z-index : 4;
   border-radius: 10px;
 }
 .balloon5 {
