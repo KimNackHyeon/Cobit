@@ -46,7 +46,7 @@
               <button class="myfacebtn" @click="cameramodal=true"> 내 얼굴로 캐릭터 만들기</button>
             <!-- </router-link> -->
             <v-app class="vapp"></v-app>
-            <v-dialog max-width="70%" min-height="50%" v-model="cameramodal">
+            <v-dialog max-width="50%" min-height="50%" v-model="cameramodal">
               <v-card flat tile>
                 <!--   -->
                 <apitest @onChangeEye="onChangeEye" @onChangeEyebrow="onChangeEyebrow" @close="cameramodal= false" />

@@ -2,14 +2,17 @@
   <div id="apitest">
     <!-- <button class="snap" v-on:click="findface">FIND</button> -->
     <div class="videobox">
-      <video style="width:500px; height:400px;" autoplay ref="video" id="video" class="video"></video>
+      <video style="width:100%; height:100%" autoplay ref="video" id="video" class="video"></video>
     </div>
     <!-- <button class="snap" v-on:click="capture()">SNAP</button> -->
     <div class="picturebtnbox">
       <!--  -->
-      <button class="snap picturebtn" v-on:click="capture" @click.self="$emit('close')">사진찍기</button>
+      <!-- <button class="snap picturebtn" v-on:click="capture" @click.self="$emit('close')">사진찍기</button> -->
+      <button class="snap picturebtn" v-on:click="capture" @click.self="$emit('close')">
+        <v-icon class="cameraicon" @click.self="$emit('close')">mdi-camera</v-icon>
+      </button>
     </div>
-    <div class="canvasbox">
+    <div class="canvasbox" v-show="false">
       <canvas ref="canvas" class="canvas" id="canvas" width="500px" height="400px"></canvas>
     </div>
     
@@ -214,29 +217,35 @@ export default {
 .videobox {
   display: flex;
   justify-content: center;
-  padding-top: 5%;
+  /* padding-top: 5%; */
 }
 .picturebtnbox {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 5%;
+  /* margin-top: 5%; */
 }
 .picturebtn {
-  width: 350px;
-  height: 60px;
-  background-color: #a4d4ff;
+  width: 25%;
+  height: 12%;
+  background-color: white;
   font-size: 27px;
   font-weight: 500;
   font-family: BMJUA;
   border-radius: 30px;
   cursor: pointer;
   transition: box-shadow .3s ease;
-  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
-              -6px -6px 10px -1px #ffffff;
+  /* box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2),
+              -6px -6px 10px -1px #ffffff; */
+  position: absolute;
+  bottom: 2%;
 }
 .canvasbox {
   display: flex;
   justify-content: center;
+}
+.cameraicon {
+  color: black;
+  font-size: 38px;
 }
 </style>

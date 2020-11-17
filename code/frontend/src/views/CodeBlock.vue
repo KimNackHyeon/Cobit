@@ -9,7 +9,7 @@
       </div>
       <div class="script" v-html="story[stageNum-1].start"></div>
     </div> -->
-    <!-- 튜토리얼 -->
+    <!-- 초급 stage1 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1">
       <div class="balloon1">
         <div class="balloon1text">
@@ -38,7 +38,6 @@
       </div>
     </div>
     <div class="tutorial4" v-if="showTutorial == 4">
-      <!-- <div class="whitebox"></div> -->
       <div class="balloon4">
         <div class="balloon1text">
           <div class="balloontext1">4. 블록 옮기기</div>
@@ -63,6 +62,10 @@
           <div class="balloontext2">시작 버튼을 누르면 게임이 실행됩니다.</div>
         </div>
       </div>
+    </div>
+    <!-- for문 튜토리얼 -->
+    <div>
+
     </div>
     <div class="code-block-container">
       <div class="unity-box">
@@ -353,6 +356,7 @@ export default {
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
+      forTutorial: 0,
       fori : 0,
       code:[]
     }
@@ -395,6 +399,10 @@ export default {
       $(".hintBtnbox").css('position', 'relative');
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
+    }
+    if(this.stageNum == 1 && this.stageType == 2){
+      this.forTutorial = 1;
+
     }
   },
   watch: {
@@ -476,14 +484,12 @@ export default {
       }
       let posX = event.pageX;
       let posY = event.pageY;
-      console.log(posX + ',' + posY)
       // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
-      console.log(this.distX + ',' + this.distY)
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
