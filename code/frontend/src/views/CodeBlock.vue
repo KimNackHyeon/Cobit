@@ -364,6 +364,7 @@ export default {
       showTutorial: 0,
       forTutorial: 0,
       fori : 0,
+      ifi: 0,
       code:[]
     }
   },
@@ -513,6 +514,9 @@ export default {
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
         this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
+      }else if(Number(selectedNum)==8){
+        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
+        this.ifi+=1;
       }else{
         this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
       }
@@ -552,6 +556,7 @@ export default {
       var forlist = [];
       this.code = [];
       this.resultmoves = [];
+      console.log(this.resultStep)
       while(tempson != -1){
         resultBlocknum +=1;
         this.code.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
@@ -849,14 +854,16 @@ export default {
           if(!this.alreadyOverPlay){
               this.alreadyOverPlay = true;
             }
-          // 튜토리얼
-          var tempson2 = this.playson;
-          var rightnum2 = this.resultStep[tempson2].num
-          var blocknum2 = 0;
-          while(tempson2 != -1 && rightnum2 == 1){
-            blocknum2 += 1
-            rightnum2 = this.resultStep[tempson2].num
-            tempson2 = this.resultStep[tempson2].son
+          // 튜토리얼 5
+          if(this.showTutorial == 5 && this.stageType == 1 && this.stageNum == 1){
+            var tempson2 = this.playson;
+            var rightnum2 = this.resultStep[tempson2].num
+            var blocknum2 = 0;
+            while(tempson2 != -1 && rightnum2 == 1){
+              blocknum2 += 1
+              rightnum2 = this.resultStep[tempson2].num
+              tempson2 = this.resultStep[tempson2].son
+            }
           }
         }
 
@@ -874,19 +881,19 @@ export default {
         this.resultStep.some( step => {
           if(step.overMe=='block' || step.class=='overMe'){
             if(step.num!=7 && step.num!=8){
-            content[0].nextSibling.after(this.targetdiv);
-            var os = this.resultStep[step.index].son;
-                this.resultStep[step.index].son = this.targetdivNum;
-                this.resultStep[this.targetdivNum].son = os;
-                var parent = step.index;
-                var son = this.targetdivNum;
-                while(son != -1){
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].son;
-                }
-          }else{
+              content[0].nextSibling.after(this.targetdiv);
+              var os = this.resultStep[step.index].son;
+              this.resultStep[step.index].son = this.targetdivNum;
+              this.resultStep[this.targetdivNum].son = os;
+              var parent = step.index;
+              var son = this.targetdivNum;
+              while(son != -1){
+                this.resultStep[son].x = Number(this.resultStep[parent].x);
+                this.resultStep[son].y = this.resultStep[parent].y+47;
+                parent = son;
+                son = this.resultStep[son].son;
+              }
+            }else{
               var underForblockParent = content[0].parentNode;
               var underForblock = underForblockParent.getElementsByClassName("underForblock")[0];
               // console.log(underForblock);
@@ -904,8 +911,10 @@ export default {
                   son = this.resultStep[son].son;
                 }
               }else{
+                console.log("여기여기")
+                console.log(this.resultStep)
                 underForblock.nextSibling.before(this.targetdiv);
-                 os = this.resultStep[step.index].forson;
+                os = this.resultStep[step.index].forson;
                 this.resultStep[step.index].forson = this.targetdivNum
                 this.resultStep[this.targetdivNum].forson = os;
 
@@ -918,7 +927,7 @@ export default {
                   son = this.resultStep[son].forson;
                 }
               }
-          }
+            }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
@@ -931,28 +940,29 @@ export default {
      this.playClass.show='none';
       }
       // 튜토리얼 4
-      for(var i=0; i<this.resultStep.length; i++){
-        var rightblocks = [];
-        var tempson = this.resultStep[i].son
-        var rightnum = this.resultStep[i].num
-        var blocknum = 1;
-        rightblocks.push(this.resultStep[i])
-        
-        while(tempson != -1 && rightnum == 1){
-          blocknum += 1
-          rightblocks.push(this.resultStep[tempson])
-          rightnum = this.resultStep[tempson].num
-          tempson = this.resultStep[tempson].son
-          if(blocknum == 4 && rightblocks.length == 4){
-            rightblocks[0].class = 'rightblock'
+      if(this.showTutorial == 4) {
+        for(var i=0; i<this.resultStep.length; i++){
+          var rightblocks = [];
+          var tempson = this.resultStep[i].son
+          var rightnum = this.resultStep[i].num
+          var blocknum = 1;
+          rightblocks.push(this.resultStep[i])
+          
+          while(tempson != -1 && rightnum == 1){
+            blocknum += 1
+            rightblocks.push(this.resultStep[tempson])
+            rightnum = this.resultStep[tempson].num
+            tempson = this.resultStep[tempson].son
+            if(blocknum == 4 && rightblocks.length == 4){
+              rightblocks[0].class = 'rightblock'
+              break
+            }
+          }
+          if(blocknum == 4){
             break
           }
         }
-        if(blocknum == 4){
-          break
-        }
       }
-      console.log(blocknum + '최종')
       
       if(this.showTutorial == 4 && blocknum == 4){
         this.showTutorial = 5
@@ -962,7 +972,7 @@ export default {
 
       }
       // 튜토리얼 5
-      if(blocknum2 == 4){
+      if(this.showTutorial == 5 && blocknum2 == 4){
         this.showTutorial = 6
         $("#play").css("z-index", "5")
         $("#underplay").children().last().css("z-index", "5")
