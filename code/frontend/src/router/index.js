@@ -6,6 +6,7 @@ import CodeBlock from '../views/CodeBlock.vue'
 import ChangeCharacter from "../views/ChangeCharacter.vue"
 import GameMap from '../views/GameMap.vue'
 import Apitest from '../views/Apitest.vue'
+import Apitest2 from '../views/Apitest2.vue'
 import Speech from '../views/Speech.vue'
 import VRTest from '../views/vrtest.vue'
 import Practice from '../views/Practice.vue'
@@ -128,6 +129,19 @@ const routes = [
     path: '/practice',
     name: 'Practice',
     component: Practice,
+    // beforeEnter(to, from, next) {
+    //   if (Vue.$cookies.isKey('access-token')) {
+    //     next()
+    //   }
+    //   else {
+    //     next('/')
+    //   }
+    // }
+  },
+  {
+    path: '/apitest2',
+    name: 'Apitest2',
+    component: Apitest2,
     // beforeEnter(to, from, next) {
     //   if (Vue.$cookies.isKey('access-token')) {
     //     next()
