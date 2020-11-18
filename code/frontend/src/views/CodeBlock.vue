@@ -89,10 +89,15 @@
             힌트 {{hintCount}}
           </div>
         </div>
-        <div id="hint" v-if="showhint">
+        <div id="hint" v-if="showhint && stageType==1">
           <div  style="height: 100%">
             <img :src="require(`../assets/images/${story[stageNum-1].hint}`)" alt="hint" style="width:100%; height:100%; border: 3px solid black;">
           </div>
+          <div style="position: absolute; top: 3px; right: 3px;" @click="showhint=false"><v-icon style="font-size: 30px; color: white; cursor: pointer">mdi-close</v-icon></div>
+            <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
+        </div>
+        <div id="hint2" v-if="showhint && stageType==2">
+          <img :src="require(`../assets/images/${story2[stageNum-1].hint}`)" alt="hint" style="width:100%; border: 3px solid black;">
           <div style="position: absolute; top: 3px; right: 3px;" @click="showhint=false"><v-icon style="font-size: 30px; color: white; cursor: pointer">mdi-close</v-icon></div>
             <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
         </div>
@@ -244,24 +249,30 @@ export default {
           start_modal: "",
           start:"메일이 왔어요!<br>누구한테서 온거지?<br>한번 열어볼까요?",
           end:"<h3>낚시와 메일의 합성어인 '피싱메일(Fishing Mail)'</h3><br>피싱메일은 일반메일처럼 보이나 사용자를 속여 바이러스를 퍼트립니다.<br>항상 메일이나 메시지를 열람할때는 주의를 합시다!",
-          hint: ""
+          hint: "middleHint1.png"
         },
         {
           start_modal: "",
           start:"바이러스는 미리 차단해야해요<br>차단할 수 있는 방법에는 무엇이 있을까요?",
           end:"<h3>공격을 보호해주는 방화벽!</h3><br>방화벽은 의심스러운 접속을 차단해줘요<br>미리 방화벽을 설정해서 바이러스를 차단해요",
-          hint: ""
+          hint: "middleHint2.png"
         },
         {
           start_modal: "",
           start:"바이러스가 다시 등장했어요!<br>차단하지 못한 바이러스 미리 예방했나요?",
           end:"<h3>파일들을 임시 복제하는 백업!</h3><br>파일들을 미리 임시보관소에 저장을 하면<br>바이러스에 걸려도 복원을 할 수 있어요<br>자주 백업하는 습관을 길러 바이러스를 예방합시다",
-          hint: ""
+          hint: "middleHint3.png"
         },
         {
           start_modal: "",
           start:"이미 감염된 바이러스는 어떻게 하죠?<br>감염된 PC를 치료할 수 있는 방법을 알아봐요",
           end:"<h3>다양한 솔루션을 가진 백신프로그램</h3><br>백신프로그램은 예방과 치료 그리고 관리까지 바이러스의 종합 해결책이에요<br>자신에게 필요한 백신프로그램을 찾아서 꼭 설치를 해줍시다",
+          hint: "middleHint4.png"
+        },
+        {
+          start_modal: "",
+          start:"",
+          end:"",
           hint: ""
         }
       ],
@@ -303,7 +314,7 @@ export default {
         },
         {
           num:7,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'305px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
           index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         },
         {
@@ -555,7 +566,7 @@ export default {
       // console.log(selectedNum);
       // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
       // }else if(Number(selectedNum)==8){
       //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
@@ -694,7 +705,7 @@ export default {
     // },
     buyHint(){
       // console.log(store.state.kakaoUserInfo);
-      if(this.buyhint == false){
+      if(this.hintCount > 0 && this.buyhint == false){
         axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
           this.hintCount -= 1;
@@ -969,32 +980,33 @@ export default {
                 // this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
-                 lastson = son;
-                while(son != -1){
-                  lastson = son;
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].forson;
-                }
-                this.resultStep[lastson].son = os;
-              }else{
-                underForblock.nextSibling.before(this.targetdiv);
-                 os = this.resultStep[step.index].forson;
-                this.resultStep[step.index].forson = this.targetdivNum;
+                 while(son != -1){
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].son;
+                  }
+                }else{
+                  // console.log("여기여기")
+                  underForblock.nextSibling.before(this.targetdiv);
+                  os = this.resultStep[step.index].forson;
+                  this.resultStep[step.index].forson = this.targetdivNum
+                  this.resultStep[this.targetdivNum].forson = os;
+
 
                 parent = step.index;
-                son = this.targetdivNum;
-                lastson = son;
-                while(son != -1){
-                  lastson = son;
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].forson;
+                  son = this.targetdivNum;
+                  while(son != -1){
+                  // console.log("p:"+parent+" s:"+son);
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].forson;
+                  }
+
                 }
-                this.resultStep[lastson].son = os;
-              }
+
+              
           }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
@@ -1436,6 +1448,18 @@ export default {
     position: absolute;
     width: 20%;
     height: 30%;
+    top: 0;
+    right: 40%;
+    z-index: 2;
+    background-color: white;
+    /* padding: 107px 50px; */
+    
+}
+
+#hint2{
+    position: absolute;
+    width: 40%;
+    height: 0;
     top: 0;
     right: 40%;
     z-index: 2;

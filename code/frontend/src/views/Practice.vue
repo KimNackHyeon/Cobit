@@ -23,14 +23,14 @@
         </div>
         <unity class="unity" style="width:100%; height:100%;" src="free/Build/free.json" unityLoader="free/Build/UnityLoader.js" ref="myInstance" :hideFooter="true"></unity>
       </div>
-      <div class="code-box" @drop="drop" @dragover="dragover">
+      <div class="code-box" @drop="drop" @dragover="dragover">  
           <!-- <div class="block-menu-bar">
             <div class="menu move-menu" @click="onMove">이동</div>
             <div class="menu obstacle-menu" @click="onObstacle">장애물</div>
           </div> -->
         <div class="block-box">
            <div class="block-list">
-            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)">
+            <div v-for="(m,index) in moves" :key="index" class="block" :class="'block'+index" @mouseover="blockmouseover(m,$event)" style="position: relative">
               {{m.move_kor}}
               <v-icon style="color:white; float:right; opacity: 60%; height: 100%;" size="2.8vw">{{m.icon}}</v-icon>
             </div>
@@ -67,10 +67,13 @@
                       </div>
                     </div>
                     <!-- <v-icon style="color:white; float:right; opacity: 60%" size="4vw">{{moves[m.num].icon}}</v-icon> -->
+  
                     <v-icon style="color:white; float:right; opacity: 60%; height:100%;" size="2.8vw" >{{moves[m.num].icon}}</v-icon>
                   </div>  
-                  <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div> -->
-                  <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
+                  <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&!m.onclick)||(m.num==8&&!m.onclick))" :style="{display:m.overMe}"></div> -->
+                  <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
+                  <div class="block underForblock1" :class="'underForblock under'+index" v-if="m.num==7" style="margin-bottom:0px;height:20px;"></div>
+                  <div class="block underForblock2" :class="'underForblock under'+index" v-if="m.num==8" style="margin-bottom:0px;height:20px;"></div>
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
                   <!-- <div v-if="m.class=='activate'" style="position:fixed;display:flex; justify-content:center;width:100%;height:5%; margin-left:15%; margin-top: 14%; z-index:3;">
@@ -79,6 +82,11 @@
                 </div>
             </div>
           </div>
+        </div>
+        <div class="btn-box">
+          <div class="del-btn" @click="deleteAll">
+            <v-icon style="color: black">mdi-trash-can-outline</v-icon>
+            전체삭제</div>
         </div>
       </div>
     </div>
@@ -146,17 +154,17 @@ export default {
         },
         {
           num:8,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'450px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'460px',
           index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         },
         {
           num:9,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'505px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'525px',
           index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         },
         {
           num:10,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'560px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'580px',
           index:8,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         }
       ],
@@ -218,7 +226,7 @@ export default {
         {
           num:8,
           move:'If',
-          move_kor:'조건',
+          move_kor:'만약 앞에 장애물이 있다면',
           isForblock:''
         },
         {
@@ -256,6 +264,9 @@ export default {
       openStory:true,
       buyhint: false,
       fori : 0,
+      ifi: 0,
+      code:[],
+      isOnLoop: false,
     }
   },
   components: {
@@ -295,12 +306,15 @@ export default {
      blockmouseover(m,event){
       let posX = event.pageX;
       let posY = event.pageY;
+      // console.log(event.target);
+      // console.log(posX + ',' + posY)
       // // console.log(event.target);
       // event.dataTransfer.effectAllowed = 'copyMove';
       // event.dataTransfer.dropEffect = "copy";
       this.targetdiv = event.target;
       this.distX = event.srcElement.offsetLeft - posX;
       this.distY = event.srcElement.offsetTop - posY;
+      // console.log(this.distX + ',' + this.distY)
       this.selectnum = event.target.className;
       this.isAdded = false;
       this.isOnMove = true;//움직이고있다.
@@ -308,13 +322,16 @@ export default {
       // var selectedNum = this.selectnum.split("block")[2].split(' ')[0]
       var selectedNum = m.num;
       // console.log(selectedNum);
-      if(Number(selectedNum)==7){
+      // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 'px',marginTop:posY + this.distY + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',class2:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,onclick:false,forindex:this.fori,forson:-1});
         this.fori+=1;
-      }else{
-        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
-      }
+      // }else if(Number(selectedNum)==8){
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
+      //   this.ifi+=1;
+      // }else{
+      //   this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      // }
      },
      selectLoopNum(loopnum,mynum){
        this.resultStep[this.targetdivNum].loop = loopnum;
@@ -326,13 +343,25 @@ export default {
        this.targetdivNum = mynum;
      },
      clickForblock(m,index){
+       let UNDERBAR
+       setTimeout(() => {
+         UNDERBAR = document.querySelector(`.under${index}`)
+       }, 10);
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
-           m.class = '';
+           event.target.style.backgroundColor = 'orange'
+           setTimeout(() => {
+             UNDERBAR.style.backgroundColor = 'orange'
+           }, 20);
+          //  event.target.parentNode.children[2].style.backgroundColor = 'orange'
          }else{
            m.onclick = true;
-          m.class = 'activate';
+           event.target.style.backgroundColor = 'orangered'
+           setTimeout(() => {
+             UNDERBAR.style.backgroundColor = 'orangered'
+           }, 20);
+          //  event.target.parentNode.children[2].style.backgroundColor = 'orangered'
          }
        }
      },
@@ -341,25 +370,41 @@ export default {
      },
     clickPlayBtn(){
       var tempson = this.playson;
+      // console.log(this.resultStep.length + '여기')
       var resultBlocknum=0;  //최종 블록 수
       var delNode = [];
       var forlist = [];
+      this.code = [];
       this.resultmoves = [];
+      // console.log(this.resultStep)
       while(tempson != -1){
         resultBlocknum +=1;
+        this.code.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
         // if(this.resultStep[tempson].num!=7){
           delNode.push(this.resultStep[tempson].index);
           if(this.resultStep[tempson].num==7){
             var tempforson = this.resultStep[tempson].forson;
             var ForresultString = String(this.resultStep[tempson].loop);
             while(tempforson !=-1){
+              this.code.push({move:this.resultStep[tempforson],loop:this.resultStep[tempson].loop});
               resultBlocknum +=1;
               ForresultString+=',';
               // console.log(this.resultStep);
               // console.log(this.resultStep[tempforson]);
               // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
-              if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
+              if(this.resultStep[tempforson].num==8){
+                ForresultString+='IfTrap';
+                var tempifson = this.resultStep[tempforson].forson;
+                while(tempifson!=-1){
+                  ForresultString+=';';
+                  // console.log(this.resultmoves[this.resultStep[tempifson].num]);
+                  ForresultString+=this.moves[this.resultStep[tempifson].num].move;
+                  tempifson = this.resultStep[tempifson].son;
+                }
+                tempforson = tempifson
+                console.log(ForresultString);
+              }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
                 tempforson = this.resultStep[tempforson].forson;
@@ -371,8 +416,7 @@ export default {
           }
           this.resultmoves.push({move:this.resultStep[tempson],loop:this.resultStep[tempson].loop});
           tempson = this.resultStep[tempson].son;
-          resultBlocknum;
-          // console.log("최종 블록 수:"+resultBlocknum);
+          this.blockNum = resultBlocknum
       }
 
       // // console.log("resultStep["+0+"]="+this.resultStep[0].son);
@@ -520,11 +564,11 @@ export default {
         }
     },
     drop(event) {
+      // console.log(this.resultmoves)
       const target = document.getElementById('play-box');
       const clientRect = target.getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
       const relativeLeft = clientRect.left;
       const relativeRight = clientRect.right;
-
       event.stopPropagation();
       event.preventDefault();
       let posX = event.pageX;
@@ -552,7 +596,7 @@ export default {
             this.playson = this.targetdivNum;
             document.getElementById('underplay').prepend(this.targetdiv);
           }
-          this.resultStep[this.targetdivNum].position = 'unset';
+          this.resultStep[this.targetdivNum].position = 'relative'; // 수정
           this.resultStep[this.targetdivNum].marginleft = '0px';
           this.resultStep[this.targetdivNum].marginTop = '0px';
           if(!this.alreadyOverPlay){
@@ -597,36 +641,42 @@ export default {
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
-                 // this.resultStep[this.targetdivNum].son = os;
+                // this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
-                 lastson = son;
-                while(son != -1){
-                  lastson = son;
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].forson;
-                }
-                this.resultStep[lastson].son = os;
-              }else{
-                underForblock.nextSibling.before(this.targetdiv);
-                 os = this.resultStep[step.index].forson;
-                this.resultStep[step.index].forson = this.targetdivNum
-                 // this.resultStep[this.targetdivNum].son = os;
+                 while(son != -1){
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].son;
+                  }
+                }else{
+                  // console.log("여기여기")
+                  underForblock.nextSibling.before(this.targetdiv);
+                  os = this.resultStep[step.index].forson;
+                  this.resultStep[step.index].forson = this.targetdivNum
+                  this.resultStep[this.targetdivNum].forson = os;
+
+
                 parent = step.index;
-                son = this.targetdivNum;
-                 lastson = son;
-                while(son != -1){
-                  lastson = son;
-                  this.resultStep[son].x = Number(this.resultStep[parent].x);
-                  this.resultStep[son].y = this.resultStep[parent].y+47;
-                  parent = son;
-                  son = this.resultStep[son].forson;
+                  son = this.targetdivNum;
+                  while(son != -1){
+                  // console.log("p:"+parent+" s:"+son);
+                    this.resultStep[son].x = Number(this.resultStep[parent].x);
+                    this.resultStep[son].y = this.resultStep[parent].y+47;
+                    parent = son;
+                    son = this.resultStep[son].forson;
+
+                  }
+                  step.onclick = false;
+                  setTimeout(() => {
+                    step.onclick = true;
+                    this.setRedBottom(step.index)
+                  }, 10);
+
                 }
-                this.resultStep[lastson].son = os;
-                
-              }
+
+              
           }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
@@ -635,12 +685,12 @@ export default {
           }
           if(step.overMe=='block' || step.class=='overMe')return;
           console.log(this.resultStep);
+          
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
     // console.log(this.resultStep);
      this.playClass.show='none';
       }
-
     },
     reStart() {
       this.coin = 0;
@@ -688,6 +738,13 @@ export default {
         }
       })
     },
+    setRedBottom(index) {
+      let UNDERBAR
+       setTimeout(() => {
+         UNDERBAR = document.querySelector(`.under${index}`)
+         UNDERBAR.style.backgroundColor = 'orangered';
+       }, 10);
+    }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -747,6 +804,39 @@ export default {
   background-repeat: repeat;
 }
 
+.code-box .btn-box {
+  position: absolute;
+  bottom: -8%;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-box .del-btn {
+  width: 120px;
+  height: 90%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#bcf2ff), to(#60e5ff));
+  margin: 0 20px;
+  border-radius: 25px;
+  font-family: 'BMJUA';
+  font-size: 18px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.2), -6px -6px 10px -1px #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow .3s ease;
+}
+
+.btn-box .del-btn:hover {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0),
+              0 0 0 0 rgba(0,0,0,0),
+              inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -3px -3px 4px -1px #ffffff !important;
+}
+
 .block-menu-bar {
   margin-left:-100px;
   width: 100px;
@@ -798,7 +888,6 @@ export default {
   float: left;
   clear: both;
   text-shadow: 1px rgb(51, 115, 204);
-      overflow: hidden;
 }
 
 /* .block::before {
@@ -962,6 +1051,8 @@ export default {
 
 .block7{
   background-color: orange;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .block72{
@@ -970,7 +1061,16 @@ export default {
 }
 
 .block8{
+  background-color: rgb(255, 136, 0);
+  margin-bottom: 20px;
+}
+
+.underForblock1 {
   background-color: orange;
+}
+
+.underForblock2 {
+  background-color: rgb(255, 136, 0);
 }
 
 .forblock{
