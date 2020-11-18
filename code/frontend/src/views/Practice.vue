@@ -343,25 +343,15 @@ export default {
        this.targetdivNum = mynum;
      },
      clickForblock(m,index){
-       let UNDERBAR
-       setTimeout(() => {
-         UNDERBAR = document.querySelector(`.under${index}`)
-       }, 10);
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
+           m.class = ''
            event.target.style.backgroundColor = 'orange'
-           setTimeout(() => {
-             UNDERBAR.style.backgroundColor = 'orange'
-           }, 20);
-          //  event.target.parentNode.children[2].style.backgroundColor = 'orange'
          }else{
            m.onclick = true;
+           m.class = 'activate'
            event.target.style.backgroundColor = 'orangered'
-           setTimeout(() => {
-             UNDERBAR.style.backgroundColor = 'orangered'
-           }, 20);
-          //  event.target.parentNode.children[2].style.backgroundColor = 'orangered'
          }
        }
      },
@@ -671,7 +661,6 @@ export default {
                   step.onclick = false;
                   setTimeout(() => {
                     step.onclick = true;
-                    this.setRedBottom(step.index)
                   }, 10);
 
                 }
@@ -738,13 +727,13 @@ export default {
         }
       })
     },
-    setRedBottom(index) {
-      let UNDERBAR
-       setTimeout(() => {
-         UNDERBAR = document.querySelector(`.under${index}`)
-         UNDERBAR.style.backgroundColor = 'orangered';
-       }, 10);
-    }
+    // setRedBottom(index) {
+    //   let UNDERBAR
+    //    setTimeout(() => {
+    //      UNDERBAR = document.querySelector(`.under${index}`)
+    //      UNDERBAR.style.backgroundColor = 'orangered';
+    //    }, 10);
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)

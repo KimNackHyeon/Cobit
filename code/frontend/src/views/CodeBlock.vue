@@ -175,7 +175,8 @@
                   </div>  
                   <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&!m.onclick)||(m.num==8&&!m.onclick))" :style="{display:m.overMe}"></div> -->
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
-                  <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
+                  <div class="block underForblock1" :class="'underForblock under'+index" v-if="m.num==7" style="margin-bottom:0px;height:20px;"></div>
+                  <div class="block underForblock2" :class="'underForblock under'+index" v-if="m.num==8" style="margin-bottom:0px;height:20px;"></div>
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
                   <!-- <div v-if="m.class=='activate'" style="position:fixed;display:flex; justify-content:center;width:100%;height:5%; margin-left:15%; margin-top: 14%; z-index:3;">
@@ -600,10 +601,10 @@ export default {
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
-           m.class = '';
+           event.target.style.backgroundColor = 'orange'
          }else{
            m.onclick = true;
-          m.class = 'activate';
+           event.target.style.backgroundColor = 'orangered'
          }
        }
      },
@@ -1008,6 +1009,10 @@ export default {
                     parent = son;
                     son = this.resultStep[son].forson;
                   }
+                  step.onclick = false;
+                  setTimeout(() => {
+                    step.onclick = true;
+                  }, 10);
 
                 }
 
@@ -1219,7 +1224,14 @@ export default {
           this.isBlock2 = false
         }
       } 
-    }
+    },
+    // setRedBottom(index) {
+    //   let UNDERBAR
+    //    setTimeout(() => {
+    //      UNDERBAR = document.querySelector(`.under${index}`)
+    //      UNDERBAR.style.backgroundColor = 'orangered';
+    //    }, 10);
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -1537,7 +1549,15 @@ export default {
 }
 
 .block8{
+  background-color: rgb(255, 136, 0);
+}
+
+.underForblock1 {
   background-color: orange;
+}
+
+.underForblock2 {
+  background-color: rgb(255, 136, 0);
 }
 
 .forblock{
