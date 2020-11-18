@@ -1127,18 +1127,38 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      // console.log(this.code);
+      console.log(this.code);
       var code = [];
       var code_kor = [];
+      var fornum = 0;
+      var isFor = false;
       this.code.forEach(m => {
-        if(m.move.num==7){
-          code.push(this.moves[m.move.num].move + "();"+m.loop+"times");
-          code_kor.push(this.moves[m.move.num].move_kor + "();"+m.loop+"번 반복");
-        }else{
-          code.push(this.moves[m.move.num].move + "();");
-          code_kor.push(this.moves[m.move.num].move_kor + "();");
+        if(fornum != m.loop && isFor){
+          code.push("}");
+          code_kor.push("}");
+        }
+        if(m.move.num==7){ // 반복문이 있을 때
+          code.push("for (i = 0; i < "+ m.loop + "; i++) {");
+          code_kor.push(this.moves[m.move.num].move_kor + "("+ m.loop + "번) {");
+          fornum = m.loop;
+          isFor = true;
+        }else{ // 반복문이 아니면
+          if(isFor){
+            code.push("&ensp;"+this.moves[m.move.num].move + "();");
+            code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "();");
+          }else{
+            code.push(this.moves[m.move.num].move + "();");
+            code_kor.push(this.moves[m.move.num].move_kor + "();");
+          }
         }
       });
+      if(isFor){
+        code.push("}");
+        code_kor.push("}");
+      }
+
+
+
       this.setCode(code)
       this.setCodeKor(code_kor)
       // console.log(code, '1');
