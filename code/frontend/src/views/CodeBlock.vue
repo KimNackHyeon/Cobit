@@ -1,7 +1,7 @@
 <template>
   <div class='wrap'>
-    <div class="story" @click="clickStory" v-if="openStory">
-      <div v-if="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
+    <div class="story" @click="clickStory" v-show="openStory && stageType == 1">
+      <div v-show="story[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
         <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story[stageNum-1].start_modal"></div>
       </div>
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
@@ -9,7 +9,17 @@
       </div>
       <div class="script" v-html="story[stageNum-1].end"></div>
     </div>
-    <!-- 초급 stage1 튜토리얼 -->
+    <div class="story" @click="clickStory" v-show="openStory2 && stageType == 2">
+      <div v-show="story2[stageNum-1].start_modal!=''" style="width:100%; height:20%; position:absolute; bottom:50%; display:flex; justify-content:center;">
+        <div style="width:20%; height:100%; background-color:white; box-shadow: 1px 1px 14px #000000b3; border: 4px solid #ffcf00;color:black;" v-html="story2[stageNum-1].start_modal"></div>
+      </div>
+      <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
+        <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
+      </div>
+      <div v-show="openStory2Start" class="script" v-html="story2[stageNum-1].start"></div>
+      <div v-show="openStory2End" class="script" v-html="story2[stageNum-1].end"></div>
+    </div>
+    <!-- 튜토리얼 -->
     <div class="tutorial1" v-if="showTutorial == 1 && stageType == 1 && stageNum == 1">
       <div class="balloon1">
         <div class="balloon1text">
@@ -105,10 +115,15 @@
             힌트 {{hintCount}}
           </div>
         </div>
-        <div id="hint" v-if="showhint">
+        <div id="hint" v-if="showhint && stageType==1">
           <div  style="height: 100%">
             <img :src="require(`../assets/images/${story[stageNum-1].hint}`)" alt="hint" style="width:100%; height:100%; border: 3px solid black;">
           </div>
+          <div style="position: absolute; top: 3px; right: 3px;" @click="showhint=false"><v-icon style="font-size: 30px; color: white; cursor: pointer">mdi-close</v-icon></div>
+            <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
+        </div>
+        <div id="hint2" v-if="showhint && stageType==2">
+          <img :src="require(`../assets/images/${story2[stageNum-1].hint}`)" alt="hint" style="width:100%; border: 3px solid black;">
           <div style="position: absolute; top: 3px; right: 3px;" @click="showhint=false"><v-icon style="font-size: 30px; color: white; cursor: pointer">mdi-close</v-icon></div>
             <!-- <div v-if="hint==''">해당 스테이지의 힌트가 없습니다.</div> -->
         </div>
@@ -186,7 +201,8 @@
                   </div>  
                   <!-- <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&!m.onclick)||(m.num==8&&!m.onclick))" :style="{display:m.overMe}"></div> -->
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="(m.num==7&&m.onclick)||(m.num==8&&m.onclick)" :style="{display:m.overMe}"></div>
-                  <div class="block" :class="'underForblock under'+index" v-if="m.num==7||m.num==8" style="background-color:orange;margin-bottom:0px;height:20px;"></div>
+                  <div class="block underForblock1" :class="'underForblock under'+index" v-if="m.num==7" style="margin-bottom:0px;height:20px;"></div>
+                  <div class="block underForblock2" :class="'underForblock under'+index" v-if="m.num==8" style="margin-bottom:0px;height:20px;"></div>
                   <div class="block" style="background-color:gray;margin-bottom:0px;" v-if="!((m.num==7&&m.onclick)||(m.num==8&&m.onclick))" :style="{display:m.overMe}">
                   </div>
                   <!-- <div v-if="m.class=='activate'" style="position:fixed;display:flex; justify-content:center;width:100%;height:5%; margin-left:15%; margin-top: 14%; z-index:3;">
@@ -229,7 +245,7 @@ export default {
       underfor:[],
       blockNum: 0,
       story:[
-        { start_modal:"cobit에 오신 여러분들 환영해요!<br> 우선, 오른쪽에 있는 컴퓨터에 다가가 왜 고장이 났는지 살펴볼까요?",
+        { start_modal:"",
           start:"1. 어떻게 풀어야할지 마이크를 누르고 말해봐.<br> 2. 블록 꾸러미에서 원하는 블록을 꺼내어 '실행' 블록과 연결해 봐.<br> 3. 다 조립했으면 '실행'을 눌러봐.<br> 4. 나는 네가 조립한 블록대로 위에서부터 순서대로 움직일게.",
           end:"<h3>컴퓨터의 두뇌, CPU</h3><br>CPU는 컴퓨터의 두뇌에요. '프로세서'라고도 불린답니다. <br> 모든 장치에 제어와 연산을 하도록 조종하는 CPU는 컴퓨터가 빠르게 돌아가는데에 중요한 역할을 한답니다.",
           hint:"basicHint1.png"
@@ -254,6 +270,38 @@ export default {
           end:"<h3>트로이 전쟁 중 성 안에 몰래 침입한전략에서 비유된 '트로이목마'</h3>바이러스 중 가장 유명한 바이러스이며, 정상적인 프로그램으로 위장해 숨어있다가 실행하면 악성코드를 퍼트리는 바이러스에요.<br>해킹기능이 존재하는 바이러스이니 컴퓨터에 트로이목마가 감염되었다면 내 개인정보가 유출되었다는 의미이니 조심하여야합니다.",
           hint:"basicHint5.png"
           },
+      ],
+      story2:[
+        {
+          start_modal: "",
+          start:"메일이 왔어요!<br>누구한테서 온거지?<br>한번 열어볼까요?",
+          end:"<h3>낚시와 메일의 합성어인 '피싱메일(Fishing Mail)'</h3><br>피싱메일은 일반메일처럼 보이나 사용자를 속여 바이러스를 퍼트립니다.<br>항상 메일이나 메시지를 열람할때는 주의를 합시다!",
+          hint: "middleHint1.png"
+        },
+        {
+          start_modal: "",
+          start:"바이러스는 미리 차단해야해요<br>차단할 수 있는 방법에는 무엇이 있을까요?",
+          end:"<h3>공격을 보호해주는 방화벽!</h3><br>방화벽은 의심스러운 접속을 차단해줘요<br>미리 방화벽을 설정해서 바이러스를 차단해요",
+          hint: "middleHint2.png"
+        },
+        {
+          start_modal: "",
+          start:"바이러스가 다시 등장했어요!<br>차단하지 못한 바이러스 미리 예방했나요?",
+          end:"<h3>파일들을 임시 복제하는 백업!</h3><br>파일들을 미리 임시보관소에 저장을 하면<br>바이러스에 걸려도 복원을 할 수 있어요<br>자주 백업하는 습관을 길러 바이러스를 예방합시다",
+          hint: "middleHint3.png"
+        },
+        {
+          start_modal: "",
+          start:"이미 감염된 바이러스는 어떻게 하죠?<br>감염된 PC를 치료할 수 있는 방법을 알아봐요",
+          end:"<h3>다양한 솔루션을 가진 백신프로그램</h3><br>백신프로그램은 예방과 치료 그리고 관리까지 바이러스의 종합 해결책이에요<br>자신에게 필요한 백신프로그램을 찾아서 꼭 설치를 해줍시다",
+          hint: "middleHint4.png"
+        },
+        {
+          start_modal: "",
+          start:"",
+          end:"",
+          hint: ""
+        }
       ],
         defaultStep:[
         {
@@ -386,13 +434,18 @@ export default {
       starNum: 1,
       stageType: this.$cookies.get('stageInfo').stageType,
       openStory:false,
+      openStory2: true,
+      openStory2Start: false,
+      openStory2End: false,
+      openClear: false,
       buyhint: false,
       hintCount: store.state.kakaoUserInfo.hint,
       showTutorial: 0,
       forTutorial: 0,
       fori : 0,
       ifi: 0,
-      code:[]
+      code:[],
+      test: [],
     }
   },
   components: {
@@ -440,6 +493,8 @@ export default {
     //   this.resultStep.push({num:7,marginleft:'10px',marginTop:'285px',class:'',overMe:'none',position:'absolute',index:0,x:0,y:275,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:0,forson:-1});
     // }
     this.checkBlockArea();
+    this.openStory2 = true;
+    this.openStory2Start = true;
   },
   watch: {
     stageNum() {
@@ -612,7 +667,7 @@ export default {
       // console.log(selectedNum);
       // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
-        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
+      this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
       // }else if(Number(selectedNum)==8){
       //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
@@ -632,16 +687,23 @@ export default {
      },
      clickStory(){
        this.openStory = false;
-       this.onModal();
+       this.openStory2 = false;
+       this.openStory2Start = false;
+       this.openStory2End = false;
+       if(this.stageType == 1) {
+         this.onModal();
+       } else if(this.stageType == 2 && this.openClear) {
+         this.onModal();
+       }
      },
      clickForblock(m,index){
        if(m.num==7 ||m.num==8 ||index==101){
          if(m.onclick){
            m.onclick = false;
-           m.class = '';
+           event.target.style.backgroundColor = 'orange'
          }else{
            m.onclick = true;
-          m.class = 'activate';
+           event.target.style.backgroundColor = 'orangered'
          }
        }
      },
@@ -686,16 +748,18 @@ export default {
               // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
               if(this.resultStep[tempforson].num==8){
-                ForresultString+='IfTrap';
+                ForresultString+='Trap';
                 var tempifson = this.resultStep[tempforson].forson;
                 while(tempifson!=-1){
                   ForresultString+=';';
                   // console.log(this.resultmoves[this.resultStep[tempifson].num]);
                   ForresultString+=this.moves[this.resultStep[tempifson].num].move;
+                  this.code.push({move:this.resultStep[tempifson],loop:this.resultStep[tempson].loop});
                   tempifson = this.resultStep[tempifson].son;
                 }
                 tempforson = tempifson
                 // console.log(ForresultString);
+                // this.result
               }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
@@ -724,6 +788,9 @@ export default {
      for(var i=0; i<this.resultmoves.length;i++){
        this.history.push(this.resultmoves[i].move);
      }
+
+    //  console.log(this.resultmoves);
+    //  console.log(this.resultStep);
     
      
      this.resultStep = [];
@@ -755,7 +822,7 @@ export default {
     // },
     buyHint(){
       // console.log(store.state.kakaoUserInfo);
-      if(this.buyhint == false){
+      if(this.hintCount > 0 && this.buyhint == false){
         axios.post(`https://k3b102.p.ssafy.io:9999/cobit/user/hint`,store.state.kakaoUserInfo)
         .then(()=>{
           this.hintCount -= 1;
@@ -1027,10 +1094,10 @@ export default {
                 underForblock.nextSibling.after(this.targetdiv);
                 os = this.resultStep[step.index].son;
                 this.resultStep[step.index].son = this.targetdivNum;
-                this.resultStep[this.targetdivNum].son = os;
+                // this.resultStep[this.targetdivNum].son = os;
                 parent = step.index;
                 son = this.targetdivNum;
-                  while(son != -1){
+                 while(son != -1){
                     this.resultStep[son].x = Number(this.resultStep[parent].x);
                     this.resultStep[son].y = this.resultStep[parent].y+47;
                     parent = son;
@@ -1043,7 +1110,8 @@ export default {
                   this.resultStep[step.index].forson = this.targetdivNum
                   this.resultStep[this.targetdivNum].forson = os;
 
-                  parent = step.index;
+
+                parent = step.index;
                   son = this.targetdivNum;
                   while(son != -1){
                   // console.log("p:"+parent+" s:"+son);
@@ -1052,8 +1120,15 @@ export default {
                     parent = son;
                     son = this.resultStep[son].forson;
                   }
+                  step.onclick = false;
+                  setTimeout(() => {
+                    step.onclick = true;
+                  }, 10);
+
                 }
-            }
+
+              
+          }
             // // console.log("원래"+step.index+"의 son "+this.resultmoves[step.index].son+"을 "+this.targetdivNum+"로 바꿈");
             // // console.log(this.targetdivNum+"의 son을"+os+"로 바꿈");
             step.overMe = 'none';
@@ -1200,6 +1275,10 @@ export default {
         }, 100);
         this.$router.push('/speech');
       }else{
+        this.openClear = false;
+        this.openStory2 = true;
+        this.openStory2Start = true;
+        this.openStory2End = false;
         this.$refs.myInstance.message('JavascriptHook', 'RestartGame')
         this.LevelLoad();
       }
@@ -1212,7 +1291,10 @@ export default {
     },
     handleClear() {
       this.getStar();
+      this.openClear = true;
       this.openStory = true;
+      this.openStory2 = true;
+      this.openStory2End = true;
       this.history.push({move:'clear',move_kor:"스테이지"+this.stageNum+' 성공!',num:-1})
     },
     handleFail() {
@@ -1234,18 +1316,50 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      // console.log(this.code);
+      console.log(this.code);
       var code = [];
       var code_kor = [];
+      var fornum = 0;
+      var isFor = false;
+      var isIf = false;
       this.code.forEach(m => {
-        if(m.move.num==7){
-          code.push(this.moves[m.move.num].move + "();"+m.loop+"times");
-          code_kor.push(this.moves[m.move.num].move_kor + "();"+m.loop+"번 반복");
-        }else{
-          code.push(this.moves[m.move.num].move + "();");
-          code_kor.push(this.moves[m.move.num].move_kor + "();");
+        if(fornum != m.loop && isFor){
+          code.push("}");
+          code_kor.push("}");
+        }
+        if(m.move.num==7){ // 반복문이 있을 때
+          code.push("for (i = 0; i < "+ m.loop + "; i++) {");
+          code_kor.push(this.moves[m.move.num].move_kor + "("+ m.loop + "번) {");
+          fornum = m.loop;
+          isFor = true;
+        }else{ // 반복문이 아니면
+          if(isFor){
+            if(m.move.num==8){
+              isIf = true;
+              code.push("&ensp;"+this.moves[m.move.num].move + "(isTrap)");
+              code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "");
+            }
+            else if(isIf){
+              code.push("&ensp;&ensp;"+this.moves[m.move.num].move + "();");
+              code_kor.push("&ensp;&ensp;"+this.moves[m.move.num].move_kor + "();");
+            }
+            else{
+              code.push("&ensp;"+this.moves[m.move.num].move + "();");
+              code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "();");
+            }
+          }else{
+            code.push(this.moves[m.move.num].move + "();");
+            code_kor.push(this.moves[m.move.num].move_kor + "();");
+          }
         }
       });
+      if(isFor){
+        code.push("}");
+        code_kor.push("}");
+      }
+
+
+
       this.setCode(code)
       this.setCodeKor(code_kor)
       // console.log(code, '1');
@@ -1288,7 +1402,14 @@ export default {
           this.isBlock2 = false
         }
       } 
-    }
+    },
+    // setRedBottom(index) {
+    //   let UNDERBAR
+    //    setTimeout(() => {
+    //      UNDERBAR = document.querySelector(`.under${index}`)
+    //      UNDERBAR.style.backgroundColor = 'orangered';
+    //    }, 10);
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('start', this.handleStart)
@@ -1541,6 +1662,18 @@ export default {
     /* padding: 107px 50px; */
     
 }
+
+#hint2{
+    position: absolute;
+    width: 40%;
+    height: 0;
+    top: 0;
+    right: 40%;
+    z-index: 2;
+    background-color: white;
+    /* padding: 107px 50px; */
+    
+}
 #deleteAllBtn {
   display: inline-block;
   width: 25%;
@@ -1570,14 +1703,18 @@ export default {
   z-index:1;
 }
 .script{
-      width: 100%;
-    height: 25%;
-    background-color: rgba(0, 0, 0, 0.66);
-    position: absolute;
-    bottom: 0px;
-    color: white;
-    font-size: x-large;
-    padding: 5vh 5vw;
+  width: 100%;
+  height: 25%;
+  background-color: rgba(0, 0, 0, 0.66);
+  position: absolute;
+  bottom: 0px;
+  color: white;
+  font-size: 20px;
+  padding: 20px 5vw;
+}
+
+.script > h3 {
+  margin-bottom: 5px;
 }
 
 .block7{
@@ -1590,7 +1727,15 @@ export default {
 }
 
 .block8{
+  background-color: rgb(255, 136, 0);
+}
+
+.underForblock1 {
   background-color: orange;
+}
+
+.underForblock2 {
+  background-color: rgb(255, 136, 0);
 }
 
 .forblock{

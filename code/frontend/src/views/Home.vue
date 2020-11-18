@@ -7,10 +7,11 @@
         <!-- <h2>놀면서 코딩 습관 + 논리력 기르기</h2>         -->
       <!-- </div> -->
       <div class="btnsbox">
-        <button class="learn-more" @click="kakaoLogin" v-if="userInfo.email==null">로그인하기</button>
+        <button class="learn-more" @click="kakaoLogin" v-if="!isUser">로그인하기</button>
         <button class="learn-more" @click="kakaoLogout" v-else>로그아웃하기</button>
         <router-link to="/mypage">
-          <button class="learn-more" style="float: right">체험하기</button>
+          <button v-if="!isUser" class="learn-more" style="float: right">체험하기</button>
+          <button v-else class="learn-more" style="float: right">입장하기</button>
         </router-link>
       </div>
     </div>
@@ -31,7 +32,16 @@ export default {
   data(){
     return {
       userInfo: store.state.kakaoUserInfo,
+      isUser: false,
     }
+  },
+  watch: {
+    userInfo() {
+      this.checkUser();
+    }
+  },
+  mounted() {
+    this.checkUser();
   },
   methods: {
     kakaoLogin() {
@@ -68,10 +78,18 @@ export default {
             },
         })
     },
+    checkUser() {
+      if(this.$cookies.get('access_token')){
+        this.isUser = true;
+      } else {
+        this.isUser = false;
+      }
+    },
     kakaoLogout() {
-      this.$cookies.remove("access_token")
+      this.$cookies.remove('access_token')
       store.commit('delKakaouserInfo');
       this.userInfo = ''
+
     }
   },
   

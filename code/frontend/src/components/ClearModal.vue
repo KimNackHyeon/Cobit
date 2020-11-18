@@ -22,8 +22,8 @@
         </div>
         <div v-show="isOpen" class="clear-modal-content">
           <div class="clear-modal-toggle-btn-area">
-            <div class="clear-modal-toggle-btn kor-toggle" @click="onKor">한글</div>
-            <div class="clear-modal-toggle-btn eng-toggle" @click="onEng">영어</div>
+            <div class="clear-modal-toggle-btn kor-toggle" @click="onKor">블록</div>
+            <div class="clear-modal-toggle-btn eng-toggle" @click="onEng">코드</div>
           </div>
           <div v-show="isKor" class="clear-modal-code-area">
             <p>시작() {</p>
