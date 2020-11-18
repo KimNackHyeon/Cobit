@@ -417,7 +417,8 @@ export default {
       forTutorial: 0,
       fori : 0,
       ifi: 0,
-      code:[]
+      code:[],
+      test: [],
     }
   },
   components: {
@@ -635,12 +636,13 @@ export default {
               // console.log("tempforson: "+tempforson);
               ForresultString += this.moves[this.resultStep[tempforson].num].move;
               if(this.resultStep[tempforson].num==8){
-                ForresultString+='IfTrap';
+                ForresultString+='Trap';
                 var tempifson = this.resultStep[tempforson].forson;
                 while(tempifson!=-1){
                   ForresultString+=';';
                   // console.log(this.resultmoves[this.resultStep[tempifson].num]);
                   ForresultString+=this.moves[this.resultStep[tempifson].num].move;
+                  this.code.push({move:this.resultStep[tempifson],loop:this.resultStep[tempson].loop});
                   tempifson = this.resultStep[tempifson].son;
                 }
                 tempforson = tempifson
@@ -674,6 +676,9 @@ export default {
      for(var i=0; i<this.resultmoves.length;i++){
        this.history.push(this.resultmoves[i].move);
      }
+
+    //  console.log(this.resultmoves);
+    //  console.log(this.resultStep);
     
      
      this.resultStep = [];
@@ -1014,7 +1019,7 @@ export default {
             // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
-          console.log(this.resultStep);
+          // console.log(this.resultStep);
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
     // console.log(this.resultStep);
@@ -1133,6 +1138,7 @@ export default {
       var code_kor = [];
       var fornum = 0;
       var isFor = false;
+      var isIf = false;
       this.code.forEach(m => {
         if(fornum != m.loop && isFor){
           code.push("}");
@@ -1145,8 +1151,19 @@ export default {
           isFor = true;
         }else{ // 반복문이 아니면
           if(isFor){
-            code.push("&ensp;"+this.moves[m.move.num].move + "();");
-            code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "();");
+            if(m.move.num==8){
+              isIf = true;
+              code.push("&ensp;"+this.moves[m.move.num].move + "(isTrap)");
+              code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "");
+            }
+            else if(isIf){
+              code.push("&ensp;&ensp;"+this.moves[m.move.num].move + "();");
+              code_kor.push("&ensp;&ensp;"+this.moves[m.move.num].move_kor + "();");
+            }
+            else{
+              code.push("&ensp;"+this.moves[m.move.num].move + "();");
+              code_kor.push("&ensp;"+this.moves[m.move.num].move_kor + "();");
+            }
           }else{
             code.push(this.moves[m.move.num].move + "();");
             code_kor.push(this.moves[m.move.num].move_kor + "();");
