@@ -68,6 +68,11 @@ export default {
       } else {
         this.levelName = '중급'
         this.nextLevelName = '고급'
+        this.storyList = ['낚시와 메일의 합성어인 피싱메일', '바이러스를 차단해주는 방화벽', 
+                      '백업은 최고의 예방법', '백신프로그램은 종합 해결책']
+        this.summeryList = ['반복구조를 이해하고 활용할 수 있다.',
+                        '조건문을 활용하여 상황을 구분할 수 있다',
+                        '바이러스의 예방법과 해결책을 알아보았다.']
       }
     },
     goNext() {
