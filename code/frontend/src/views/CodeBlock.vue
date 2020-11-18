@@ -64,8 +64,34 @@
       </div>
     </div>
     <!-- for문 튜토리얼 -->
-    <div>
-
+    <div class="fortutorial1" v-if="forTutorial == 1 && stageType == 2 && stageNum == 1">
+      <div class="forballoon1">
+        <div class="balloon1text">
+          <div class="balloontext1">1. 반복 블록 옮기기</div>
+          <div class="balloontext2">펭귄이 바이러스에 빠르게 다가갈 수 있도록 보드에<br> 반복 블록을 옮겨주세요.</div>
+          <div class="showbtn" @click="fortutorial1" @mouseover="fortutorial1_0">미리보기</div>
+        </div>
+      </div>
+    </div>
+    <div class="fortutorial2" v-if="forTutorial == 2 && stageType == 2 && stageNum == 1">
+      <div class="forballoon1">
+        <div class="balloon1text">
+          <div class="balloontext1">2. 반복 블록 만들기</div>
+          <div class="balloontext2">반복 블록안에 들어갈 블록들을 만들어주세요.</div>
+          <div class="showbtn" @click="deleteAllfortutorial2" style="margin-left: 2%">다시하기</div>
+          <div class="showbtn" @click="fortutorial2" @mouseover="fortutorial2_0">미리보기</div>
+        </div>
+      </div>
+    </div>
+    <div class="fortutorial3" v-if="forTutorial == 3 && stageType == 2 && stageNum == 1">
+      <div class="forballoon1">
+        <div class="balloon1text">
+          <div class="balloontext1">3. 반복 블록안에 넣기</div>
+          <div class="balloontext2">반복 블록을 클릭하고 만든 블록들을 반복 블록안에 넣어주세요.</div>
+          <div class="showbtn" @click="deleteAll" style="margin-left: 2%">다시하기</div>
+          <div class="showbtn" @click="fortutorial2" @mouseover="fortutorial2_0">미리보기</div>
+        </div>
+      </div>
     </div>
     <div class="code-block-container">
       <div class="unity-box">
@@ -267,7 +293,7 @@ export default {
         },
         {
           num:7,
-          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'305px',
+          marginleft:'10px',class:'',overMe:'none',position:'absolute',marginTop:'285px',
           index:7,x:0,y:0,son:-1,onPlayBtn:false,loop:1,overmeFor:false
         },
         {
@@ -407,10 +433,12 @@ export default {
       $(".hintBtnbox").css('z-index', '4');
       $(".hintBtnbox").css('box-shadow', "unset");
     }
-    if(this.stageNum == 1 && this.stageType == 2){
-      this.forTutorial = 1;
-
-    }
+    // if(this.stageNum == 1 && this.stageType == 2){
+    //   this.forTutorial = 1;
+    //   $(".block7").css('position', 'relative')
+    //   $(".block7").css('z-index', '4')
+    //   this.resultStep.push({num:7,marginleft:'10px',marginTop:'285px',class:'',overMe:'none',position:'absolute',index:0,x:0,y:275,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:0,forson:-1});
+    // }
     this.checkBlockArea();
   },
   watch: {
@@ -487,11 +515,82 @@ export default {
         }
       }, 4500);
     },
+    fortutorial1_0() {
+      this.resultStep.push({num:7,marginleft:'10px',marginTop:'285px',class:'moveforblock',overMe:'none',position:'absolute',index:0,x:0,y:275,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:0,forson:-1});
+    },
+    fortutorial1() {
+      $(".moveforblock").parent().css('z-index', '4')
+      var divX = $("#play").offset().left;
+      var divY = $("#play").offset().top + $("#play").height();
+      var blockX = $(".moveforblock").offset().left;
+      var blockY = $(".moveforblock").offset().top;
+      $(".moveforblock").parent().css("transform", `translate(${divX-blockX}px, ${divY-blockY+25}px)`)
+      $(".moveforblock").parent().addClass("tutorial4btn")
+      setTimeout(() => {
+        $(`.moveforblock`).parent().css("transform", "")
+        $(`.moveforblock`).parent().removeClass("tutorial4btn")
+      }, 1500)
+    },
+    fortutorial2_0() {
+      var rightposX = 840;
+      var rightposY = 150;
+      var upposX = 824;
+      var upposY = 80;
+      this.resultStep.push({num:1,marginleft:'10px',marginTop:this.defaultStep[1].marginTop,class:'rightblock1',overMe:'none',position:'absolute',index:this.resultStep.length,x:rightposX + this.distX,y:rightposY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:1,marginleft:'10px',marginTop:this.defaultStep[1].marginTop,class:'rightblock2',overMe:'none',position:'absolute',index:this.resultStep.length,x:rightposX + this.distX,y:rightposY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:0,marginleft:'10px',marginTop:this.defaultStep[0].marginTop,class:'upblock1',overMe:'none',position:'absolute',index:this.resultStep.length,x:upposX + this.distX,y:upposY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+      this.resultStep.push({num:0,marginleft:'10px',marginTop:this.defaultStep[0].marginTop,class:'upblock2',overMe:'none',position:'absolute',index:this.resultStep.length,x:upposX + this.distX,y:upposY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false});
+    },
+    fortutorial2() {
+      $(".block0").css("z-index", 'unset');
+      $(".block1").css("z-index", 'unset');
+      var divX = $("#play").offset().left;
+      var divY = $("#play").offset().top + $("#play").height();
+      var blockX = $(".rightblock1").offset().left;
+      var blockY = $(".rightblock1").offset().top;
+      for(var i=1; i<3; i++){
+        $(`.rightblock${i}`).css("position", 'relative');
+        $(`.rightblock${i}`).css("z-index", '4');
+        $(`.upblock${i}`).css("position", 'relative');
+        $(`.upblock${i}`).css("z-index", '4');
+      }
+      $(".rightblock1").css("transform", `translate(${divX-blockX}px, ${divY-blockY+150}px)`)
+      $(".rightblock1").addClass("tutorial4btn")
+      setTimeout(() => {
+        $(".rightblock2").css("transform", `translate(${divX-blockX}px, ${divY-blockY+195}px)`)
+        $(".rightblock2").addClass("tutorial4btn")
+      }, 800)
+      setTimeout(() => {
+        $(".upblock1").css("transform", `translate(${divX-blockX}px, ${divY-blockY+290}px)`)
+        $(".upblock1").addClass("tutorial4btn")
+      }, 1600)
+      setTimeout(() => {
+        $(".upblock2").css("transform", `translate(${divX-blockX}px, ${divY-blockY+335}px)`)
+        $(".upblock2").addClass("tutorial4btn")
+      }, 2400)
+      setTimeout(() => {
+        for(var j=1; j<3; j++){
+          $(`.rightblock${j}`).css("transform", "")
+          $(`.rightblock${j}`).removeClass("tutorial4btn")
+          $(`.upblock${j}`).css("transform", "")
+          $(`.upblock${j}`).removeClass("tutorial4btn")
+        }
+      }, 4500);
+    },
      ...mapMutations(['setInStageNum', 'setInStageStar', 'setIsLastStage', 'setCode', 'setCodeKor']),
      blockmouseover(m,event){
       if(this.showTutorial == 4){
         $(".block1").css("position", 'relative');
         $(".block1").css("z-index", '3');
+      }
+      if(this.forTutorial == 1){
+        $(".forblock").css('z-index', '4')
+      }
+      if(this.forTutorial == 2){
+        $(".block0").css('position', 'relative')
+        $(".block0").css('z-index', '4')
+        $(".block1").css('position', 'relative')
+        $(".block1").css('z-index', '4')
       }
       let posX = event.pageX;
       let posY = event.pageY;
@@ -513,7 +612,7 @@ export default {
       // console.log(selectedNum);
       // if(Number(selectedNum)==7||Number(selectedNum)==8){
         // this.underfor.push({parentNum:this.resultStep.length,sonNum:0,x:posX + this.distX,y:posY + this.distY+45,overMe:false})
-        this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
+        this.resultStep.push({num:Number(selectedNum),marginleft:'10px',marginTop:this.defaultStep[selectedNum].marginTop,class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,forindex:this.fori,forson:-1});
         this.fori+=1;
       // }else if(Number(selectedNum)==8){
       //   this.resultStep.push({num:Number(selectedNum),marginleft:posX + this.distX + 10 +'px',marginTop:posY + this.distY + 10 + 'px',class:'',overMe:'none',position:'absolute',index:this.resultStep.length,x:posX + this.distX,y:posY + this.distY,son:-1,onPlayBtn:false,loop:1,choiceNum:false,ifindex:this.ifi,ifson:-1});
@@ -548,6 +647,18 @@ export default {
      },
      deleteAll(){
        this.resultStep = [];
+     },
+     deleteAllfortutorial2() {
+       if(this.forTutorial == 2){
+         var resultblock = []
+         for(var i=0; i<this.resultStep.length; i++){
+           if(this.resultStep[i].num == 7){
+             resultblock.push(this.resultStep[i])
+           }
+         }
+         this.resultStep = [];
+         this.resultStep = resultblock;
+       }
      },
     clickPlayBtn(){
       var tempson = this.playson;
@@ -584,7 +695,7 @@ export default {
                   tempifson = this.resultStep[tempifson].son;
                 }
                 tempforson = tempifson
-                console.log(ForresultString);
+                // console.log(ForresultString);
               }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
@@ -949,13 +1060,13 @@ export default {
             // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
-          console.log(this.resultStep);
+          // console.log(this.resultStep);
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
     // console.log(this.resultStep);
      this.playClass.show='none';
       }
-      // 튜토리얼 4
+      // 초급 튜토리얼 4 => 5
       if(this.showTutorial == 4) {
         for(var i=0; i<this.resultStep.length; i++){
           var rightblocks = [];
@@ -987,14 +1098,81 @@ export default {
         // $(".block-list").children(".block1").css("z-index", "unset")
 
       }
-      // 튜토리얼 5
+      // 초급 튜토리얼 5 => 6
       if(this.showTutorial == 5 && blocknum2 == 4){
         this.showTutorial = 6
         $("#play").css("z-index", "5")
         $("#underplay").children().last().css("z-index", "5")
         $("#underplay").children().last().css("position", "relative")
       }
-
+      // for 튜토리얼 1 => 2
+      if(this.forTutorial == 1){
+        var marginleft = this.resultStep[this.targetdivNum].marginleft
+        var margintop = this.resultStep[this.targetdivNum].marginTop
+        if(Number(marginleft.substring(0, marginleft.length-2)) >= 140 
+          && Number(margintop.substring(0, margintop.length-2)) >= 0 
+          && this.resultStep[this.targetdivNum].num == 7
+          ){
+          // 필요없는 복사된 block 지우기
+          for(var a=0; a<this.resultStep.length; a++){
+            marginleft = Number(this.resultStep[a].marginleft.substring(0, this.resultStep[a].marginleft.length-2))
+            if(marginleft < 134 && this.resultStep[a].num == 7){
+              this.resultStep.splice(a, 1)
+            }
+          }
+          this.forTutorial = 2
+          $(".block7").css("position", "unset")
+          $(".block7").css("z-index", "unset")
+          $(".forblock").css("z-index", "unset")
+          $(".block0").css("position", "relative")
+          $(".block0").css("z-index", "4")
+          $(".block1").css("position", "relative")
+          $(".block1").css("z-index", "4")
+        }
+      }
+      // for 튜토리얼 2 => 3
+      if(this.forTutorial == 2) {
+        for(var j=0; j<this.resultStep.length; j++){
+          var forblocks = [];
+          let tempson = this.resultStep[j].son
+          let rightnum = this.resultStep[j].num
+          let forblocknum = [1, 1, 0, 0]
+          blocknum2 = 1;
+          forblocks.push(this.resultStep[j])
+          while(tempson != -1 && rightnum == forblocknum[blocknum2-1]){
+            blocknum2 += 1
+            forblocks.push(this.resultStep[tempson])
+            rightnum = this.resultStep[tempson].num
+            tempson = this.resultStep[tempson].son
+            if(blocknum2 == 4 && forblocks.length == 4){
+              forblocks[0].class = 'rightblock'
+              break
+            }
+          }
+          if(blocknum2 == 4){
+            break
+          }
+        }
+        if(blocknum2 == 4){
+          this.forTutorial = 3
+          $(".forblock").css("z-index", "4")
+          // $(".block-board").children(".block0").css("z-index", '4');
+          // $(".block1").css("z-index", '4');
+          $(".rightblock").parent().css("z-index", "4")
+          for(var k=0; k<this.resultStep.length; k++){
+            if(this.resultStep[k].num == 7 && Number(this.resultStep[k].marginleft.substring(0, this.resultStep[k].marginleft.length-2))>= 140){
+              marginleft = this.resultStep[k].marginleft
+              margintop = this.resultStep[k].marginTop
+              setTimeout(()=>{
+                var playboxwidth = $("#play-box").width()
+                $(".fortutorial3").css("top", `${Number(margintop.substring(0, margintop.length-2))}px`)
+                $(".fortutorial3").css("right", `${playboxwidth-Number(marginleft.substring(0, marginleft.length-2))+30}px`)
+              }, 100)
+              
+            }
+          }
+        }
+      }
     },
     LevelLoad() {
       this.commandList = []
@@ -1660,5 +1838,46 @@ export default {
   position: absolute;
   top: 60px;
   left: 350px;
+}
+.fortutorial1 {
+  position:fixed;
+  top: 40%;
+  right: 41%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 4;
+  border-radius: 10px;
+}
+.forballoon1 {
+  position:relative;
+  width:350px;
+  height:150px;
+  background:white;
+  border-radius: 10px;
+}
+.forballoon1:after {
+  border-top: 15px solid transparent;
+  border-left: 15px solid white;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid transparent;
+  content: "";
+  position: absolute;
+  top: 60px;
+  left: 350px;
+}
+.fortutorial2 {
+  position:fixed;
+  top: 5%;
+  right: 41%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 4;
+  border-radius: 10px;
+}
+.fortutorial3 {
+  position:fixed;
+  top: 5%;
+  right: 41%;
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px, rgba(0,0,0,0.5) 2px 2px 3px 3px;
+  z-index : 4;
+  border-radius: 10px;
 }
 </style>

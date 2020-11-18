@@ -1,7 +1,8 @@
 <template>
   <div class="mypage">
     <div class="header">
-      <div class="back-btn" @click="onBack"><i class="fas fa-chevron-left"></i>돌아가기</div>
+      <div v-if="userEmail==null" class="back-btn" @click="onBack"><i class="fas fa-chevron-left"></i>돌아가기</div>
+      <div v-else class="back-btn" @click="kakaoLogout"><i class="fas fa-chevron-left"></i>로그아웃</div>
     </div>
     <!-- 연습하기, 모험하기 -->
     <div class="leftbox">
@@ -205,7 +206,7 @@ import DifficultyModal from '../components/DifficultyModal.vue';
 export default {
   data() {
     return {
-      userEmail: '',
+      userEmail: null,
       star: 10,
       starpercent: [],
       name: null,
@@ -252,6 +253,11 @@ export default {
   mounted() {
   },
   methods: {
+    kakaoLogout() {
+      this.$cookies.remove("access_token")
+      store.commit('delKakaouserInfo');
+      this.$router.push('/home')
+    },
     onRename(){
       this.renamemodal = !this.renamemodal
     },
