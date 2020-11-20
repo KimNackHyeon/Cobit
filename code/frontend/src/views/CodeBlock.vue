@@ -1316,7 +1316,7 @@ export default {
       this.isFail = true;
     },
     makeCode(){
-      console.log(this.code);
+      // console.log(this.code);
       var code = [];
       var code_kor = [];
       var fornum = 0;

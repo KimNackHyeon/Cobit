@@ -191,15 +191,15 @@ export default {
     },
     getStar() {
       if(this.stageNum == 1) {
-        if(this.count == 1) {this.starNum=3} else if(this.count == 2) {this.starNum=2} else {this.starNum=1}
+        if(this.count <= 1) {this.starNum=3} else if(this.count > 1 && this.count <= 3) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 2) {
-        if(this.count == 2) {this.starNum=3} else if(this.count == 3) {this.starNum=2} else {this.starNum=1}
+        if(this.count <= 2) {this.starNum=3} else if(this.count > 2 && this.count <= 4) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 3) {
-        if(this.count == 3) {this.starNum=3} else if(this.count == 4) {this.starNum=2} else {this.starNum=1}
+        if(this.count <= 3) {this.starNum=3} else if(this.count > 3 && this.count <= 5) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 4) {
-        if(this.count == 5) {this.starNum=3} else if(this.count == 6) {this.starNum=2} else {this.starNum=1}
+        if(this.count <= 5) {this.starNum=3} else if(this.count > 5 && this.count <= 7) {this.starNum=2} else {this.starNum=1}
       } if(this.stageNum == 5) {
-        if(this.count == 6) {this.starNum=3} else if(this.count == 7) {this.starNum=2} else {this.starNum=1}
+        if(this.count <= 6) {this.starNum=3} else if(this.count > 6 && this.count <= 8) {this.starNum=2} else {this.starNum=1}
       }
 
       // axios

@@ -393,7 +393,7 @@ export default {
                   tempifson = this.resultStep[tempifson].son;
                 }
                 tempforson = tempifson
-                console.log(ForresultString);
+                // console.log(ForresultString);
               }else if(this.resultStep[tempforson].num!=7||this.resultStep[tempforson].son!=-1){
                 tempforson = this.resultStep[tempforson].son;
               }else{
@@ -673,7 +673,7 @@ export default {
             // console.log()
           }
           if(step.overMe=='block' || step.class=='overMe')return;
-          console.log(this.resultStep);
+          // console.log(this.resultStep);
           
      });
     //  this.resultStep[this.targetdivNum].son = original_son;
