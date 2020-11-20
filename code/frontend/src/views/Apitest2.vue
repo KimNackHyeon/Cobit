@@ -160,7 +160,7 @@ export default {
               }
 
             }
-            console.log(msg.result);
+            // console.log(msg.result);
             var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext("2d");
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);

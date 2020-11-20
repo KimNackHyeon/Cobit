@@ -231,16 +231,14 @@ export default {
     DifficultyModal,
   },
   watch: {
-     starCount(){
-      // console.log("watch");
-      // console.log(this.starCount);
+     starCount : function(){
       if(this.starCount == 0) {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
       }
-      else if(this.starCount == 63){
+      else if(this.starCount == 30){
         $(".mystar").css("border-radius", "15px")
-        $(".mystar").css("width", "100%")
+        $(".mystar").css("width", "100%") 
       }
       else {
         const starratio = (this.starCount / 30) * 100
@@ -250,8 +248,6 @@ export default {
     }
   },
 
-  mounted() {
-  },
   methods: {
     kakaoLogout() {
       this.$cookies.remove("access_token")
@@ -387,7 +383,7 @@ export default {
       this.$router.push('/home')
     }
   },
-  async created(){
+  async mounted(){
     window.addEventListener('start', this.handleStart);
     if(this.$cookies.isKey("access_token")){
       // console.log("로그인")
@@ -407,6 +403,19 @@ export default {
                 this.starCount = store.state.kakaoUserInfo.star;
               });
       await this.loadAttend();
+      if(this.starCount == 0) {
+      $(".startotal").css("border-radius", "15px")
+      $(".startotal").css("width", "100%")
+      }
+      else if(this.starCount == 30){
+        $(".mystar").css("border-radius", "15px")
+        $(".mystar").css("width", "100%") 
+      }
+      else {
+        const starratio = (this.starCount / 30) * 100
+        $(".mystar").css("width", `${starratio}%`)
+        $(".startotal").css("width", `${100 - starratio}%`)
+      }
     } else{
       this.userEmail = null;
     }
