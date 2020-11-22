@@ -7,6 +7,9 @@
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
       </div>
+      <div v-show="stageNum == 1" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);">
+        <img src="../assets/images/cpu.png" alt="">
+      </div>
       <div class="script" v-html="story[stageNum-1].end"></div>
     </div>
     <div class="story" @click="clickStory" v-show="openStory2 && stageType == 2">
@@ -15,6 +18,9 @@
       </div>
       <div style="width: 100%; height: 25%; position: absolute; bottom: 25%;">
         <img style="width:auto; height:100%;" src="../assets/images/pen_saying.gif">
+      </div>
+      <div v-show="stageNum == 2 && openStory2End" style="position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);">
+        <img src="../assets/images/firewall.png" alt="">
       </div>
       <div v-show="openStory2Start" class="script" v-html="story2[stageNum-1].start"></div>
       <div v-show="openStory2End" class="script" v-html="story2[stageNum-1].end"></div>
