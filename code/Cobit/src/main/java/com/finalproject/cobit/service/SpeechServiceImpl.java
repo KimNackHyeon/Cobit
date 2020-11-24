@@ -25,6 +25,12 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			targetPosCollection.add("NNP");
 			targetPosCollection.add("SN");
 			targetPosCollection.add("MM");
+			targetPosCollection.add("XSN");
+			targetPosCollection.add("XSV");
+			targetPosCollection.add("NNB");
+			targetPosCollection.add("JX");
+			targetPosCollection.add("VV");
+			targetPosCollection.add("NR");
 			List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
 			System.out.println(list.toString());
 			if(commands == null) {
@@ -37,7 +43,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 	}
 	public static void main(String[] args) {
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-		KomoranResult analyzeResultList = komoran.analyze("오른쪽으로 두칸 갔다가 위로 두칸 간 뒤 점프!!");
+		KomoranResult analyzeResultList = komoran.analyze("왼쪽으로 네 번가");//네: XSN 세: NNB 두:JX 하:VV	다섯: NR	
 		String common = analyzeResultList.getPlainText();
 		List<String> targetPosCollection = new ArrayList<String>();
 		targetPosCollection.add("NNG");
@@ -45,10 +51,16 @@ public class SpeechServiceImpl implements SpeechSerivce {
 		targetPosCollection.add("NNP");
 		targetPosCollection.add("SN");
 		targetPosCollection.add("MM");
+		targetPosCollection.add("XSN");
+		targetPosCollection.add("XSV");
+		targetPosCollection.add("NNB");
+		targetPosCollection.add("JX");
+		targetPosCollection.add("VV");
+		targetPosCollection.add("NR");
 		List<String> list = analyzeResultList.getMorphesByTags(targetPosCollection);
 		System.out.println("-----------------------------------------------------");
 		System.out.println();
-		System.out.println("자연어        :   \"오른쪽으로 두칸 갔다가 위로 두칸 간 뒤 점프!!\"");
+		System.out.println("자연어        :   \"오른쪽으로세 번가\"");
 		System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
 		System.out.println();
 		System.out.println("형태소        :   \""+common);
@@ -57,13 +69,13 @@ public class SpeechServiceImpl implements SpeechSerivce {
 		System.out.println("키워드 추출    :   \""+list.toString());
 		System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
 		System.out.println();
-		System.out.println("싫행 명령리스트 :	\""+makeCommand(list));
+//		System.out.println("싫행 명령리스트 :	\""+makeCommand(list));
 		System.out.println("-----------------------------------------------------");
 		
 		
 	}
 
-	private static List<String> makeCommand(List<String> list) {
+	private List<String> makeCommand(List<String> list) {
 		List<String> result = new ArrayList<String>();
 		int N = list.size();
 		for(int i = 0; i < N; i++) {
@@ -74,14 +86,22 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			else if(command.contains("위")) {
 				if(i != N-1) {
 					char nextCommand = list.get(i+1).charAt(0);
-					String next = list.get(i+1);
+					int k = i+1;
+					while(nextCommand == '으' || nextCommand == '로') {
+						nextCommand = list.get(++k).charAt(0);
+						if(k == N)break;
+					}
+					if(k != N) {
+						i = k;
+					}
+					String next = list.get(i);
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
 							result.add("Up");
 						}
 						i++;
-					}else if(nextCommand == '한') {
+					}else if(nextCommand == '한' || nextCommand == '하') {
 						result.add("Up");
 						i++;
 					}else if(nextCommand == '두') {
@@ -89,7 +109,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 							result.add("Up");
 						}
 						i++;
-					}else if(nextCommand == '세') {
+					}else if(nextCommand == '세' || nextCommand == '새') {
 						for(int j = 0 ; j < 3; j++) {
 							result.add("Up");
 						}
@@ -131,14 +151,22 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			}else if(command.contains("밑") || command.contains("아래")) {
 				if(i != N-1) {
 					char nextCommand = list.get(i+1).charAt(0);
-					String next = list.get(i+1);
+					int k = i+1;
+					while(nextCommand == '으' || nextCommand == '로') {
+						nextCommand = list.get(++k).charAt(0);
+						if(k == N)break;
+					}
+					if(k != N) {
+						i = k;
+					}
+					String next = list.get(i);
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
 							result.add("Down");
 						}
 						i++;
-					}else if(nextCommand == '한') {
+					}else if(nextCommand == '한' || nextCommand == '하') {
 						result.add("Down");
 						i++;
 					}else if(nextCommand == '두') {
@@ -146,7 +174,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 							result.add("Down");
 						}
 						i++;
-					}else if(nextCommand == '세') {
+					}else if(nextCommand == '세' || nextCommand == '새') {
 						for(int j = 0 ; j < 3; j++) {
 							result.add("Down");
 						}
@@ -188,14 +216,22 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			}else if(command.contains("오른")) {
 				if(i != N-1) {
 					char nextCommand = list.get(i+1).charAt(0);
-					String next = list.get(i+1);
+					int k = i+1;
+					while(nextCommand == '으' || nextCommand == '로') {
+						nextCommand = list.get(++k).charAt(0);
+						if(k == N)break;
+					}
+					if(k != N) {
+						i = k;
+					}
+					String next = list.get(i);
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
 							result.add("Right");
 						}
 						i++;
-					}else if(nextCommand == '한') {
+					}else if(nextCommand == '한' || nextCommand == '하') {
 						result.add("Right");
 						i++;
 					}else if(nextCommand == '두') {
@@ -203,7 +239,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 							result.add("Right");
 						}
 						i++;
-					}else if(nextCommand == '세') {
+					}else if(nextCommand == '세' || nextCommand == '새') {
 						for(int j = 0 ; j < 3; j++) {
 							result.add("Right");
 						}
@@ -245,14 +281,22 @@ public class SpeechServiceImpl implements SpeechSerivce {
 			}else if(command.contains("왼")) {
 				if(i != N-1) {
 					char nextCommand = list.get(i+1).charAt(0);
-					String next = list.get(i+1);
+					int k = i+1;
+					while(nextCommand == '으' || nextCommand == '로') {
+						nextCommand = list.get(++k).charAt(0);
+						if(k == N)break;
+					}
+					if(k != N) {
+						i = k;
+					}
+					String next = list.get(i);
 					if(nextCommand>='1' && nextCommand<='9') {
 						int iter = nextCommand-'0';
 						for(int j = 0; j < iter; j++) {
 							result.add("Left");
 						}
 						i++;
-					}else if(nextCommand == '한') {
+					}else if(nextCommand == '한' || nextCommand == '하') {
 						result.add("Left");
 						i++;
 					}else if(nextCommand == '두') {
@@ -260,7 +304,7 @@ public class SpeechServiceImpl implements SpeechSerivce {
 							result.add("Left");
 						}
 						i++;
-					}else if(nextCommand == '세') {
+					}else if(nextCommand == '세' || nextCommand == '새') {
 						for(int j = 0 ; j < 3; j++) {
 							result.add("Left");
 						}

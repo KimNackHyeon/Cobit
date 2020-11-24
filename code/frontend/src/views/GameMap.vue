@@ -187,7 +187,7 @@ export default {
       $(".startotal").css("border-radius", "15px")
       $(".startotal").css("width", "100%")
       }
-      else if(this.starCount == 15){
+      else if(this.starCount == this.totalCount){
         $(".mystar").css("border-radius", "15px")
         $(".mystar").css("width", "100%")
       }
